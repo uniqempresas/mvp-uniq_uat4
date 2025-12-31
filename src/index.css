@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .bg-grid-pattern {
+    background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .dark .bg-grid-pattern {
+    background-image: radial-gradient(#374151 1px, transparent 1px);
+  }
+}
