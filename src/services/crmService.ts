@@ -238,6 +238,142 @@ export const crmService = {
 
         if (error) throw error
         return data
+    },
+
+    // Activities
+    async getActivities(opportunityId: string) {
+        const { data, error } = await supabase
+            .from('crm_atividades')
+            .select('*')
+            .eq('oportunidade_id', opportunityId)
+            .order('criado_em', { ascending: false })
+
+        if (error) console.error('Error getting activities:', error)
+        return (data || []) as Activity[]
+    },
+
+    async addActivity(activity: Omit<Activity, 'id' | 'criado_em'>) {
+        const empresaId = await authService.getEmpresaId()
+        if (!empresaId) throw new Error('Empresa não identificada')
+
+        const { data, error } = await supabase
+            .from('crm_atividades')
+            .insert([{ ...activity, empresa_id: empresaId }])
+            .select()
+            .single()
+
+        if (error) throw error
+        return data as Activity
+    },
+
+    async updateActivity(id: string, updates: Partial<Activity>) {
+        const { data, error } = await supabase
+            .from('crm_atividades')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single()
+
+        if (error) throw error
+        return data as Activity
+    },
+
+    async deleteActivity(id: string) {
+        const { error } = await supabase
+            .from('crm_atividades')
+            .delete()
+            .eq('id', id)
+
+        if (error) throw error
+    },
+
+    async getAllActivities() {
+        const empresaId = await authService.getEmpresaId()
+        if (!empresaId) return []
+
+        const { data, error } = await supabase
+            .from('crm_atividades')
+            .select(`
+                *,
+                oportunidade:oportunidade_id (
+                    titulo,
+                    estagio,
+                    cliente:cliente_id ( nome_cliente ),
+                    lead:lead_id ( nome )
+                )
+            `)
+            .eq('empresa_id', empresaId)
+            .order('criado_em', { ascending: false })
+
+        if (error) {
+            console.error('Error getting all activities:', error)
+            return []
+        }
+        return data as (Activity & {
+            oportunidade?: {
+                titulo: string,
+                estagio: string,
+                cliente?: { nome_cliente: string },
+                lead?: { nome: string }
+            }
+        })[]
+    },
+
+    // Attendances
+    async getAttendances() {
+        const empresaId = await authService.getEmpresaId()
+        if (!empresaId) return []
+
+        const { data, error } = await supabase
+            .from('crm_atendimentos')
+            .select(`
+                *,
+                cliente:cliente_id ( nome )
+            `)
+            .eq('empresa_id', empresaId)
+            .order('created_at', { ascending: false })
+
+        if (error) {
+            console.error('Error getting attendances:', error)
+            return []
+        }
+        return data as Attendance[]
+    },
+
+    async createAttendance(attendance: Omit<Attendance, 'id' | 'created_at' | 'empresa_id'>) {
+        const empresaId = await authService.getEmpresaId()
+        if (!empresaId) throw new Error('Empresa não identificada')
+
+        const { data, error } = await supabase
+            .from('crm_atendimentos')
+            // @ts-ignore - empresa_id is dynamically added
+            .insert([{ ...attendance, empresa_id: empresaId }])
+            .select()
+            .single()
+
+        if (error) throw error
+        return data as Attendance
+    },
+
+    async updateAttendance(id: string, updates: Partial<Attendance>) {
+        const { data, error } = await supabase
+            .from('crm_atendimentos')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single()
+
+        if (error) throw error
+        return data as Attendance
+    },
+
+    async deleteAttendance(id: string) {
+        const { error } = await supabase
+            .from('crm_atendimentos')
+            .delete()
+            .eq('id', id)
+
+        if (error) throw error
     }
 }
 
@@ -271,4 +407,27 @@ export interface OpportunityProduct {
     produto?: {
         nome_produto: string
     }
+}
+
+export interface Activity {
+    id: string
+    empresa_id: string
+    oportunidade_id: string
+    tipo: 'nota' | 'tarefa' | 'reuniao' | 'ligacao'
+    descricao: string
+    data_vencimento?: string
+    concluido?: boolean
+    criado_em: string
+}
+
+export interface Attendance {
+    id: string
+    empresa_id: string
+    cliente_id?: string
+    titulo: string
+    descricao?: string
+    status: string
+    prioridade: string
+    created_at: string
+    cliente?: { nome: string }
 }

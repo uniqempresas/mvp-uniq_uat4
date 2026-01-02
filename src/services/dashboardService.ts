@@ -89,8 +89,7 @@ export const dashboardService = {
                 npedido,
                 valor_total,
                 status_venda,
-                criado_em,
-                cliente:me_cliente(nome)
+                criado_em
             `)
             .eq('empresa_id', empresaId)
             .order('criado_em', { ascending: false })

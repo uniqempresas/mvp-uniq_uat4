@@ -7,6 +7,10 @@ import ProductForm from '../Catalog/ProductForm'
 import ClientList from '../CRM/ClientList'
 import CRMSettings from '../CRM/CRMSettings'
 import CRMOpportunities from '../CRM/CRMOpportunities'
+import CRMActivities from '../CRM/CRMActivities'
+import CRMAttendances from '../CRM/CRMAttendances'
+import CRMChat from '../CRM/CRMChat'
+import CRMDashboard from '../CRM/CRMDashboard'
 
 export default function Dashboard() {
     const [activeContext, setActiveContext] = useState('dashboard')
@@ -21,12 +25,20 @@ export default function Dashboard() {
         switch (activeView) {
             case 'products':
                 return <ProductForm />
+            case 'crm-dashboard':
+                return <CRMDashboard />
             case 'crm-clients':
                 return <ClientList />
             case 'crm-settings':
                 return <CRMSettings />
             case 'crm-opportunities':
                 return <CRMOpportunities />
+            case 'crm-activities':
+                return <CRMActivities />
+            case 'crm-chat':
+                return <CRMChat />
+            case 'crm-attendances':
+                return <CRMAttendances />
             case 'home':
             default:
                 return <DashboardHome />

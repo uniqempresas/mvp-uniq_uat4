@@ -30,13 +30,13 @@ const MENU_CONFIG: Record<string, { title: string; subtitle: string; items: Menu
                 label: 'CRM',
                 href: '#',
                 children: [
-                    { label: 'Dashboard', icon: 'dashboard', href: '#' },
+                    { label: 'Dashboard', icon: 'dashboard', view: 'crm-dashboard' },
                     { label: 'Leads/Clientes', icon: 'groups', view: 'crm-clients', href: '#' },
-                    { label: 'Chat', icon: 'chat', href: '#' },
-                    { label: 'Oportunidades', icon: 'lightbulb', view: 'crm-opportunities' },
-                    { label: 'Atendimentos', icon: 'support_agent', href: '#' },
-                    { label: 'Atividades', icon: 'task', href: '#' },
-                    { label: 'Configurações CRM', icon: 'settings', view: 'crm-settings' },
+                    { label: 'Chat', icon: 'chat', view: 'crm-chat' },
+                    { label: 'Oportunidades', icon: 'view_kanban', view: 'crm-opportunities' },
+                    { label: 'Atividades', icon: 'task', view: 'crm-activities' },
+                    { label: 'Atendimentos', icon: 'support_agent', view: 'crm-attendances' },
+                    { label: 'Configurações', icon: 'settings', view: 'crm-settings' },
                 ]
             },
             { icon: 'point_of_sale', label: 'Vendas & PDV', href: '#' },
@@ -130,6 +130,8 @@ export default function SubSidebar({ activeContext, onNavigate }: SubSidebarProp
             toggleExpand(item.id, e)
         } else if (item.view && onNavigate) {
             e.preventDefault()
+            e.stopPropagation() // Ensure no bubbling issues
+            console.log('Navigating to:', item.view)
             onNavigate(item.view)
         }
     }

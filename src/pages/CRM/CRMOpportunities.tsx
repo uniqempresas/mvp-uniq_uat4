@@ -29,6 +29,98 @@ export default function CRMOpportunities() {
         preco_unitario: 0
     })
 
+    // Activities State
+    const [activities, setActivities] = useState<any[]>([])
+    const [activityForm, setActivityForm] = useState({
+        tipo: 'nota', // Default to DB value
+        descricao: '',
+        data_vencimento: ''
+    })
+
+    const fetchActivities = async (oppId: string) => {
+        console.log('Fetching activities for:', oppId)
+        const acts = await crmService.getActivities(oppId)
+        console.log('Fetched activities:', acts)
+        setActivities(acts)
+    }
+
+    // Call this when modal opens if ID exists
+    useEffect(() => {
+        if (selectedOpp?.id) {
+            fetchActivities(selectedOpp.id)
+        } else {
+            setActivities([])
+        }
+    }, [selectedOpp?.id])
+
+    const handleAddActivity = async () => {
+        if (!selectedOpp?.id || !activityForm.descricao) return
+        if (activityForm.tipo !== 'nota' && !activityForm.data_vencimento) {
+            alert('Data de vencimento é obrigatória para este tipo de atividade')
+            return
+        }
+
+        try {
+            await crmService.addActivity({
+                oportunidade_id: selectedOpp.id,
+                tipo: activityForm.tipo as any,
+                descricao: activityForm.descricao,
+                data_vencimento: activityForm.data_vencimento ? new Date(activityForm.data_vencimento).toISOString() : undefined,
+                empresa_id: '', // Handled by service
+                concluido: false
+            })
+            setActivityForm({ tipo: 'nota', descricao: '', data_vencimento: '' })
+            fetchActivities(selectedOpp.id)
+        } catch (error) {
+            console.error('Error adding activity:', error)
+            alert('Erro ao adicionar atividade')
+        }
+    }
+
+    const handleToggleActivity = async (id: string, currentStatus: boolean) => {
+        try {
+            await crmService.updateActivity(id, { concluido: !currentStatus })
+            setActivities(prev => prev.map(a => a.id === id ? { ...a, concluido: !currentStatus } : a))
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const handleDeleteActivity = async (id: string) => {
+        if (!confirm('Tem certeza que deseja excluir esta atividade?')) return
+        try {
+            await crmService.deleteActivity(id)
+            setActivities(prev => prev.filter(a => a.id !== id))
+        } catch (error) {
+            console.error('Error deleting activity:', error)
+            alert('Erro ao excluir atividade')
+        }
+    }
+
+    // Helper to map DB types to Labels
+    const getActivityLabel = (type: string) => {
+        const map: Record<string, string> = {
+            'nota': 'Nota',
+            'tarefa': 'Tarefa',
+            'reuniao': 'Reunião',
+            'ligacao': 'Ligação'
+        }
+        return map[type] || type
+    }
+
+    // Relative Time Helper
+    const formatRelativeTime = (dateString: string) => {
+        const date = new Date(dateString)
+        const now = new Date()
+        const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
+
+        if (diffInSeconds < 60) return 'agora'
+        if (diffInSeconds < 3600) return `há ${Math.floor(diffInSeconds / 60)} min`
+        if (diffInSeconds < 86400) return `há ${Math.floor(diffInSeconds / 3600)} h`
+        if (diffInSeconds < 604800) return `há ${Math.floor(diffInSeconds / 86400)} dias`
+        return date.toLocaleDateString('pt-BR')
+    }
+
     // Value masking state
     const [displayValue, setDisplayValue] = useState('')
 
@@ -584,6 +676,7 @@ export default function CRMOpportunities() {
                                         </div>
                                     </div>
 
+
                                     {/* Action Buttons */}
                                     <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
                                         <button
@@ -604,13 +697,141 @@ export default function CRMOpportunities() {
                                 </form >
                             )
                             }
-                            {
-                                activeTab !== 'detalhes' && (
-                                    <div className="text-center py-10 text-gray-400">
-                                        Em desenvolvimento...
+                            {activeTab === 'atividades' && (
+                                <div className="space-y-6">
+                                    <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                                        <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
+                                            {[
+                                                { id: 'nota', label: 'Nota', icon: 'chat_bubble_outline' },
+                                                { id: 'tarefa', label: 'Tarefa', icon: 'check_box' },
+                                                { id: 'reuniao', label: 'Reunião', icon: 'calendar_today' },
+                                                { id: 'ligacao', label: 'Ligação', icon: 'call' }
+                                            ].map(item => (
+                                                <button
+                                                    key={item.id}
+                                                    type="button"
+                                                    onClick={() => setActivityForm(prev => ({ ...prev, tipo: item.id }))}
+                                                    className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors border ${activityForm.tipo === item.id
+                                                        ? 'bg-gray-100 border-gray-300 text-gray-900 shadow-sm'
+                                                        : 'bg-white border-transparent text-gray-500 hover:bg-gray-50'
+                                                        }`}
+                                                >
+                                                    <span className="material-symbols-outlined text-lg">
+                                                        {item.icon}
+                                                    </span>
+                                                    {item.label}
+                                                </button>
+                                            ))}
+                                        </div>
+
+                                        <textarea
+                                            className="w-full rounded-lg border-gray-300 text-sm p-3 focus:border-primary focus:ring-primary/20 min-h-[100px] mb-3"
+                                            placeholder="Descreva a atividade..."
+                                            value={activityForm.descricao}
+                                            onChange={e => setActivityForm(prev => ({ ...prev, descricao: e.target.value }))}
+                                        />
+
+                                        <div className="flex items-center justify-between">
+                                            {activityForm.tipo !== 'nota' ? (
+                                                <div className="relative">
+                                                    <input
+                                                        type="datetime-local"
+                                                        className="pl-3 pr-3 py-2 rounded-lg border border-gray-300 text-sm focus:border-primary focus:ring-primary/20"
+                                                        value={activityForm.data_vencimento}
+                                                        onChange={e => setActivityForm(prev => ({ ...prev, data_vencimento: e.target.value }))}
+                                                    />
+                                                </div>
+                                            ) : <div></div>}
+
+                                            <button
+                                                type="button"
+                                                onClick={handleAddActivity}
+                                                className="bg-emerald-400 hover:bg-emerald-500 text-white px-6 py-2 rounded-lg font-medium text-sm transition-colors shadow-sm"
+                                            >
+                                                Adicionar
+                                            </button>
+                                        </div>
                                     </div>
-                                )
-                            }
+
+                                    <div>
+                                        <h3 className="text-sm font-bold text-gray-700 mb-4 flex items-center gap-2">
+                                            <span className="material-symbols-outlined text-gray-400">schedule</span>
+                                            Linha do Tempo
+                                        </h3>
+
+                                        <div className="space-y-4">
+                                            {activities.length === 0 && (
+                                                <p className="text-center text-gray-400 text-sm py-4">Nenhuma atividade registrada.</p>
+                                            )}
+                                            {activities.map(act => (
+                                                <div key={act.id} className="flex gap-4 items-start">
+                                                    {/* Icon Circle */}
+                                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${act.tipo === 'nota' ? 'bg-blue-100 text-blue-600' :
+                                                        act.concluido ? 'bg-green-100 text-green-600' :
+                                                            'bg-gray-100 text-gray-600' // Default gray checking reference image, valid tasks get specific colors if needed but reference shows green for task? 
+                                                        // Wait, reference shows Green Check for task. Blue bubble for note. 
+                                                        // Let's stick to: Note=Blue, Task/Others=Green(if done) else Gray/Default?
+                                                        // Actually reference image shows "Tarefa" (Task) with a Green check icon in a Green circle.
+                                                        // "Nota" (Note) with Blue chat bubble in Blue circle.
+                                                        // Let's follow that pattern.
+                                                        } ${act.tipo !== 'nota' && !act.concluido ? 'bg-emerald-100 text-emerald-600' : ''}`}>
+                                                        <span className="material-symbols-outlined">
+                                                            {act.tipo === 'nota' ? 'chat' :
+                                                                act.tipo === 'tarefa' ? 'check' :
+                                                                    act.tipo === 'reuniao' ? 'groups' : 'call'}
+                                                        </span>
+                                                    </div>
+
+                                                    {/* Content Card */}
+                                                    <div className="flex-1 bg-white p-4 rounded-xl border border-gray-200 shadow-sm group">
+                                                        <div className="flex justify-between items-start mb-2">
+                                                            <div className="flex items-center gap-2">
+                                                                <span className="font-bold text-gray-900 text-base">{getActivityLabel(act.tipo)}</span>
+                                                            </div>
+                                                            <div className="flex items-center gap-3">
+                                                                <span className="text-xs text-gray-400">{formatRelativeTime(act.criado_em)}</span>
+                                                                <button
+                                                                    onClick={() => handleDeleteActivity(act.id)}
+                                                                    className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                                                                    title="Excluir atividade"
+                                                                >
+                                                                    <span className="material-symbols-outlined text-lg">delete</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <p className="text-sm text-gray-600 mb-3 whitespace-pre-wrap">{act.descricao}</p>
+
+                                                        {act.tipo !== 'nota' && (
+                                                            <div className="flex items-center gap-6 pt-2 border-t border-gray-100">
+                                                                {act.data_vencimento && (
+                                                                    <span className={`flex items-center gap-1 text-sm ${new Date(act.data_vencimento) < new Date() && !act.concluido
+                                                                        ? 'text-red-500 font-medium'
+                                                                        : 'text-gray-500'
+                                                                        }`}>
+                                                                        <span className="material-symbols-outlined text-lg">event</span>
+                                                                        {new Date(act.data_vencimento).toLocaleString('pt-BR')}
+                                                                    </span>
+                                                                )}
+
+                                                                <label className="flex items-center gap-2 cursor-pointer text-gray-600 hover:text-primary transition-colors select-none">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        checked={act.concluido || false}
+                                                                        onChange={() => handleToggleActivity(act.id, act.concluido || false)}
+                                                                        className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                                                                    />
+                                                                    <span className="text-sm">Concluído</span>
+                                                                </label>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div >
                     </div >
                 </div >

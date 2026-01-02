@@ -20,7 +20,8 @@ export default {
                 "mint-soft": "#D1FAE5",
             },
             fontFamily: {
-                "display": ["Inter", "sans-serif"]
+                "display": ["Poppins", "sans-serif"],
+                "sans": ["Poppins", "sans-serif"]
             },
             borderRadius: {
                 "DEFAULT": "0.5rem",
