@@ -56,21 +56,31 @@ export default function CRMDashboard() {
     return (
         <div className="flex flex-col h-full bg-slate-50/50">
             {/* Header */}
-            <div className="flex items-center justify-between px-8 py-6 bg-white border-b border-slate-200">
-                <div>
-                    <h1 className="text-2xl font-bold text-slate-900">Dashboard CRM</h1>
-                    <p className="text-slate-500 mt-1">Visão geral do seu pipeline de vendas</p>
+            <header className="flex-none px-8 py-6 pb-2 bg-white border-b border-gray-200">
+                <nav className="flex items-center text-sm font-medium text-slate-500 mb-4">
+                    <a className="hover:text-primary transition-colors" href="#">Minha Empresa</a>
+                    <span className="mx-2 text-gray-300">/</span>
+                    <a className="hover:text-primary transition-colors" href="#">CRM</a>
+                    <span className="mx-2 text-gray-300">/</span>
+                    <span className="text-primary font-semibold">Dashboard</span>
+                </nav>
+                <div className="flex flex-wrap items-end justify-between gap-4">
+                    <div>
+                        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Dashboard CRM</h1>
+                        <p className="text-slate-500 mt-1">Visão geral do seu pipeline de vendas</p>
+                    </div>
+                    <div className="flex gap-3">
+                        <button
+                            onClick={loadDashboardData}
+                            className="flex items-center gap-2 bg-white border border-gray-200 hover:bg-gray-50 text-slate-600 px-4 py-2.5 rounded-xl font-medium transition-all shadow-sm"
+                            title="Atualizar"
+                        >
+                            <span className="material-symbols-outlined">refresh</span>
+                            Atualizar
+                        </button>
+                    </div>
                 </div>
-                <div className="flex gap-3">
-                    <button
-                        onClick={loadDashboardData}
-                        className="p-2 text-slate-400 hover:text-primary transition-colors"
-                        title="Atualizar"
-                    >
-                        <span className="material-symbols-outlined">refresh</span>
-                    </button>
-                </div>
-            </div>
+            </header>
 
             <div className="flex-1 overflow-auto p-8">
                 <div className="max-w-7xl mx-auto space-y-8">

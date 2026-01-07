@@ -299,29 +299,38 @@ export default function CRMOpportunities() {
     return (
         <div className="flex-1 flex flex-col h-full overflow-hidden relative bg-[#F3F4F6]">
             {/* Header */}
-            <header className="bg-white border-b border-gray-200 px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0 z-10">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                        Oportunidades
-                        <span className="bg-gray-100 text-gray-500 text-xs px-2 py-1 rounded-full font-medium border border-gray-200">v2.1</span>
-                    </h1>
-                    <p className="text-sm text-gray-500 mt-1">Gerencie seu funil de vendas e acompanhe o progresso.</p>
-                </div>
-                <div className="flex items-center gap-3 self-end sm:self-auto">
-                    <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                        <span className="material-symbols-outlined">search</span>
-                    </button>
-                    <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                        <span className="material-symbols-outlined">filter_list</span>
-                    </button>
-                    <div className="h-6 w-px bg-gray-200 mx-1"></div>
-                    <button
-                        onClick={() => handleOpenModal()}
-                        className="bg-primary hover:bg-emerald-600 text-white px-4 py-2.5 rounded-lg flex items-center gap-2 shadow-sm shadow-emerald-500/20 transition-all active:scale-95 font-medium text-sm"
-                    >
-                        <span className="material-symbols-outlined text-lg">add</span>
-                        Nova Oportunidade
-                    </button>
+            <header className="flex-none px-8 py-6 pb-2 bg-white border-b border-gray-200 shrink-0 z-10">
+                <nav className="flex items-center text-sm font-medium text-slate-500 mb-4">
+                    <a className="hover:text-primary transition-colors" href="#">Minha Empresa</a>
+                    <span className="mx-2 text-gray-300">/</span>
+                    <a className="hover:text-primary transition-colors" href="#">CRM</a>
+                    <span className="mx-2 text-gray-300">/</span>
+                    <span className="text-primary font-semibold">Oportunidades</span>
+                </nav>
+                <div className="flex flex-wrap items-end justify-between gap-4">
+                    <div>
+                        <h1 className="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                            Oportunidades
+                            <span className="bg-gray-100 text-gray-500 text-sm px-2.5 py-0.5 rounded-full font-bold border border-gray-200">v2.1</span>
+                        </h1>
+                        <p className="text-slate-500 mt-1">Gerencie seu funil de vendas e acompanhe o progresso.</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <button className="p-2 text-slate-400 hover:text-primary transition-colors rounded-lg hover:bg-gray-50">
+                            <span className="material-symbols-outlined">search</span>
+                        </button>
+                        <button className="p-2 text-slate-400 hover:text-primary transition-colors rounded-lg hover:bg-gray-50">
+                            <span className="material-symbols-outlined">filter_list</span>
+                        </button>
+                        <div className="h-8 w-px bg-gray-200 mx-1"></div>
+                        <button
+                            onClick={() => handleOpenModal()}
+                            className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-xl font-semibold shadow-sm shadow-primary/30 transition-all active:scale-95"
+                        >
+                            <span className="material-symbols-outlined text-[20px]">add</span>
+                            Nova Oportunidade
+                        </button>
+                    </div>
                 </div>
             </header>
 
@@ -577,6 +586,8 @@ export default function CRMOpportunities() {
                                             <div className="md:col-span-5">
                                                 <label className="block text-xs font-semibold text-gray-500 mb-1.5">Produto</label>
                                                 <select
+                                                    id="product-select"
+                                                    name="product-select"
                                                     className="w-full rounded-lg border-gray-300 text-sm py-2"
                                                     value={productForm.produto_id}
                                                     onChange={e => {
@@ -597,6 +608,8 @@ export default function CRMOpportunities() {
                                             <div className="md:col-span-2">
                                                 <label className="block text-xs font-semibold text-gray-500 mb-1.5">Qtd</label>
                                                 <input
+                                                    id="product-qty"
+                                                    name="product-qty"
                                                     className="w-full rounded-lg border-gray-300 text-sm py-2"
                                                     type="number"
                                                     value={productForm.quantidade}
@@ -606,6 +619,8 @@ export default function CRMOpportunities() {
                                             <div className="md:col-span-3">
                                                 <label className="block text-xs font-semibold text-gray-500 mb-1.5">Preço Unit.</label>
                                                 <input
+                                                    id="product-price"
+                                                    name="product-price"
                                                     className="w-full rounded-lg border-gray-300 text-sm py-2"
                                                     type="number"
                                                     value={productForm.preco_unitario}
@@ -725,6 +740,8 @@ export default function CRMOpportunities() {
                                         </div>
 
                                         <textarea
+                                            id="activity-desc"
+                                            name="activity-desc"
                                             className="w-full rounded-lg border-gray-300 text-sm p-3 focus:border-primary focus:ring-primary/20 min-h-[100px] mb-3"
                                             placeholder="Descreva a atividade..."
                                             value={activityForm.descricao}
@@ -735,6 +752,8 @@ export default function CRMOpportunities() {
                                             {activityForm.tipo !== 'nota' ? (
                                                 <div className="relative">
                                                     <input
+                                                        id="activity-date"
+                                                        name="activity-date"
                                                         type="datetime-local"
                                                         className="pl-3 pr-3 py-2 rounded-lg border border-gray-300 text-sm focus:border-primary focus:ring-primary/20"
                                                         value={activityForm.data_vencimento}
