@@ -12,7 +12,7 @@ export default function CRMActivities() {
         }
     })[]>([])
     const [opportunities, setOpportunities] = useState<Opportunity[]>([])
-    const [loading, setLoading] = useState(true)
+
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [newActivity, setNewActivity] = useState<{
         oportunidade_id: string
@@ -38,7 +38,6 @@ export default function CRMActivities() {
     }, [])
 
     const loadData = async () => {
-        setLoading(true)
         const [activitiesData, opportunitiesData] = await Promise.all([
             crmService.getAllActivities(),
             crmService.getOpportunities()
@@ -46,7 +45,6 @@ export default function CRMActivities() {
         console.log('Activities Data:', activitiesData)
         setActivities(activitiesData)
         setOpportunities(opportunitiesData)
-        setLoading(false)
     }
 
     const handleSave = async (e: React.FormEvent) => {

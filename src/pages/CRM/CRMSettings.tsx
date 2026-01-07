@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { crmService, type FunnelStage } from '../../services/crmService'
 
 const COLORS = [
@@ -38,7 +38,8 @@ export default function CRMSettings() {
             await crmService.addStage({
                 nome: newStageName,
                 cor: newStageColor,
-                ordem: 999 // Service handles correct order
+
+                // ordem/posicao handled by service/backend defaults
             })
             setNewStageName('')
             fetchStages()

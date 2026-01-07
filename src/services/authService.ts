@@ -6,7 +6,7 @@ export const authService = {
         if (!user) return null
 
         // Try to get from me_usuario
-        const { data: userData, error } = await supabase
+        const { data: userData } = await supabase
             .from('me_usuario')
             .select('empresa_id')
             .eq('id', user.id)
