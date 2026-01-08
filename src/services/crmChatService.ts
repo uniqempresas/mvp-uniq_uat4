@@ -12,8 +12,8 @@ export interface ChatConversation {
     canal?: string
     criado_em: string
     updated_at: string
-    cliente?: { nome_cliente: string, email: string, telefone: string }
-    lead?: { nome: string, email: string, telefone: string }
+    cliente?: { id: string, nome_cliente: string, email: string, telefone: string }
+    lead?: { id: string, nome: string, email: string, telefone: string }
     lastMessage?: ChatMessage
     unreadCount?: number
 }
@@ -35,8 +35,8 @@ export const crmChatService = {
             .from('crm_chat_conversas')
             .select(`
                 *,
-                cliente:cliente_id ( nome_cliente, email, telefone ),
-                lead:lead_id ( nome, email, telefone )
+                cliente:cliente_id ( id, nome_cliente, email, telefone ),
+                lead:lead_id ( id, nome, email, telefone )
             `)
             .eq('empresa_id', empresaId)
             .order('updated_at', { ascending: false })

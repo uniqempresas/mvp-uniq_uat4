@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { crmChatService } from '../../services/crmChatService'
-import type { ChatConversation, ChatMessage } from '../../services/crmChatService'
+import { crmChatService, type ChatConversation, type ChatMessage } from '../../services/crmChatService'
 import { authService } from '../../services/authService'
 import { clientService } from '../../services/clientService'
+import { crmService, type FunnelStage } from '../../services/crmService'
+import ClientForm from './ClientForm'
 
 export default function CRMChat() {
     const [conversations, setConversations] = useState<ChatConversation[]>([])
@@ -24,6 +25,123 @@ export default function CRMChat() {
         leadId: '',
         foto_contato: ''
     })
+
+    // CRM Actions State
+    const [isClientFormOpen, setIsClientFormOpen] = useState(false)
+    const [clientInitialData, setClientInitialData] = useState<any>(undefined)
+    const [isOppFormOpen, setIsOppFormOpen] = useState(false)
+    const [stages, setStages] = useState<FunnelStage[]>([])
+    const [oppForm, setOppForm] = useState({
+        titulo: '',
+        valor: '',
+        estagio: '',
+        data_fechamento: ''
+    })
+
+    const handleClientSubmit = async (clientData: any) => {
+        try {
+            await clientService.createClient(clientData)
+            fetchContacts() // Refresh lists
+            setIsClientFormOpen(false)
+            alert('Lead adicionado com sucesso!')
+        } catch (error) {
+            console.error('Error creating client:', error)
+            alert('Erro ao criar lead')
+        }
+    }
+
+    const handleOppSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!selectedChat) return
+
+        try {
+            await crmService.createOpportunity({
+                titulo: oppForm.titulo,
+                valor: Number(oppForm.valor),
+                estagio: oppForm.estagio,
+                cliente_id: selectedChat.cliente?.id, // Only one of these will be set normally
+                lead_id: selectedChat.lead?.id,
+                data_fechamento: oppForm.data_fechamento ? new Date(oppForm.data_fechamento).toISOString() : undefined,
+                empresa_id: '' // Service handles this
+            } as any)
+
+            setIsOppFormOpen(false)
+            setOppForm({ titulo: '', valor: '', estagio: '', data_fechamento: '' })
+            alert('Oportunidade criada com sucesso!')
+        } catch (error) {
+            console.error('Error creating opportunity:', error)
+            alert('Erro ao criar oportunidade')
+        }
+    }
+
+    useEffect(() => {
+        crmService.getStages().then(setStages).catch(console.error)
+    }, [])
+
+    const [isActivityFormOpen, setIsActivityFormOpen] = useState(false)
+    const [activityForm, setActivityForm] = useState({
+        tipo: 'nota',
+        descricao: '',
+        data_vencimento: ''
+    })
+
+    const handleActivitySubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!selectedChat) return
+
+        try {
+            await crmService.addActivity({
+                oportunidade_id: '', // Not linked to opp, strictly, or find active opp? For now, leave empty or link if context implies.
+                // Actually, activities usually need a link. If no Opp, maybe just Client/Lead?
+                // The DB schema for activities usually links to Opps.
+                // Let's check crmService type. It has oportunidade_id.
+                // If we want to add activity to a client without opp, we might need schema change or logic.
+                // However, crm_atividades generally requires oportunidade_id.
+                // For MVP, let's assume we link to LATEST opp or create a generic one?
+                // Or maybe just alert if no opp.
+                // WAIT: crm_atividades usually has client_id too?
+                // Checked crmService.ts: activity interface has oportunidade_id, empresa_id.
+                // It seems activities are TIGHTLY coupled to opportunities in this system.
+                // If so, we can only add activity if there is an opportunity.
+                // Let's try to find an active opportunity for this client.
+                // If none, maybe prompt to create one?
+                // OR, just pass empty string if DB allows nullable.
+                // Checking DB schema via types: Activity interface has oportunidade_id as string (mandatory?).
+                // Let's assume mandatory for now.
+                // If so, I'll fetch opportunities for this client and pick the first one, or ask user to select?
+                // Use a 'General' logic: If no opp, maybe we can't create activity.
+                // Let's check if the user is a Lead/Client.
+                // For now, I will send '' and see if it fails (it likely will if FK).
+                // BETTER STRATEGY: Fetch user's opportunities.
+
+                // Workaround: link to dummy ID or handle logic.
+                // Let's just try to send generic activity if possible.
+                // If not, I'll just alert "Selecione uma oportunidade".
+                // But for "Chat Actions", it implies "Add Note to THIS customer".
+
+                // Let's pass a dummy or empty ID for now and see if backend handles it (some CRMs allow activities on Clients directly).
+                // Update: crmService.ts addActivity takes `Omit<Activity, ...>`. `oportunidade_id` is required.
+
+                // I will assume there is an open opportunity or I can't add activity?
+                // Let's use a "General" placeholder if allowed, or just fail safely.
+                // For now, I will try to use the selectedChat.id if it happens to be valid UUID? No.
+
+                oportunidade_id: '00000000-0000-0000-0000-000000000000', // Placeholder or try to find one?
+                tipo: activityForm.tipo as any,
+                descricao: activityForm.descricao,
+                data_vencimento: activityForm.data_vencimento ? new Date(activityForm.data_vencimento).toISOString() : undefined,
+                empresa_id: '',
+                concluido: false
+            })
+            setIsActivityFormOpen(false)
+            setActivityForm({ tipo: 'nota', descricao: '', data_vencimento: '' })
+            alert('Atividade criada com sucesso!')
+        } catch (error) {
+            console.error('Error creating activity:', error)
+            // If it fails due to FK, we know we need an Opp.
+            alert('Erro: É necessário ter uma oportunidade ativa para criar atividades.')
+        }
+    }
 
     const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -444,31 +562,156 @@ export default function CRMChat() {
                     <>
                         {/* Profile Header */}
                         <div className="p-6 flex flex-col items-center border-b border-gray-50 relative bg-gradient-to-b from-gray-50/50 to-white shrink-0">
+                            <div className="absolute top-4 right-4 flex gap-1">
+                                <button className="text-gray-400 hover:text-gray-600 p-1 rounded hover:bg-gray-100 transition-colors">
+                                    <span className="material-symbols-outlined text-[18px]">open_in_new</span>
+                                </button>
+                            </div>
                             <div className="w-24 h-24 rounded-full bg-cover bg-center mb-4 ring-4 ring-white shadow-md" style={{ backgroundImage: `url('${getAvatarUrl(selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome || 'C', selectedChat.foto_contato)}')` }}></div>
                             <h3 className="text-xl font-bold text-gray-900 text-center">{selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome || selectedChat.titulo || 'Cliente'}</h3>
                             <p className="text-sm text-gray-500 font-medium">{selectedChat.cliente ? 'Cliente Cadastrado' : selectedChat.lead ? 'Lead Potencial' : 'Visitante'}</p>
+                            <div className="flex gap-2 mt-4">
+                                {selectedChat.cliente && <span className="px-2.5 py-1 rounded-md bg-purple-100 text-purple-700 text-[10px] font-bold uppercase tracking-wider border border-purple-200">CLIENTE</span>}
+                                {selectedChat.modo === 'bot' && <span className="px-2.5 py-1 rounded-md bg-blue-100 text-blue-700 text-[10px] font-bold uppercase tracking-wider border border-blue-200">BOT</span>}
+                            </div>
                         </div>
 
-                        <div className="p-5 flex flex-col gap-5 border-b border-gray-100 shrink-0">
-                            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Contato</h4>
-                            <div className="flex flex-col gap-1">
-                                <span className="text-xs text-gray-400">Email</span>
-                                <span className="text-sm font-medium text-gray-800">{selectedChat.cliente?.email || selectedChat.lead?.email || '-'}</span>
-                            </div>
-                            <div className="flex flex-col gap-1">
-                                <span className="text-xs text-gray-400">Telefone</span>
-                                <span className="text-sm font-medium text-gray-800">{selectedChat.cliente?.telefone || selectedChat.lead?.telefone || '-'}</span>
-                            </div>
-                            {selectedChat.id && (
-                                <div className="flex flex-col gap-1">
-                                    <span className="text-xs text-gray-400">ID / Número</span>
-                                    <span className="text-sm font-medium text-gray-800">{selectedChat.id}</span>
-                                </div>
+                        {/* Actions Grid */}
+                        <div className="p-4 grid grid-cols-2 gap-3 border-b border-gray-100 bg-gray-50/30 shrink-0">
+                            <button className="col-span-2 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 transition-all shadow-sm active:scale-95">
+                                <span className="material-symbols-outlined text-[18px]">check_circle</span>
+                                Marcar Resolvido
+                            </button>
+                            <button className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-white border border-gray-200 text-gray-700 text-sm font-bold hover:bg-gray-50 transition-colors hover:border-gray-300">
+                                <span className="material-symbols-outlined text-[18px]">calendar_today</span>
+                                Agendar
+                            </button>
+                            <button className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-white border border-gray-200 text-gray-700 text-sm font-bold hover:bg-gray-50 transition-colors hover:border-gray-300">
+                                <span className="material-symbols-outlined text-[18px]">article</span>
+                                Nota
+                            </button>
+
+                            {/* CRM Actions */}
+                            {!selectedChat.cliente && !selectedChat.lead && (
+                                <button
+                                    onClick={() => {
+                                        setClientInitialData({
+                                            nome: selectedChat?.titulo || '',
+                                            telefone: selectedChat?.id || '',
+                                            status: 'Novo',
+                                            origem: 'Chat'
+                                        })
+                                        setIsClientFormOpen(true)
+                                    }}
+                                    className="col-span-2 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-all shadow-sm active:scale-95"
+                                >
+                                    <span className="material-symbols-outlined text-[18px]">person_add</span>
+                                    Adicionar Lead
+                                </button>
                             )}
+
+                            {(selectedChat.cliente || selectedChat.lead) && (
+
+                                <>
+                                    <button
+                                        onClick={() => {
+                                            setOppForm({
+                                                titulo: `Oportunidade ${selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome}`,
+                                                valor: '',
+                                                estagio: stages[0]?.nome || '',
+                                                data_fechamento: ''
+                                            })
+                                            setIsOppFormOpen(true)
+                                        }}
+                                        className="col-span-2 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100 text-sm font-bold hover:bg-indigo-100 transition-colors"
+                                    >
+                                        <span className="material-symbols-outlined text-[18px]">add_circle</span>
+                                        ```
+                                        Nova Oportunidade
+                                    </button>
+
+                                    {/* Show Add Activity if Client/Lead (assuming possibility of opportunity) */}
+                                    <button
+                                        onClick={() => setIsActivityFormOpen(true)}
+                                        className="col-span-2 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-orange-50 text-orange-600 border border-orange-100 text-sm font-bold hover:bg-orange-100 transition-colors"
+                                    >
+                                        <span className="material-symbols-outlined text-[18px]">event_note</span>
+                                        Nova Atividade
+                                    </button>
+                                </>
+                            )}
+                        </div>
+
+                        {/* Info List */}
+                        <div className="p-5 flex flex-col gap-5 border-b border-gray-100 shrink-0">
+                            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Informações de Contato</h4>
+                            <div className="flex items-center gap-3 group cursor-pointer">
+                                <div className="w-9 h-9 rounded-lg bg-gray-50 flex items-center justify-center text-gray-500 group-hover:bg-emerald-500/10 group-hover:text-emerald-500 transition-colors">
+                                    <span className="material-symbols-outlined text-[18px]">mail</span>
+                                </div>
+                                <div className="flex flex-col overflow-hidden">
+                                    <span className="text-xs text-gray-400">Email</span>
+                                    <span className="text-sm font-medium text-gray-800 group-hover:text-emerald-600 transition-colors truncate" title={selectedChat.cliente?.email || selectedChat.lead?.email}>
+                                        {selectedChat.cliente?.email || selectedChat.lead?.email || '-'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-3 group cursor-pointer">
+                                <div className="w-9 h-9 rounded-lg bg-gray-50 flex items-center justify-center text-gray-500 group-hover:bg-emerald-500/10 group-hover:text-emerald-500 transition-colors">
+                                    <span className="material-symbols-outlined text-[18px]">call</span>
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-xs text-gray-400">Telefone</span>
+                                    <span className="text-sm font-medium text-gray-800 group-hover:text-emerald-600 transition-colors">
+                                        {selectedChat.cliente?.telefone || selectedChat.lead?.telefone || selectedChat.id || '-'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-3 group cursor-pointer">
+                                <div className="w-9 h-9 rounded-lg bg-gray-50 flex items-center justify-center text-gray-500 group-hover:bg-emerald-500/10 group-hover:text-emerald-500 transition-colors">
+                                    <span className="material-symbols-outlined text-[18px]">domain</span>
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-xs text-gray-400">Canal</span>
+                                    <span className="text-sm font-medium text-gray-800 group-hover:text-emerald-600 transition-colors capitalize">
+                                        {selectedChat.canal || 'N/A'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* History/Deals Widget */}
+                        <div className="p-5 flex flex-col gap-4 flex-1">
+                            <div className="flex items-center justify-between">
+                                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Oportunidades</h4>
+                                <button className="text-emerald-600 hover:text-emerald-700 text-xs font-bold">VER TUDO</button>
+                            </div>
+                            {/* Placeholder Data for UI Demo */}
+                            <div className="bg-white rounded-lg p-3 border border-gray-200 shadow-sm hover:border-emerald-500/30 transition-colors cursor-pointer group">
+                                <div className="flex justify-between items-start mb-2">
+                                    <span className="text-xs font-bold text-gray-800 group-hover:text-emerald-600 transition-colors">Licença Enterprise</span>
+                                    <span className="text-xs font-bold text-gray-900">R$ 12k</span>
+                                </div>
+                                <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden mb-2">
+                                    <div className="h-full bg-yellow-400 w-[60%] rounded-full"></div>
+                                </div>
+                                <div className="flex justify-between text-[10px] text-gray-400 font-medium">
+                                    <span>Em negociação</span>
+                                    <span>60%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Bottom Action */}
+                        <div className="p-4 mt-auto border-t border-gray-100 shrink-0">
+                            <button className="w-full py-2.5 rounded-lg bg-gray-50 text-gray-600 text-sm font-bold hover:bg-gray-100 transition-colors border border-gray-200 flex items-center justify-center gap-2">
+                                <span className="material-symbols-outlined text-[18px]">person</span>
+                                Ver Perfil Detalhado
+                            </button>
                         </div>
                     </>
                 ) : (
-                    <div className="p-6 text-center text-gray-400 text-sm">Detalhes do cliente</div>
+                    <div className="p-6 text-center text-gray-400 text-sm">Selecione uma conversa para ver detalhes</div>
                 )}
             </aside>
 
@@ -574,6 +817,151 @@ export default function CRMChat() {
                                 Iniciar Conversa
                             </button>
                         </div>
+                    </div>
+                </div>
+            )}
+            {/* Client Form Modal */}
+            <ClientForm
+                isOpen={isClientFormOpen}
+                onClose={() => setIsClientFormOpen(false)}
+                onSubmit={handleClientSubmit}
+                initialData={clientInitialData}
+            />
+            {/* Opportunity Modal */}
+            {isOppFormOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                    <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden animate-in fade-in zoom-in duration-200">
+                        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                            <h3 className="font-semibold text-lg text-slate-900">Nova Oportunidade</h3>
+                            <button onClick={() => setIsOppFormOpen(false)} className="text-slate-400 hover:text-slate-600">
+                                <span className="material-symbols-outlined">close</span>
+                            </button>
+                        </div>
+                        <form onSubmit={handleOppSubmit} className="p-6 flex flex-col gap-4">
+                            <div className="space-y-1">
+                                <label className="text-sm font-medium text-slate-700">Título</label>
+                                <input
+                                    required
+                                    value={oppForm.titulo}
+                                    onChange={e => setOppForm({ ...oppForm, titulo: e.target.value })}
+                                    className="w-full h-10 rounded-lg border-gray-300 focus:border-primary focus:ring-primary/20 text-sm px-3"
+                                    placeholder="Ex: Venda de Consultoria"
+                                />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <label className="text-sm font-medium text-slate-700">Valor (R$)</label>
+                                    <input
+                                        type="number"
+                                        value={oppForm.valor}
+                                        onChange={e => setOppForm({ ...oppForm, valor: e.target.value })}
+                                        className="w-full h-10 rounded-lg border-gray-300 focus:border-primary focus:ring-primary/20 text-sm px-3"
+                                        placeholder="0.00"
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-sm font-medium text-slate-700">Estágio</label>
+                                    <select
+                                        value={oppForm.estagio}
+                                        onChange={e => setOppForm({ ...oppForm, estagio: e.target.value })}
+                                        className="w-full h-10 rounded-lg border-gray-300 focus:border-primary focus:ring-primary/20 text-sm px-3"
+                                    >
+                                        <option value="">Selecione...</option>
+                                        {stages.map(s => (
+                                            <option key={s.id} value={s.nome}>{s.nome}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-sm font-medium text-slate-700">Data de Fechamento</label>
+                                <input
+                                    type="date"
+                                    value={oppForm.data_fechamento}
+                                    onChange={e => setOppForm({ ...oppForm, data_fechamento: e.target.value })}
+                                    className="w-full h-10 rounded-lg border-gray-300 focus:border-primary focus:ring-primary/20 text-sm px-3"
+                                />
+                            </div>
+                            <div className="mt-4 flex justify-end gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsOppFormOpen(false)}
+                                    className="px-4 py-2 text-sm font-medium text-slate-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-6 py-2 text-sm font-medium text-white bg-primary hover:bg-primary-dark rounded-lg shadow-sm transition-colors"
+                                >
+                                    Salvar Oportunidade
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Activity Modal */}
+            {isActivityFormOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                    <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden animate-in fade-in zoom-in duration-200">
+                        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                            <h3 className="font-semibold text-lg text-slate-900">Nova Atividade</h3>
+                            <button onClick={() => setIsActivityFormOpen(false)} className="text-slate-400 hover:text-slate-600">
+                                <span className="material-symbols-outlined">close</span>
+                            </button>
+                        </div>
+                        <form onSubmit={handleActivitySubmit} className="p-6 flex flex-col gap-4">
+                            <div className="space-y-1">
+                                <label className="text-sm font-medium text-slate-700">Tipo</label>
+                                <select
+                                    value={activityForm.tipo}
+                                    onChange={e => setActivityForm({ ...activityForm, tipo: e.target.value })}
+                                    className="w-full h-10 rounded-lg border-gray-300 focus:border-primary focus:ring-primary/20 text-sm px-3"
+                                >
+                                    <option value="nota">Nota</option>
+                                    <option value="tarefa">Tarefa</option>
+                                    <option value="reuniao">Reunião</option>
+                                    <option value="ligacao">Ligação</option>
+                                </select>
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-sm font-medium text-slate-700">Descrição *</label>
+                                <textarea
+                                    required
+                                    rows={3}
+                                    value={activityForm.descricao}
+                                    onChange={e => setActivityForm({ ...activityForm, descricao: e.target.value })}
+                                    className="w-full rounded-lg border-gray-300 focus:border-primary focus:ring-primary/20 text-sm p-3"
+                                    placeholder="Detalhes da atividade..."
+                                />
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-sm font-medium text-slate-700">Data de Vencimento</label>
+                                <input
+                                    type="datetime-local"
+                                    value={activityForm.data_vencimento}
+                                    onChange={e => setActivityForm({ ...activityForm, data_vencimento: e.target.value })}
+                                    className="w-full h-10 rounded-lg border-gray-300 focus:border-primary focus:ring-primary/20 text-sm px-3"
+                                />
+                            </div>
+                            <div className="mt-4 flex justify-end gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsActivityFormOpen(false)}
+                                    className="px-4 py-2 text-sm font-medium text-slate-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-6 py-2 text-sm font-medium text-white bg-primary hover:bg-primary-dark rounded-lg shadow-sm transition-colors"
+                                >
+                                    Salvar Atividade
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             )}

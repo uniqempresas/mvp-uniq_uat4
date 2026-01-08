@@ -1,4 +1,4 @@
-
+import { supabase } from '../../lib/supabase'
 
 interface MainSidebarProps {
     activeContext: string
@@ -52,8 +52,19 @@ export default function MainSidebar({ activeContext, onContextChange }: MainSide
                         Configurações
                     </div>
                 </button>
-                <div className="h-10 w-10 overflow-hidden rounded-full border-2 border-white/20 cursor-pointer">
+                <div
+                    onClick={async () => {
+                        if (confirm('Deseja realmente sair?')) {
+                            await supabase.auth.signOut()
+                            window.location.reload()
+                        }
+                    }}
+                    className="h-10 w-10 overflow-hidden rounded-full border-2 border-white/20 cursor-pointer hover:border-white/50 transition-colors relative group"
+                >
                     <img alt="User profile" className="h-full w-full object-cover" src="/avatar.png" />
+                    <div className="absolute left-12 top-0 hidden rounded bg-slate-800 px-2 py-1 text-xs text-white opacity-0 group-hover:block group-hover:opacity-100 z-50 whitespace-nowrap pointer-events-none">
+                        Sair
+                    </div>
                 </div>
             </div>
         </aside>
