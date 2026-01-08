@@ -91,7 +91,7 @@ export default function CRMChat() {
 
         try {
             await crmService.addActivity({
-                oportunidade_id: '', // Not linked to opp, strictly, or find active opp? For now, leave empty or link if context implies.
+
                 // Actually, activities usually need a link. If no Opp, maybe just Client/Lead?
                 // The DB schema for activities usually links to Opps.
                 // Let's check crmService type. It has oportunidade_id.
