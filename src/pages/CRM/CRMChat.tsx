@@ -40,10 +40,20 @@ export default function CRMChat() {
 
     const handleClientSubmit = async (clientData: any) => {
         try {
-            await clientService.createClient(clientData)
+            const newClient = await clientService.createClient(clientData)
+
+            // Link new lead to current conversation
+            if (selectedChat) {
+                await crmChatService.updateConversation(selectedChat.id, {
+                    lead_id: newClient.id,
+                    // If we want to update the conversation title as well:
+                    // title: newClient.nome 
+                })
+            }
+
             fetchContacts() // Refresh lists
             setIsClientFormOpen(false)
-            alert('Lead adicionado com sucesso!')
+            alert('Lead criado e vinculado com sucesso!')
         } catch (error) {
             console.error('Error creating client:', error)
             alert('Erro ao criar lead')
@@ -414,7 +424,7 @@ export default function CRMChat() {
                             <div className="relative shrink-0">
                                 <div
                                     className="w-11 h-11 rounded-full bg-cover bg-center shadow-sm"
-                                    style={{ backgroundImage: `url('${getAvatarUrl(conv.cliente?.nome_cliente || conv.lead?.nome || 'Cliente', conv.foto_contato)}')` }}
+                                    style={{ backgroundImage: `url('${getAvatarUrl(conv.cliente?.nome_cliente || conv.lead?.nome || conv.nome || conv.titulo || 'Cliente', conv.foto_contato)}')` }}
                                 ></div>
                                 <div className={`absolute bottom-0 right-0 w-3 h-3 border-2 border-white rounded-full ${conv.status === 'aberto' ? 'bg-green-500' : 'bg-gray-300'
                                     }`}></div>
@@ -429,7 +439,7 @@ export default function CRMChat() {
                             </div>
                             <div className="flex-1 min-w-0 flex flex-col justify-center">
                                 <div className="flex justify-between items-baseline mb-0.5">
-                                    <h3 className="text-sm font-bold text-gray-900 truncate">{conv.cliente?.nome_cliente || conv.lead?.nome || conv.titulo || 'Desconhecido'}</h3>
+                                    <h3 className="text-sm font-bold text-gray-900 truncate">{conv.cliente?.nome_cliente || conv.lead?.nome || conv.nome || conv.titulo || 'Desconhecido'}</h3>
                                     <span className={`text-[10px] font-bold ${selectedChat?.id === conv.id ? 'text-emerald-600' : 'text-gray-400'
                                         }`}>{conv.updated_at ? new Date(conv.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}</span>
                                 </div>
@@ -460,11 +470,11 @@ export default function CRMChat() {
                         <div className="h-[72px] border-b border-gray-100 px-6 flex items-center justify-between shrink-0 bg-white/80 backdrop-blur z-10">
                             <div className="flex items-center gap-4">
                                 <div className="relative">
-                                    <div className="w-10 h-10 rounded-full bg-cover bg-center ring-2 ring-gray-50" style={{ backgroundImage: `url('${getAvatarUrl(selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome || 'C', selectedChat.foto_contato)}')` }}></div>
+                                    <div className="w-10 h-10 rounded-full bg-cover bg-center ring-2 ring-gray-50" style={{ backgroundImage: `url('${getAvatarUrl(selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome || selectedChat.nome || selectedChat.titulo || 'C', selectedChat.foto_contato)}')` }}></div>
                                     <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></div>
                                 </div>
                                 <div className="flex flex-col">
-                                    <h2 className="text-sm font-bold text-gray-900 leading-tight">{selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome || selectedChat.titulo || 'Cliente'}</h2>
+                                    <h2 className="text-sm font-bold text-gray-900 leading-tight">{selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome || selectedChat.nome || selectedChat.titulo || 'Cliente'}</h2>
                                     <span className="text-xs text-green-600 font-medium flex items-center gap-1">
                                         <span className="w-1.5 h-1.5 rounded-full bg-green-600"></span>
                                         {selectedChat.modo === 'bot' ? 'Atendimento Automático (Bot)' : 'Atendimento Humano'}
@@ -497,7 +507,7 @@ export default function CRMChat() {
                                 return (
                                     <div key={msg.id} className={`flex gap-3 max-w-[85%] ${isRight ? 'ml-auto justify-end' : ''}`}>
                                         {!isRight && (
-                                            <div className="w-8 h-8 rounded-full bg-cover bg-center shrink-0 mt-auto mb-1 ring-2 ring-white" style={{ backgroundImage: `url('${getAvatarUrl(selectedChat.cliente?.nome_cliente || 'C', selectedChat.foto_contato)}')` }}></div>
+                                            <div className="w-8 h-8 rounded-full bg-cover bg-center shrink-0 mt-auto mb-1 ring-2 ring-white" style={{ backgroundImage: `url('${getAvatarUrl(selectedChat.cliente?.nome_cliente || selectedChat.nome || 'C', selectedChat.foto_contato)}')` }}></div>
                                         )}
                                         <div className={`flex flex-col gap-1 items-${isRight ? 'end' : 'start'}`}>
                                             <div className={`p-4 rounded-2xl shadow-md text-sm leading-relaxed ${isRight
@@ -567,8 +577,8 @@ export default function CRMChat() {
                                     <span className="material-symbols-outlined text-[18px]">open_in_new</span>
                                 </button>
                             </div>
-                            <div className="w-24 h-24 rounded-full bg-cover bg-center mb-4 ring-4 ring-white shadow-md" style={{ backgroundImage: `url('${getAvatarUrl(selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome || 'C', selectedChat.foto_contato)}')` }}></div>
-                            <h3 className="text-xl font-bold text-gray-900 text-center">{selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome || selectedChat.titulo || 'Cliente'}</h3>
+                            <div className="w-24 h-24 rounded-full bg-cover bg-center mb-4 ring-4 ring-white shadow-md" style={{ backgroundImage: `url('${getAvatarUrl(selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome || selectedChat.nome || 'C', selectedChat.foto_contato)}')` }}></div>
+                            <h3 className="text-xl font-bold text-gray-900 text-center">{selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome || selectedChat.nome || selectedChat.titulo || 'Cliente'}</h3>
                             <p className="text-sm text-gray-500 font-medium">{selectedChat.cliente ? 'Cliente Cadastrado' : selectedChat.lead ? 'Lead Potencial' : 'Visitante'}</p>
                             <div className="flex gap-2 mt-4">
                                 {selectedChat.cliente && <span className="px-2.5 py-1 rounded-md bg-purple-100 text-purple-700 text-[10px] font-bold uppercase tracking-wider border border-purple-200">CLIENTE</span>}
@@ -596,10 +606,11 @@ export default function CRMChat() {
                                 <button
                                     onClick={() => {
                                         setClientInitialData({
-                                            nome: selectedChat?.titulo || '',
+                                            nome: selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome || selectedChat?.nome || selectedChat?.titulo || '',
                                             telefone: selectedChat?.id || '',
                                             status: 'Novo',
-                                            origem: 'Chat'
+                                            origem: 'Chat',
+                                            foto_url: selectedChat?.foto_contato || ''
                                         })
                                         setIsClientFormOpen(true)
                                     }}

@@ -159,6 +159,15 @@ export const crmChatService = {
         if (error) throw error
     },
 
+    async updateConversation(conversaId: string, updates: Partial<ChatConversation>): Promise<void> {
+        const { error } = await supabase
+            .from('crm_chat_conversas')
+            .update(updates)
+            .eq('id', conversaId)
+
+        if (error) throw error
+    },
+
     async markAsRead(conversaId: string): Promise<void> {
         await supabase
             .from('crm_chat_mensagens')
