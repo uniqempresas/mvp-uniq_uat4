@@ -10,6 +10,7 @@ export interface ChatConversation {
     titulo?: string
     foto_contato?: string
     canal?: string
+    nome?: string
     criado_em: string
     updated_at: string
     cliente?: { id: string, nome_cliente: string, email: string, telefone: string }
