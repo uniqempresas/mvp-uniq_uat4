@@ -24,7 +24,16 @@ export default function Onboarding() {
         phone: '',
         segment: '',
         employees: '',
-        address: '',
+        address: {
+            cep: '',
+            logradouro: '',
+            numero: '',
+            complemento: '',
+            bairro: '',
+            cidade: '',
+            uf: '',
+            ibge: ''
+        },
 
         // Step 3: Config
         modules: {
@@ -71,7 +80,7 @@ export default function Onboarding() {
             if (!authData.user) throw new Error("Erro ao criar usuário")
 
             // 2. Call RPC to create company and initial settings
-            const { error: rpcError } = await supabase.rpc('criar_empresa_e_configuracoes_iniciais', {
+            const { data: empresaId, error: rpcError } = await supabase.rpc('criar_empresa_e_configuracoes_iniciais', {
                 p_usuario_id: authData.user.id,
                 p_nome_fantasia: formData.companyName,
                 p_cnpj: formData.cnpj,
@@ -80,6 +89,24 @@ export default function Onboarding() {
             })
 
             if (rpcError) throw rpcError
+            if (!empresaId) throw new Error("Erro ao obter ID da empresa")
+
+            // 3. Save Address
+            const { error: addressError } = await supabase
+                .from('me_empresa_endereco')
+                .insert([{
+                    empresa_id: empresaId,
+                    cep: formData.address.cep,
+                    logradouro: formData.address.logradouro,
+                    numero: formData.address.numero,
+                    complemento: formData.address.complemento,
+                    bairro: formData.address.bairro,
+                    cidade: formData.address.cidade,
+                    uf: formData.address.uf,
+                    ibge: formData.address.ibge
+                }])
+
+            if (addressError) throw addressError
 
             // Success
             alert('Conta criada com sucesso!')

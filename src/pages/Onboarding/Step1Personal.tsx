@@ -1,5 +1,4 @@
-
-import { formatCpfCnpj } from '../../utils/format'
+import { formatCpf } from '../../utils/format'
 
 interface Props {
     formData: any
@@ -61,14 +60,14 @@ export default function Step1Personal({ formData, updateFormData, onNext }: Prop
                         </div>
                     </div>
                     <div className="flex flex-col gap-2">
-                        <label className="text-sm font-semibold text-input-text dark:text-gray-200">CPF / CNPJ</label>
+                        <label className="text-sm font-semibold text-input-text dark:text-gray-200">CPF</label>
                         <div className="relative">
                             <input
                                 className="w-full h-12 rounded-xl border border-input-border bg-background-light dark:bg-background-dark/50 text-input-text dark:text-white placeholder:text-input-placeholder px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                                 placeholder="000.000.000-00"
                                 type="text"
                                 value={formData.cpf}
-                                onChange={e => updateFormData({ cpf: formatCpfCnpj(e.target.value) })}
+                                onChange={e => updateFormData({ cpf: formatCpf(e.target.value) })}
                             />
                         </div>
                     </div>

@@ -27,6 +27,15 @@ export const formatCpfCnpj = (value: string): string => {
     }
 }
 
+export const formatCpf = (value: string): string => {
+    const numbers = value.replace(/\D/g, '').slice(0, 11) // Limit to 11 digits
+    return numbers
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+        .replace(/(-\d{2})\d+?$/, '$1') // Prevent extra chars
+}
+
 export const formatPhone = (value: string): string => {
     const numbers = value.replace(/\D/g, '').slice(0, 11) // Limit to 11 digits
 
@@ -41,4 +50,11 @@ export const formatPhone = (value: string): string => {
             .replace(/^(\d{2})(\d)/, '($1) $2')
             .replace(/(\d{4})(\d)/, '$1-$2')
     }
+}
+
+export const formatCep = (value: string): string => {
+    return value
+        .replace(/\D/g, '')
+        .replace(/^(\d{5})(\d)/, '$1-$2')
+        .substr(0, 9)
 }
