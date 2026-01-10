@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from 'react'
+import { supabase } from '../../lib/supabase'
 
 interface Props {
     formData: any
@@ -7,7 +9,38 @@ interface Props {
     loading: boolean
 }
 
+interface SystemModule {
+    id: string
+    nome: string
+    icone: string
+    descricao: string
+}
+
 export default function Step3Config({ formData, updateFormData, onSubmit, onBack, loading }: Props) {
+    const [systemModules, setSystemModules] = useState<SystemModule[]>([])
+    const [isLoadingModules, setIsLoadingModules] = useState(true)
+
+    useEffect(() => {
+        const fetchModules = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('unq_modulos_sistema')
+                    .select('*')
+                    .eq('status', 'active')
+                    .order('nome')
+
+                if (error) throw error
+                setSystemModules(data || [])
+            } catch (error) {
+                console.error('Error fetching modules:', error)
+            } finally {
+                setIsLoadingModules(false)
+            }
+        }
+
+        fetchModules()
+    }, [])
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         if (!formData.termsAgreed) {
@@ -17,21 +50,18 @@ export default function Step3Config({ formData, updateFormData, onSubmit, onBack
         onSubmit()
     }
 
-    const toggleModule = (moduleKey: string) => {
+    const toggleModule = (moduleId: string) => {
+        // Safe access
+        const modules = formData?.modules || {}
+        const currentVal = modules[moduleId]
+
         updateFormData({
             modules: {
-                ...formData.modules,
-                [moduleKey]: !formData.modules[moduleKey]
+                ...modules,
+                [moduleId]: !currentVal
             }
         })
     }
-
-    const modules = [
-        { key: 'sales', label: 'Vendas & PDV', icon: 'point_of_sale', default: true },
-        { key: 'stock', label: 'Estoque', icon: 'inventory_2', default: true },
-        { key: 'finance', label: 'Financeiro', icon: 'account_balance', default: false },
-        { key: 'fiscal', label: 'Fiscal', icon: 'receipt_long', default: false },
-    ]
 
     return (
         <div className="animate-fadeIn">
@@ -42,22 +72,44 @@ export default function Step3Config({ formData, updateFormData, onSubmit, onBack
             <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
                 <div className="flex flex-col gap-3">
                     <label className="text-sm font-semibold text-input-text dark:text-gray-200">Módulos de Interesse</label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {modules.map(mod => (
-                            <label key={mod.key} className="flex items-center gap-3 p-3 rounded-xl border border-input-border hover:bg-background-light dark:hover:bg-background-dark/30 cursor-pointer transition-colors group">
-                                <input
-                                    type="checkbox"
-                                    className="custom-checkbox h-5 w-5 rounded border-2 border-input-border text-primary focus:ring-0 focus:ring-offset-0 focus:border-primary checked:bg-primary checked:border-primary bg-transparent transition-all"
-                                    checked={formData.modules[mod.key]}
-                                    onChange={() => toggleModule(mod.key)}
-                                />
-                                <div className="flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-brand-teal group-hover:text-primary transition-colors">{mod.icon}</span>
-                                    <span className="text-sm font-medium text-input-text dark:text-gray-200">{mod.label}</span>
-                                </div>
-                            </label>
-                        ))}
-                    </div>
+
+                    {isLoadingModules ? (
+                        <div className="flex items-center justify-center py-8">
+                            <span className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent"></span>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {systemModules.map(mod => {
+                                // We use the ID as the key. 
+                                // Note: Previous hardcoded keys (sales, stock) won't match IDs.
+                                // It's expected that the user starts with an empty selection or we'd need to map them.
+                                // For now, we rely on the ID.
+                                const isSelected = !!(formData?.modules?.[mod.id])
+
+                                return (
+                                    <label key={mod.id} className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all group ${isSelected ? 'border-primary bg-primary/5' : 'border-input-border hover:bg-background-light dark:hover:bg-background-dark/30'}`}>
+                                        <div className="mt-1">
+                                            <input
+                                                type="checkbox"
+                                                className="custom-checkbox h-5 w-5 rounded border-2 border-input-border text-primary focus:ring-0 focus:ring-offset-0 focus:border-primary checked:bg-primary checked:border-primary bg-transparent transition-all"
+                                                checked={isSelected}
+                                                onChange={() => toggleModule(mod.id)}
+                                            />
+                                        </div>
+                                        <div className="flex flex-col gap-1">
+                                            <div className="flex items-center gap-2">
+                                                <span className="material-symbols-outlined text-brand-teal text-[20px]">{mod.icone || 'extension'}</span>
+                                                <span className="text-sm font-bold text-input-text dark:text-gray-200">{mod.nome}</span>
+                                            </div>
+                                            {mod.descricao && (
+                                                <p className="text-xs text-input-text/60 dark:text-gray-400 leading-snug">{mod.descricao}</p>
+                                            )}
+                                        </div>
+                                    </label>
+                                )
+                            })}
+                        </div>
+                    )}
                 </div>
 
                 <div className="flex flex-col gap-3 mt-2">
@@ -68,7 +120,9 @@ export default function Step3Config({ formData, updateFormData, onSubmit, onBack
                             checked={formData.termsAgreed}
                             onChange={(e) => updateFormData({ termsAgreed: e.target.checked })}
                         />
-                        <span className="text-sm text-input-text/70 dark:text-gray-300">Concordo com os Termos de Serviço e Política de Privacidade da UNIQ.</span>
+                        <span className="text-sm text-input-text/70 dark:text-gray-400">
+                            Concordo com os Termos de Serviço e Política de Privacidade da UNIQ.
+                        </span>
                     </label>
                 </div>
 
