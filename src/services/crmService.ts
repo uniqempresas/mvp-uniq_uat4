@@ -386,6 +386,7 @@ export interface Opportunity {
     valor: number
     estagio: string
     data_fechamento?: string
+    responsavel_id?: string
     created_at?: string
 }
 
