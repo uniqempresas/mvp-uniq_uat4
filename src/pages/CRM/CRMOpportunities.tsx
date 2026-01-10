@@ -167,7 +167,7 @@ export default function CRMOpportunities() {
         const newOpp: Partial<Opportunity> = {
             titulo: '',
             valor: 0,
-            estagio: 'Novo',
+            estagio: stages[0]?.nome || '',
             data_fechamento: new Date().toISOString().split('T')[0] // Today YYYY-MM-DD
         }
 
@@ -258,6 +258,20 @@ export default function CRMOpportunities() {
         } catch (error: any) {
             console.error('Save error:', error)
             alert(`Erro ao salvar: ${error.message || 'Erro desconhecido'}`)
+        }
+    }
+
+    const handleDeleteOpp = async () => {
+        if (!selectedOpp?.id) return
+        if (!confirm('Tem certeza que deseja excluir esta oportunidade?')) return
+
+        try {
+            await crmService.deleteOpportunity(selectedOpp.id)
+            setOpportunities(prev => prev.filter(o => o.id !== selectedOpp.id))
+            setIsModalOpen(false)
+        } catch (error) {
+            console.error('Error deleting opportunity:', error)
+            alert('Erro ao excluir oportunidade')
         }
     }
 
@@ -457,12 +471,23 @@ export default function CRMOpportunities() {
                             <h2 className="text-xl font-bold text-gray-900">
                                 {selectedOpp?.id ? 'Detalhes da Oportunidade' : 'Nova Oportunidade'}
                             </h2>
-                            <button
-                                onClick={() => setIsModalOpen(false)}
-                                className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100"
-                            >
-                                <span className="material-symbols-outlined">close</span>
-                            </button>
+                            <div className="flex items-center gap-2">
+                                {selectedOpp?.id && (
+                                    <button
+                                        onClick={handleDeleteOpp}
+                                        className="text-gray-400 hover:text-red-500 transition-colors p-1 rounded-full hover:bg-red-50"
+                                        title="Excluir Oportunidade"
+                                    >
+                                        <span className="material-symbols-outlined">delete</span>
+                                    </button>
+                                )}
+                                <button
+                                    onClick={() => setIsModalOpen(false)}
+                                    className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100"
+                                >
+                                    <span className="material-symbols-outlined">close</span>
+                                </button>
+                            </div>
                         </div>
 
                         {/* Tabs */}

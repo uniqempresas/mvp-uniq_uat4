@@ -118,7 +118,8 @@ export const crmChatService = {
             clienteId?: string,
             leadId?: string,
             canal?: string,
-            foto_contato?: string
+            foto_contato?: string,
+            nome?: string
         }
     ): Promise<ChatConversation> {
         const { data: conv, error } = await supabase
@@ -131,6 +132,7 @@ export const crmChatService = {
                 lead_id: data.leadId,
                 canal: data.canal,
                 foto_contato: data.foto_contato,
+                nome: data.nome,
                 modo: 'bot',
                 status: 'aberto'
             })
@@ -193,5 +195,34 @@ export const crmChatService = {
         } catch (error) {
             console.error('Error sending to webhook:', error)
         }
+    },
+
+    async deleteConversation(conversaId: string): Promise<void> {
+        // 1. Delete messages
+        const { error: errorMessages } = await supabase
+            .from('crm_chat_mensagens')
+            .delete()
+            .eq('conversa_id', conversaId)
+
+        if (errorMessages) throw errorMessages
+
+        // 2. Delete from mel_chat (session_id = phone/id)
+        const { error: errorMel } = await supabase
+            .from('mel_chat')
+            .delete()
+            .eq('session_id', conversaId)
+
+        if (errorMel) {
+            console.error('Error deleting from mel_chat:', errorMel)
+            // Continue to delete conversation even if mel_chat fail (might not exist)
+        }
+
+        // 3. Delete conversation
+        const { error } = await supabase
+            .from('crm_chat_conversas')
+            .delete()
+            .eq('id', conversaId)
+
+        if (error) throw error
     }
 }

@@ -3,6 +3,8 @@ import { crmChatService, type ChatConversation, type ChatMessage } from '../../s
 import { authService } from '../../services/authService'
 import { clientService } from '../../services/clientService'
 import { crmService, type FunnelStage } from '../../services/crmService'
+import { productService, type Product } from '../../services/productService'
+import OpportunityModal from '../../components/CRM/OpportunityModal'
 import ClientForm from './ClientForm'
 
 export default function CRMChat() {
@@ -17,13 +19,15 @@ export default function CRMChat() {
     const [isNewChatModalOpen, setIsNewChatModalOpen] = useState(false)
     const [leads, setLeads] = useState<any[]>([])
     const [customers, setCustomers] = useState<any[]>([])
+    const [productsList, setProductsList] = useState<Product[]>([]) // Added products state
     const [newChatForm, setNewChatForm] = useState({
         id: '', // Phone/Handle
         canal: 'whatsapp',
         titulo: '',
         clienteId: '',
         leadId: '',
-        foto_contato: ''
+        foto_contato: '',
+        nome: ''
     })
 
     // CRM Actions State
@@ -31,12 +35,26 @@ export default function CRMChat() {
     const [clientInitialData, setClientInitialData] = useState<any>(undefined)
     const [isOppFormOpen, setIsOppFormOpen] = useState(false)
     const [stages, setStages] = useState<FunnelStage[]>([])
-    const [oppForm, setOppForm] = useState({
-        titulo: '',
-        valor: '',
-        estagio: '',
-        data_fechamento: ''
+
+    // Filters
+    const [searchTerm, setSearchTerm] = useState('')
+    const [filterType, setFilterType] = useState<'all' | 'cliente' | 'lead' | 'outros'>('all')
+
+    // Filter Logic
+    const filteredConversations = conversations.filter(conv => {
+        const name = conv.cliente?.nome_cliente || conv.lead?.nome || conv.nome || conv.titulo || ''
+        const matchesSearch = name.toLowerCase().includes(searchTerm.toLowerCase())
+
+        if (!matchesSearch) return false
+
+        if (filterType === 'all') return true
+        if (filterType === 'cliente') return !!conv.cliente
+        if (filterType === 'lead') return !!conv.lead && !conv.cliente
+        if (filterType === 'outros') return !conv.cliente && !conv.lead
+
+        return true
     })
+    // Removed unused oppForm state
 
     const handleClientSubmit = async (clientData: any) => {
         try {
@@ -46,9 +64,18 @@ export default function CRMChat() {
             if (selectedChat) {
                 await crmChatService.updateConversation(selectedChat.id, {
                     lead_id: newClient.id,
-                    // If we want to update the conversation title as well:
-                    // title: newClient.nome 
                 })
+
+                // Update local state immediately to reflect changes in UI
+                setSelectedChat(prev => prev ? ({
+                    ...prev,
+                    lead: {
+                        id: newClient.id,
+                        nome: newClient.nome,
+                        email: newClient.email || '',
+                        telefone: newClient.telefone || ''
+                    }
+                }) : null)
             }
 
             fetchContacts() // Refresh lists
@@ -60,29 +87,7 @@ export default function CRMChat() {
         }
     }
 
-    const handleOppSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        if (!selectedChat) return
-
-        try {
-            await crmService.createOpportunity({
-                titulo: oppForm.titulo,
-                valor: Number(oppForm.valor),
-                estagio: oppForm.estagio,
-                cliente_id: selectedChat.cliente?.id, // Only one of these will be set normally
-                lead_id: selectedChat.lead?.id,
-                data_fechamento: oppForm.data_fechamento ? new Date(oppForm.data_fechamento).toISOString() : undefined,
-                empresa_id: '' // Service handles this
-            } as any)
-
-            setIsOppFormOpen(false)
-            setOppForm({ titulo: '', valor: '', estagio: '', data_fechamento: '' })
-            alert('Oportunidade criada com sucesso!')
-        } catch (error) {
-            console.error('Error creating opportunity:', error)
-            alert('Erro ao criar oportunidade')
-        }
-    }
+    // Removed handleOppSubmit
 
     useEffect(() => {
         crmService.getStages().then(setStages).catch(console.error)
@@ -215,13 +220,17 @@ export default function CRMChat() {
     const fetchContacts = async () => {
         try {
             const [leadsData, customersData] = await Promise.all([
-                clientService.getClients(), // Returns leads (crm_leads usually, based on previous analysis)
-                clientService.getCustomers() // Returns me_cliente
+                clientService.getClients(),
+                clientService.getCustomers()
             ])
             setLeads(leadsData)
             setCustomers(customersData)
+
+            // Also fetch products
+            const products = await productService.getProducts()
+            setProductsList(products)
         } catch (error) {
-            console.error('Error fetching contacts:', error)
+            console.error('Error fetching data:', error)
         }
     }
 
@@ -301,6 +310,20 @@ export default function CRMChat() {
         }
     }
 
+    const handleDeleteChat = async () => {
+        if (!selectedChat) return
+        if (!confirm('Tem certeza que deseja excluir esta conversa? Todo o histórico será perdido.')) return
+
+        try {
+            await crmChatService.deleteConversation(selectedChat.id)
+            setConversations(prev => prev.filter(c => c.id !== selectedChat.id))
+            setSelectedChat(null)
+        } catch (error) {
+            console.error('Error deleting chat:', error)
+            alert('Erro ao excluir conversa')
+        }
+    }
+
     const handleCreateConversation = async () => {
         if (!newChatForm.canal) {
             alert('Selecione um canal')
@@ -336,7 +359,8 @@ export default function CRMChat() {
                 clienteId: newChatForm.clienteId || undefined,
                 leadId: newChatForm.leadId || undefined,
                 canal: newChatForm.canal,
-                foto_contato: newChatForm.foto_contato
+                foto_contato: newChatForm.foto_contato,
+                nome: newChatForm.nome
             })
 
             setConversations(prev => [newConv, ...prev])
@@ -348,7 +372,8 @@ export default function CRMChat() {
                 titulo: '',
                 clienteId: '',
                 leadId: '',
-                foto_contato: ''
+                foto_contato: '',
+                nome: ''
             })
 
         } catch (error) {
@@ -382,9 +407,9 @@ export default function CRMChat() {
     if (loading) return <div className="flex h-full items-center justify-center">Carregando...</div>
 
     return (
-        <div className="flex h-full overflow-hidden bg-[#F3F4F6] p-4 lg:p-6 gap-4 relative">
+        <div className="flex w-full h-full overflow-hidden bg-[#F3F4F6] p-4 lg:p-6 gap-4 relative">
             {/* Left Panel: Conversation List */}
-            <div className="w-80 flex flex-col bg-white rounded-xl shadow-sm border border-gray-100 shrink-0 flex-1 md:flex-none h-full">
+            <div className="w-[360px] flex flex-col bg-white rounded-xl shadow-sm border border-gray-100 shrink-0 flex-1 md:flex-none h-full">
                 {/* Header */}
                 <div className="p-4 border-b border-gray-50 flex justify-between items-center shrink-0">
                     <h2 className="font-bold text-gray-800 text-lg tracking-tight">Conversas</h2>
@@ -395,24 +420,52 @@ export default function CRMChat() {
                         <span className="material-symbols-outlined text-[20px]">add</span>
                     </button>
                 </div>
-                {/* Search */}
-                <div className="px-4 py-3 shrink-0">
+                <div className="px-4 py-3 shrink-0 space-y-3">
                     <div className="relative group">
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-emerald-500 material-symbols-outlined text-[20px] transition-colors">search</span>
                         <input
                             id="chat-search"
                             name="chat-search"
                             className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-emerald-500/20 focus:bg-white text-gray-700 placeholder-gray-400 transition-all shadow-sm outline-none"
-                            placeholder="Buscar cliente..."
+                            placeholder="Buscar nome..."
                             type="text"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                         />
+                    </div>
+                    {/* Filter Tabs */}
+                    <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+                        <button
+                            onClick={() => setFilterType('all')}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${filterType === 'all' ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                        >
+                            Todos
+                        </button>
+                        <button
+                            onClick={() => setFilterType('cliente')}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${filterType === 'cliente' ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'}`}
+                        >
+                            Clientes
+                        </button>
+                        <button
+                            onClick={() => setFilterType('lead')}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${filterType === 'lead' ? 'bg-purple-600 text-white' : 'bg-purple-50 text-purple-600 hover:bg-purple-100'}`}
+                        >
+                            Leads
+                        </button>
+                        <button
+                            onClick={() => setFilterType('outros')}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${filterType === 'outros' ? 'bg-gray-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                        >
+                            Outros
+                        </button>
                     </div>
                 </div>
                 {/* List */}
                 <div className="flex-1 overflow-y-auto p-2 space-y-1 custom-scrollbar">
-                    {conversations.length === 0 ? (
+                    {filteredConversations.length === 0 ? (
                         <div className="p-4 text-center text-gray-500 text-sm">Nenhuma conversa encontrada</div>
-                    ) : conversations.map(conv => (
+                    ) : filteredConversations.map(conv => (
                         <div
                             key={conv.id}
                             onClick={() => setSelectedChat(conv)}
@@ -463,7 +516,7 @@ export default function CRMChat() {
             </div>
 
             {/* Center Panel: Chat Interface */}
-            <section className="flex-1 flex flex-col bg-white rounded-xl shadow-sm border border-gray-100 min-w-[350px] relative h-full overflow-hidden">
+            <section className="flex-1 w-full flex flex-col bg-white rounded-xl shadow-sm border border-gray-100 min-w-[350px] relative h-full overflow-hidden">
                 {selectedChat ? (
                     <>
                         {/* Chat Header */}
@@ -494,8 +547,13 @@ export default function CRMChat() {
                                     {selectedChat.modo === 'bot' ? 'Assumir Conversa' : 'Devolver p/ Bot'}
                                 </button>
                                 <div className="h-5 w-px bg-gray-200 mx-1"></div>
-                                <button className="w-9 h-9 rounded-full hover:bg-gray-50 text-gray-500 flex items-center justify-center transition-colors">
-                                    <span className="material-symbols-outlined text-[20px]">more_vert</span>
+                                <div className="h-5 w-px bg-gray-200 mx-1"></div>
+                                <button
+                                    onClick={handleDeleteChat}
+                                    className="w-9 h-9 rounded-full hover:bg-red-50 text-gray-400 hover:text-red-500 flex items-center justify-center transition-colors"
+                                    title="Excluir Conversa"
+                                >
+                                    <span className="material-symbols-outlined text-[20px]">delete</span>
                                 </button>
                             </div>
                         </div>
@@ -567,7 +625,7 @@ export default function CRMChat() {
             </section>
 
             {/* Right Panel: Customer Details (Hidden on small screens) */}
-            <aside className="w-80 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col shrink-0 overflow-y-auto hidden xl:flex h-full">
+            <aside className="w-[360px] bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col shrink-0 overflow-y-auto hidden xl:flex h-full">
                 {selectedChat ? (
                     <>
                         {/* Profile Header */}
@@ -626,18 +684,11 @@ export default function CRMChat() {
                                 <>
                                     <button
                                         onClick={() => {
-                                            setOppForm({
-                                                titulo: `Oportunidade ${selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome}`,
-                                                valor: '',
-                                                estagio: stages[0]?.nome || '',
-                                                data_fechamento: ''
-                                            })
                                             setIsOppFormOpen(true)
                                         }}
                                         className="col-span-2 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100 text-sm font-bold hover:bg-indigo-100 transition-colors"
                                     >
                                         <span className="material-symbols-outlined text-[18px]">add_circle</span>
-                                        ```
                                         Nova Oportunidade
                                     </button>
 
@@ -771,6 +822,19 @@ export default function CRMChat() {
                             </div>
 
                             <div>
+                                <label htmlFor="new-chat-nome" className="block text-sm font-semibold text-gray-700 mb-1.5">Nome do Contato</label>
+                                <input
+                                    id="new-chat-nome"
+                                    name="contact-nome"
+                                    className="w-full h-10 rounded-lg border-gray-300 bg-white px-3 text-sm focus:border-primary focus:ring-primary/20 transition-all border"
+                                    type="text"
+                                    placeholder="Ex: João Silva"
+                                    value={newChatForm.nome}
+                                    onChange={e => setNewChatForm({ ...newChatForm, nome: e.target.value })}
+                                />
+                            </div>
+
+                            <div>
                                 <label htmlFor="new-chat-photo" className="block text-sm font-semibold text-gray-700 mb-1.5">Foto do Contato (URL - Opcional)</label>
                                 <input
                                     id="new-chat-photo"
@@ -840,77 +904,30 @@ export default function CRMChat() {
             />
             {/* Opportunity Modal */}
             {isOppFormOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                    <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden animate-in fade-in zoom-in duration-200">
-                        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                            <h3 className="font-semibold text-lg text-slate-900">Nova Oportunidade</h3>
-                            <button onClick={() => setIsOppFormOpen(false)} className="text-slate-400 hover:text-slate-600">
-                                <span className="material-symbols-outlined">close</span>
-                            </button>
-                        </div>
-                        <form onSubmit={handleOppSubmit} className="p-6 flex flex-col gap-4">
-                            <div className="space-y-1">
-                                <label className="text-sm font-medium text-slate-700">Título</label>
-                                <input
-                                    required
-                                    value={oppForm.titulo}
-                                    onChange={e => setOppForm({ ...oppForm, titulo: e.target.value })}
-                                    className="w-full h-10 rounded-lg border-gray-300 focus:border-primary focus:ring-primary/20 text-sm px-3"
-                                    placeholder="Ex: Venda de Consultoria"
-                                />
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-1">
-                                    <label className="text-sm font-medium text-slate-700">Valor (R$)</label>
-                                    <input
-                                        type="number"
-                                        value={oppForm.valor}
-                                        onChange={e => setOppForm({ ...oppForm, valor: e.target.value })}
-                                        className="w-full h-10 rounded-lg border-gray-300 focus:border-primary focus:ring-primary/20 text-sm px-3"
-                                        placeholder="0.00"
-                                    />
-                                </div>
-                                <div className="space-y-1">
-                                    <label className="text-sm font-medium text-slate-700">Estágio</label>
-                                    <select
-                                        value={oppForm.estagio}
-                                        onChange={e => setOppForm({ ...oppForm, estagio: e.target.value })}
-                                        className="w-full h-10 rounded-lg border-gray-300 focus:border-primary focus:ring-primary/20 text-sm px-3"
-                                    >
-                                        <option value="">Selecione...</option>
-                                        {stages.map(s => (
-                                            <option key={s.id} value={s.nome}>{s.nome}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-                            <div className="space-y-1">
-                                <label className="text-sm font-medium text-slate-700">Data de Fechamento</label>
-                                <input
-                                    type="date"
-                                    value={oppForm.data_fechamento}
-                                    onChange={e => setOppForm({ ...oppForm, data_fechamento: e.target.value })}
-                                    className="w-full h-10 rounded-lg border-gray-300 focus:border-primary focus:ring-primary/20 text-sm px-3"
-                                />
-                            </div>
-                            <div className="mt-4 flex justify-end gap-3">
-                                <button
-                                    type="button"
-                                    onClick={() => setIsOppFormOpen(false)}
-                                    className="px-4 py-2 text-sm font-medium text-slate-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-                                >
-                                    Cancelar
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="px-6 py-2 text-sm font-medium text-white bg-primary hover:bg-primary-dark rounded-lg shadow-sm transition-colors"
-                                >
-                                    Salvar Oportunidade
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                <OpportunityModal
+                    isOpen={isOppFormOpen}
+                    onClose={() => setIsOppFormOpen(false)}
+                    initialOpp={(() => {
+                        // Pre-fill logic similar to what we did for Lead
+                        // If we want to associate with the current chat's person
+                        return {
+                            titulo: 'Nova Oportunidade',
+                            valor: 0,
+                            estagio: stages[0]?.nome || '',
+                            lead_id: selectedChat?.lead_id || undefined,
+                            cliente_id: selectedChat?.cliente_id || undefined
+                        }
+                    })()}
+                    stages={stages}
+                    leads={leads}
+                    customers={customers}
+                    productsList={productsList}
+                    onSuccess={() => {
+                        setIsOppFormOpen(false)
+                        fetchContacts() // Refresh leads/customers if needed, or just close
+                        alert('Oportunidade criada com sucesso!')
+                    }}
+                />
             )}
 
             {/* Activity Modal */}
