@@ -1,3 +1,5 @@
+import { formatCpfCnpj, formatPhone } from '../../utils/format'
+
 interface Props {
     formData: any
     updateFormData: (data: any) => void
@@ -47,7 +49,7 @@ export default function Step2Company({ formData, updateFormData, onNext, onBack 
                                 placeholder="00.000.000/0000-00"
                                 type="text"
                                 value={formData.cnpj}
-                                onChange={e => updateFormData({ cnpj: e.target.value })}
+                                onChange={e => updateFormData({ cnpj: formatCpfCnpj(e.target.value) })}
                             />
                         </div>
                     </div>
@@ -59,7 +61,7 @@ export default function Step2Company({ formData, updateFormData, onNext, onBack 
                                 placeholder="(00) 00000-0000"
                                 type="text"
                                 value={formData.phone}
-                                onChange={e => updateFormData({ phone: e.target.value })}
+                                onChange={e => updateFormData({ phone: formatPhone(e.target.value) })}
                             />
                         </div>
                     </div>
