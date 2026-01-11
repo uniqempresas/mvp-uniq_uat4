@@ -139,9 +139,6 @@ export default function ProductList({ onNavigate, onEdit }: Props) {
                                     </tr>
                                 ) : (
                                     filteredProducts.map(product => {
-                                        const stockStatus = product.estoque_atual === 0 ? 'Sem Estoque' :
-                                            product.estoque_atual < 10 ? 'Baixo Estoque' : 'Em Estoque'
-
                                         return (
                                             <tr key={product.id} className="group hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                                                 <td className="px-6 py-4 text-center">

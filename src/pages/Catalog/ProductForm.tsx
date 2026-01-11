@@ -13,9 +13,7 @@ const formatMoney = (value: number) => {
     return new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(value)
 }
 
-const parseMoney = (value: string) => {
-    return Number(value.replace(/\./g, '').replace(',', '.'))
-}
+
 
 const generateSKU = () => {
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
