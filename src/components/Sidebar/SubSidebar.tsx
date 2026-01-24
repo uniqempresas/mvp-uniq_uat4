@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 interface SubSidebarProps {
     activeContext: string
@@ -31,7 +32,7 @@ const MENU_CONFIG: Record<string, { title: string; subtitle: string; items: Menu
                 href: '#',
                 children: [
                     { label: 'Dashboard', icon: 'dashboard', view: 'crm-dashboard' },
-                    { label: 'Leads/Clientes', icon: 'groups', view: 'crm-clients', href: '#' },
+                    { label: 'Leads/Clientes', icon: 'groups', view: 'crm-clients' },
                     { label: 'Chat', icon: 'chat', view: 'crm-chat' },
                     { label: 'Oportunidades', icon: 'view_kanban', view: 'crm-opportunities' },
                     { label: 'Atividades', icon: 'task', view: 'crm-activities' },
@@ -40,14 +41,13 @@ const MENU_CONFIG: Record<string, { title: string; subtitle: string; items: Menu
                 ]
             },
             { icon: 'point_of_sale', label: 'Vendas & PDV', href: '#' },
-            { icon: 'attach_money', label: 'Financeiro', href: '#' },
             {
                 id: 'cadastros',
                 icon: 'app_registration',
                 label: 'Cadastros',
                 href: '#',
                 children: [
-                    { label: 'Produtos', icon: 'package_2', view: 'products', href: '#' },
+                    { label: 'Produtos', icon: 'package_2', view: 'products' },
                     { label: 'Serviços', icon: 'handyman', href: '#' },
                     { label: 'Clientes', icon: 'group', href: '#' },
                     { label: 'Fornecedores', icon: 'warehouse', href: '#' },
@@ -172,20 +172,39 @@ export default function SubSidebar({ activeContext, onNavigate }: SubSidebarProp
                 {/* Submenu Items */}
                 {hasChildren && isExpanded && (
                     <div className="flex flex-col gap-1 mt-1 pl-4 border-l border-slate-100 ml-5">
-                        {item.children?.map((subItem, subIndex) => (
-                            <button
-                                key={`sub-${index}-${subIndex}`}
-                                onClick={(e) => handleClick(e, subItem)}
-                                className="flex w-full items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-                            >
-                                {subItem.icon && (
-                                    <span className="material-symbols-outlined text-[18px] text-slate-400">
-                                        {subItem.icon}
-                                    </span>
-                                )}
-                                <span>{subItem.label}</span>
-                            </button>
-                        ))}
+                        {item.children?.map((subItem, subIndex) => {
+                            if (subItem.href) {
+                                return (
+                                    <Link
+                                        key={`sub-${index}-${subIndex}`}
+                                        to={subItem.href}
+                                        className="flex w-full items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
+                                    >
+                                        {subItem.icon && (
+                                            <span className="material-symbols-outlined text-[18px] text-slate-400">
+                                                {subItem.icon}
+                                            </span>
+                                        )}
+                                        <span>{subItem.label}</span>
+                                    </Link>
+                                )
+                            }
+
+                            return (
+                                <button
+                                    key={`sub-${index}-${subIndex}`}
+                                    onClick={(e) => handleClick(e, subItem)}
+                                    className="flex w-full items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
+                                >
+                                    {subItem.icon && (
+                                        <span className="material-symbols-outlined text-[18px] text-slate-400">
+                                            {subItem.icon}
+                                        </span>
+                                    )}
+                                    <span>{subItem.label}</span>
+                                </button>
+                            )
+                        })}
                     </div>
                 )}
             </div>

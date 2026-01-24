@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Financeiro - Fluxo de Caixa (DRE) UNIQ</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b5573",
+                        "secondary": "#244E5F",
+                        "sidebar-dark": "#1F2937",
+                        "background-light": "#F3F4F6",
+                        "background-dark": "#141a1e",
+                        "uniq-green": "#10B981",
+                        "uniq-red": "#EF4444",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light text-[#111518] font-display antialiased overflow-hidden h-screen flex">
+<!-- 1. Primary Global Sidebar (Dark) -->
+<aside class="w-20 bg-sidebar-dark flex flex-col items-center py-6 gap-8 shrink-0 z-20">
+<!-- Logo Icon -->
+<div class="size-10 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/30">
+            U
+        </div>
+<!-- Global Nav Items -->
+<nav class="flex flex-col gap-6 w-full items-center">
+<button class="size-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors group relative">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="absolute left-14 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">Dashboard Geral</span>
+</button>
+<button class="size-10 flex items-center justify-center text-white bg-primary rounded-lg shadow-md shadow-primary/20 relative">
+<span class="material-symbols-outlined">payments</span>
+<span class="absolute -right-1 -top-1 size-3 bg-uniq-green rounded-full border-2 border-sidebar-dark"></span>
+</button>
+<button class="size-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors group relative">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="absolute left-14 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">Estoque</span>
+</button>
+<button class="size-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors group relative">
+<span class="material-symbols-outlined">group</span>
+<span class="absolute left-14 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">CRM &amp; Clientes</span>
+</button>
+</nav>
+<div class="mt-auto flex flex-col gap-6 items-center w-full">
+<button class="size-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="size-8 rounded-full bg-cover bg-center ring-2 ring-gray-600 cursor-pointer" data-alt="User profile photo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCVskfQGGEms-NkrX6-W62Ajya5UIQzABBH4i4Q4mNb5gm3LdkzPZYsn2dR7NyWAfV7VL4gQUCpJeWsPAZxUSIo68a1B6dllvL23EdL8uqn449c-0ibXfY0iK1hF3Hj2fhB3tv8QEUpU9whf7HZASbPJViY3CcXqz2QOwlq23E5xNWn-x0DO-KwQYZKMJ-MyAEwl9QfkExdBi17YxeK__VZ1ZBD1F4qTxuzW0wFh1y0gaKNoibzIs_EYjs13Lj8RlvkqjFrEtIfhDHH");'></div>
+</div>
+</aside>
+<!-- 2. Context Sidebar (Module Specific) -->
+<aside class="w-64 bg-white border-r border-gray-200 flex flex-col shrink-0 hidden md:flex">
+<div class="p-6 border-b border-gray-100">
+<h2 class="text-[#111518] text-lg font-bold leading-tight">Financeiro &amp; <br/>UNIQ Bank</h2>
+<p class="text-gray-500 text-xs mt-1">Gestão Financeira Integrada</p>
+</div>
+<nav class="flex-1 overflow-y-auto p-4 flex flex-col gap-2 no-scrollbar">
+<div class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mt-4 mb-2">Visão Geral</div>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary group transition-all" href="#">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="text-sm font-medium">Fluxo de Caixa (DRE)</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-[#111518] transition-all" href="#">
+<span class="material-symbols-outlined text-gray-400" style="font-variation-settings: 'FILL' 0;">account_balance_wallet</span>
+<span class="text-sm font-medium">Contas Bancárias</span>
+</a>
+<div class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mt-6 mb-2">Operacional</div>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-[#111518] transition-all" href="#">
+<span class="material-symbols-outlined text-gray-400">arrow_circle_down</span>
+<span class="text-sm font-medium">Contas a Pagar</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-[#111518] transition-all" href="#">
+<span class="material-symbols-outlined text-gray-400">arrow_circle_up</span>
+<span class="text-sm font-medium">Contas a Receber</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-[#111518] transition-all" href="#">
+<span class="material-symbols-outlined text-gray-400">receipt_long</span>
+<span class="text-sm font-medium">Notas Fiscais</span>
+</a>
+<div class="mt-auto p-4 bg-gray-50 rounded-xl border border-gray-100">
+<div class="flex items-start gap-3">
+<div class="bg-blue-100 text-blue-600 rounded-lg p-1.5 shrink-0">
+<span class="material-symbols-outlined text-[20px]">tips_and_updates</span>
+</div>
+<div>
+<p class="text-xs font-semibold text-gray-800">Dica Financeira</p>
+<p class="text-[10px] text-gray-500 mt-1 leading-relaxed">Manter o DRE atualizado ajuda na previsão de impostos.</p>
+</div>
+</div>
+</div>
+</nav>
+</aside>
+<!-- 3. Main Content Area -->
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-[#F3F4F6] relative">
+<!-- Header -->
+<header class="bg-white border-b border-gray-200 px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
+<div>
+<!-- Breadcrumbs -->
+<div class="flex items-center gap-2 text-xs text-gray-500 mb-1">
+<span class="hover:text-primary cursor-pointer">Financeiro</span>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span class="text-gray-800 font-medium">Fluxo de Caixa (DRE)</span>
+</div>
+<h1 class="text-2xl font-bold text-[#111518] tracking-tight">Demonstrativo de Resultado</h1>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center bg-gray-100 rounded-lg p-1">
+<button class="px-3 py-1.5 text-xs font-medium rounded-md bg-white shadow-sm text-gray-800">Mensal</button>
+<button class="px-3 py-1.5 text-xs font-medium rounded-md text-gray-500 hover:bg-gray-200">Trimestral</button>
+<button class="px-3 py-1.5 text-xs font-medium rounded-md text-gray-500 hover:bg-gray-200">Anual</button>
+</div>
+<div class="h-6 w-px bg-gray-300 mx-1"></div>
+<button class="flex items-center gap-2 px-4 py-2 bg-secondary text-white text-sm font-medium rounded-lg hover:bg-[#1a3a48] transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                    Exportar
+                </button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-6 md:p-8">
+<div class="max-w-7xl mx-auto flex flex-col gap-6">
+<!-- Filters -->
+<div class="flex flex-wrap gap-3">
+<button class="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:border-primary hover:text-primary transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span>
+                        Outubro 2023
+                    </button>
+<button class="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:border-primary hover:text-primary transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">domain</span>
+                        Centro de Custo: Geral
+                    </button>
+<button class="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:border-primary hover:text-primary transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">account_balance</span>
+                        Todas as Contas
+                    </button>
+<button class="ml-auto text-primary text-sm font-medium hover:underline">Limpar filtros</button>
+</div>
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Revenue Card -->
+<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-uniq-green">trending_up</span>
+</div>
+<div class="flex items-center justify-between">
+<p class="text-sm font-medium text-gray-500">Receita Bruta</p>
+<span class="bg-green-50 text-green-700 text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span> 12%
+                            </span>
+</div>
+<div>
+<p class="text-2xl font-bold text-[#111518]">R$ 124.500,00</p>
+<p class="text-xs text-gray-400 mt-1">vs R$ 111.200,00 mês anterior</p>
+</div>
+</div>
+<!-- Expenses Card -->
+<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-uniq-red">trending_down</span>
+</div>
+<div class="flex items-center justify-between">
+<p class="text-sm font-medium text-gray-500">Despesas Totais</p>
+<span class="bg-red-50 text-red-700 text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span> 5%
+                            </span>
+</div>
+<div>
+<p class="text-2xl font-bold text-[#111518]">R$ 82.350,00</p>
+<p class="text-xs text-gray-400 mt-1">vs R$ 78.400,00 mês anterior</p>
+</div>
+</div>
+<!-- Net Profit Card -->
+<div class="bg-primary text-white p-5 rounded-xl shadow-md shadow-primary/20 flex flex-col justify-between h-32 relative overflow-hidden">
+<div class="absolute -right-6 -bottom-6 size-32 bg-white/10 rounded-full blur-2xl"></div>
+<div class="flex items-center justify-between relative z-10">
+<p class="text-sm font-medium text-blue-100">Lucro Líquido</p>
+<span class="bg-white/20 text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span> 22%
+                            </span>
+</div>
+<div class="relative z-10">
+<p class="text-2xl font-bold">R$ 42.150,00</p>
+<p class="text-xs text-blue-200 mt-1">Margem Líquida: 33.8%</p>
+</div>
+</div>
+</div>
+<!-- Charts Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Main Chart (Evolution) -->
+<div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-base font-semibold text-[#111518]">Evolução Financeira</h3>
+<div class="flex items-center gap-2">
+<div class="flex items-center gap-1">
+<div class="size-2 rounded-full bg-primary"></div>
+<span class="text-xs text-gray-500">Receita</span>
+</div>
+<div class="flex items-center gap-1">
+<div class="size-2 rounded-full bg-uniq-red opacity-80"></div>
+<span class="text-xs text-gray-500">Despesa</span>
+</div>
+</div>
+</div>
+<!-- Abstract Chart Representation using CSS Gradients/Flex -->
+<div class="h-64 flex items-end justify-between gap-2 px-2 pb-4 border-b border-gray-100 relative" data-alt="Bar chart showing financial evolution over 6 months">
+<!-- Y-Axis Lines (Background) -->
+<div class="absolute inset-0 flex flex-col justify-between text-xs text-gray-300 pointer-events-none pb-4">
+<div class="border-b border-gray-100 border-dashed w-full h-0"></div>
+<div class="border-b border-gray-100 border-dashed w-full h-0"></div>
+<div class="border-b border-gray-100 border-dashed w-full h-0"></div>
+<div class="border-b border-gray-100 border-dashed w-full h-0"></div>
+<div class="border-b border-gray-100 border-dashed w-full h-0"></div>
+</div>
+<!-- Bar Group 1 -->
+<div class="flex flex-col items-center gap-1 h-full justify-end w-full z-10">
+<div class="w-full flex justify-center gap-1 items-end h-[60%]">
+<div class="w-3 bg-primary rounded-t-sm h-full hover:opacity-80 transition-opacity cursor-pointer relative group">
+<div class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">85k</div>
+</div>
+<div class="w-3 bg-uniq-red opacity-80 rounded-t-sm h-[70%] hover:opacity-100 transition-opacity cursor-pointer"></div>
+</div>
+<span class="text-xs text-gray-400">Mai</span>
+</div>
+<!-- Bar Group 2 -->
+<div class="flex flex-col items-center gap-1 h-full justify-end w-full z-10">
+<div class="w-full flex justify-center gap-1 items-end h-[75%]">
+<div class="w-3 bg-primary rounded-t-sm h-full hover:opacity-80 transition-opacity cursor-pointer"></div>
+<div class="w-3 bg-uniq-red opacity-80 rounded-t-sm h-[60%] hover:opacity-100 transition-opacity cursor-pointer"></div>
+</div>
+<span class="text-xs text-gray-400">Jun</span>
+</div>
+<!-- Bar Group 3 -->
+<div class="flex flex-col items-center gap-1 h-full justify-end w-full z-10">
+<div class="w-full flex justify-center gap-1 items-end h-[65%]">
+<div class="w-3 bg-primary rounded-t-sm h-full hover:opacity-80 transition-opacity cursor-pointer"></div>
+<div class="w-3 bg-uniq-red opacity-80 rounded-t-sm h-[80%] hover:opacity-100 transition-opacity cursor-pointer"></div>
+</div>
+<span class="text-xs text-gray-400">Jul</span>
+</div>
+<!-- Bar Group 4 -->
+<div class="flex flex-col items-center gap-1 h-full justify-end w-full z-10">
+<div class="w-full flex justify-center gap-1 items-end h-[85%]">
+<div class="w-3 bg-primary rounded-t-sm h-full hover:opacity-80 transition-opacity cursor-pointer"></div>
+<div class="w-3 bg-uniq-red opacity-80 rounded-t-sm h-[50%] hover:opacity-100 transition-opacity cursor-pointer"></div>
+</div>
+<span class="text-xs text-gray-400">Ago</span>
+</div>
+<!-- Bar Group 5 -->
+<div class="flex flex-col items-center gap-1 h-full justify-end w-full z-10">
+<div class="w-full flex justify-center gap-1 items-end h-[90%]">
+<div class="w-3 bg-primary rounded-t-sm h-full hover:opacity-80 transition-opacity cursor-pointer"></div>
+<div class="w-3 bg-uniq-red opacity-80 rounded-t-sm h-[55%] hover:opacity-100 transition-opacity cursor-pointer"></div>
+</div>
+<span class="text-xs text-gray-400">Set</span>
+</div>
+<!-- Bar Group 6 -->
+<div class="flex flex-col items-center gap-1 h-full justify-end w-full z-10">
+<div class="w-full flex justify-center gap-1 items-end h-[95%]">
+<div class="w-3 bg-primary rounded-t-sm h-full hover:opacity-80 transition-opacity cursor-pointer"></div>
+<div class="w-3 bg-uniq-red opacity-80 rounded-t-sm h-[45%] hover:opacity-100 transition-opacity cursor-pointer"></div>
+</div>
+<span class="text-xs font-semibold text-primary">Out</span>
+</div>
+</div>
+</div>
+<!-- Secondary Chart (Expense Breakdown) -->
+<div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col">
+<h3 class="text-base font-semibold text-[#111518] mb-6">Detalhamento de Despesas</h3>
+<div class="flex-1 flex flex-col items-center justify-center relative">
+<!-- Simple CSS Donut Chart -->
+<div class="size-40 rounded-full bg-[conic-gradient(at_center,_var(--tw-gradient-stops))] from-blue-500 via-teal-400 to-indigo-500 relative flex items-center justify-center mb-6" style="background: conic-gradient(#2b5573 0% 45%, #EF4444 45% 70%, #FBBF24 70% 85%, #E5E7EB 85% 100%);">
+<div class="size-28 bg-white rounded-full flex flex-col items-center justify-center shadow-inner">
+<span class="text-xs text-gray-400">Total</span>
+<span class="text-sm font-bold text-gray-800">R$ 82.3k</span>
+</div>
+</div>
+<!-- Legend -->
+<div class="w-full space-y-3">
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-primary"></div>
+<span class="text-gray-600">Pessoal</span>
+</div>
+<span class="font-medium text-gray-800">45%</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-red-500"></div>
+<span class="text-gray-600">Operacional</span>
+</div>
+<span class="font-medium text-gray-800">25%</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-yellow-400"></div>
+<span class="text-gray-600">Impostos</span>
+</div>
+<span class="font-medium text-gray-800">15%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- DRE Table Section -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+<div class="p-4 border-b border-gray-100 flex items-center justify-between">
+<h3 class="text-base font-semibold text-[#111518]">Demonstrativo Detalhado</h3>
+<button class="text-primary text-sm font-medium flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-[16px]">expand_all</span>
+                            Expandir Tudo
+                        </button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-sm text-left">
+<thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
+<tr>
+<th class="px-6 py-3 font-medium tracking-wider">Descrição</th>
+<th class="px-6 py-3 font-medium tracking-wider text-right w-32">%</th>
+<th class="px-6 py-3 font-medium tracking-wider text-right w-48">Valor (R$)</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-100">
+<!-- Group: Receita Bruta -->
+<tr class="bg-blue-50/30 hover:bg-blue-50/50 transition-colors">
+<td class="px-6 py-3 font-semibold text-gray-800 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-gray-400 cursor-pointer">keyboard_arrow_down</span>
+                                        (+) Receita Operacional Bruta
+                                    </td>
+<td class="px-6 py-3 text-right text-gray-500">100%</td>
+<td class="px-6 py-3 text-right font-bold text-[#111518]">124.500,00</td>
+</tr>
+<tr class="hover:bg-gray-50 transition-colors">
+<td class="px-6 py-2 pl-12 text-gray-600">Venda de Produtos</td>
+<td class="px-6 py-2 text-right text-gray-400">80%</td>
+<td class="px-6 py-2 text-right text-gray-600">99.600,00</td>
+</tr>
+<tr class="hover:bg-gray-50 transition-colors">
+<td class="px-6 py-2 pl-12 text-gray-600">Prestação de Serviços</td>
+<td class="px-6 py-2 text-right text-gray-400">20%</td>
+<td class="px-6 py-2 text-right text-gray-600">24.900,00</td>
+</tr>
+<!-- Group: Deduções -->
+<tr class="bg-gray-50/50 hover:bg-gray-50 transition-colors">
+<td class="px-6 py-3 font-medium text-gray-700 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-gray-400 cursor-pointer">keyboard_arrow_right</span>
+                                        (-) Deduções da Receita
+                                    </td>
+<td class="px-6 py-3 text-right text-gray-500">-8%</td>
+<td class="px-6 py-3 text-right text-red-500 font-medium">(9.960,00)</td>
+</tr>
+<!-- Divider Result: Receita Líquida -->
+<tr class="bg-gray-100 font-semibold border-y border-gray-200">
+<td class="px-6 py-3 text-gray-900 pl-12">(=) Receita Operacional Líquida</td>
+<td class="px-6 py-3 text-right text-gray-600">92%</td>
+<td class="px-6 py-3 text-right text-primary">114.540,00</td>
+</tr>
+<!-- Group: Custos -->
+<tr class="bg-gray-50/50 hover:bg-gray-50 transition-colors">
+<td class="px-6 py-3 font-medium text-gray-700 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-gray-400 cursor-pointer">keyboard_arrow_right</span>
+                                        (-) Custos (CMV / CSP)
+                                    </td>
+<td class="px-6 py-3 text-right text-gray-500">-30%</td>
+<td class="px-6 py-3 text-right text-red-500 font-medium">(37.350,00)</td>
+</tr>
+<!-- Divider Result: Lucro Bruto -->
+<tr class="bg-gray-100 font-semibold border-y border-gray-200">
+<td class="px-6 py-3 text-gray-900 pl-12">(=) Lucro Bruto</td>
+<td class="px-6 py-3 text-right text-gray-600">62%</td>
+<td class="px-6 py-3 text-right text-primary">77.190,00</td>
+</tr>
+<!-- Group: Despesas Operacionais -->
+<tr class="bg-gray-50/50 hover:bg-gray-50 transition-colors">
+<td class="px-6 py-3 font-medium text-gray-700 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-gray-400 cursor-pointer">keyboard_arrow_down</span>
+                                        (-) Despesas Operacionais
+                                    </td>
+<td class="px-6 py-3 text-right text-gray-500">-28%</td>
+<td class="px-6 py-3 text-right text-red-500 font-medium">(35.040,00)</td>
+</tr>
+<tr class="hover:bg-gray-50 transition-colors">
+<td class="px-6 py-2 pl-12 text-gray-600">Despesas com Pessoal</td>
+<td class="px-6 py-2 text-right text-gray-400">18%</td>
+<td class="px-6 py-2 text-right text-gray-600">(22.410,00)</td>
+</tr>
+<tr class="hover:bg-gray-50 transition-colors">
+<td class="px-6 py-2 pl-12 text-gray-600">Despesas Administrativas</td>
+<td class="px-6 py-2 text-right text-gray-400">5%</td>
+<td class="px-6 py-2 text-right text-gray-600">(6.225,00)</td>
+</tr>
+<tr class="hover:bg-gray-50 transition-colors">
+<td class="px-6 py-2 pl-12 text-gray-600">Marketing e Vendas</td>
+<td class="px-6 py-2 text-right text-gray-400">5%</td>
+<td class="px-6 py-2 text-right text-gray-600">(6.405,00)</td>
+</tr>
+<!-- Final Result: Lucro Líquido -->
+<tr class="bg-primary/5 border-t-2 border-primary/20">
+<td class="px-6 py-4 font-bold text-lg text-primary pl-12">(=) Resultado Líquido do Exercício</td>
+<td class="px-6 py-4 text-right font-medium text-primary/80">34%</td>
+<td class="px-6 py-4 text-right font-bold text-xl text-primary">42.150,00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

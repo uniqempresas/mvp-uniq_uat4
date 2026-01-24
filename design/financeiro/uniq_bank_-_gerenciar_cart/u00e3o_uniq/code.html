@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UNIQ Bank - Gerenciar Cartão</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b77f",
+                        "primary-dark": "#0e9f6e",
+                        "secondary": "#244E5F",
+                        "background-light": "#F3F4F6", // As requested: #F3F4F6
+                        "background-dark": "#10221c",
+                        "sidebar-dark": "#1F2937", // As requested
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.75rem", // 12px
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        "sm": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-body text-gray-900 dark:text-gray-100 overflow-hidden">
+<div class="flex h-screen w-full flex-row overflow-hidden">
+<!-- Primary Sidebar (Dark) -->
+<aside class="flex h-full w-20 flex-col items-center justify-between bg-sidebar-dark py-6 flex-shrink-0 z-20">
+<div class="flex flex-col items-center gap-8">
+<!-- Brand Icon -->
+<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white font-bold text-xl shadow-lg shadow-primary/20">
+                    U
+                </div>
+<!-- Nav Icons -->
+<nav class="flex flex-col gap-6">
+<button class="group flex items-center justify-center text-gray-400 hover:text-white transition-colors relative">
+<span class="material-symbols-outlined text-[28px]">dashboard</span>
+<span class="absolute left-14 hidden rounded-md bg-gray-900 px-2 py-1 text-xs text-white group-hover:block z-50 whitespace-nowrap">Dashboard</span>
+</button>
+<button class="group flex items-center justify-center text-white relative">
+<div class="absolute -left-4 top-1/2 h-8 w-1 -translate-y-1/2 rounded-r-full bg-primary"></div>
+<span class="material-symbols-outlined text-[28px]">payments</span>
+</button>
+<button class="group flex items-center justify-center text-gray-400 hover:text-white transition-colors relative">
+<span class="material-symbols-outlined text-[28px]">inventory_2</span>
+</button>
+<button class="group flex items-center justify-center text-gray-400 hover:text-white transition-colors relative">
+<span class="material-symbols-outlined text-[28px]">group</span>
+</button>
+<button class="group flex items-center justify-center text-gray-400 hover:text-white transition-colors relative">
+<span class="material-symbols-outlined text-[28px]">bar_chart</span>
+</button>
+</nav>
+</div>
+<div class="flex flex-col items-center gap-6">
+<button class="group flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[28px]">notifications</span>
+</button>
+<div class="h-10 w-10 rounded-full bg-gray-600 bg-cover bg-center border-2 border-gray-500 cursor-pointer" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD9S2tCMBa80xRHkscQa8TvPS6q29Hf3Qf42-7xn63lSJZhaaX77YLpn6qkiGQcaC02gUx9PA6cHYpNV3XimnCv-4jDyENCu8ca0XfDaR9pLDnqQawpzitdtUu_OrJLrcGS59FonJw30fnq7iLdB8Dll3ua-Tjnk6QAJkHjW7TjCGsdCoTghzA0CHAB4bEnYUs4orE3RSjjClj1iiThr0tbLX9ASTQUjGWYMcCDvIQO5TL38KAXP5d17Iy_886Yjgd_afETlZk7hEcR");'></div>
+</div>
+</aside>
+<!-- Context Sidebar (Light) -->
+<aside class="hidden w-64 flex-col border-r border-gray-200 bg-white dark:bg-[#1a2c26] dark:border-gray-800 lg:flex flex-shrink-0 overflow-y-auto">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-8">
+<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-[20px]">account_balance</span>
+</div>
+<div>
+<h2 class="text-sm font-semibold text-gray-900 dark:text-white">Financeiro</h2>
+<p class="text-xs text-gray-500 dark:text-gray-400">UNIQ Bank</p>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-gray-400">Menu Principal</div>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">grid_view</span>
+                        Visão Geral
+                    </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+                        Extrato
+                    </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">sync_alt</span>
+                        Transferências
+                    </a>
+<div class="mt-4 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-gray-400">Cartões</div>
+<a class="flex items-center gap-3 rounded-lg bg-primary/10 px-3 py-2 text-sm font-medium text-primary dark:bg-primary/20 dark:text-primary-light" href="#">
+<span class="material-symbols-outlined fill-1 text-[20px]">credit_card</span>
+                        Gerenciar Cartão
+                    </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">add_card</span>
+                        Solicitar Novo
+                    </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+                        Configurações
+                    </a>
+</div>
+</div>
+<div class="mt-auto p-6">
+<div class="rounded-xl bg-secondary/5 p-4 dark:bg-secondary/20">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary dark:text-white">support_agent</span>
+<div>
+<p class="text-sm font-medium text-gray-900 dark:text-white">Precisa de ajuda?</p>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Fale com seu gerente UNIQ Bank.</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex flex-1 flex-col h-full overflow-hidden bg-[#F3F4F6] dark:bg-background-dark relative">
+<!-- Header -->
+<header class="flex h-16 w-full items-center justify-between border-b border-gray-200 bg-white px-8 dark:border-gray-800 dark:bg-[#1a2c26] flex-shrink-0">
+<div class="flex flex-col">
+<nav class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+<a class="hover:text-primary transition-colors" href="#">Financeiro</a>
+<span class="text-[10px]">&gt;</span>
+<a class="hover:text-primary transition-colors" href="#">UNIQ Bank</a>
+<span class="text-[10px]">&gt;</span>
+<span class="text-gray-900 font-medium dark:text-white">Gerenciar Cartão</span>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-sm font-medium text-gray-600 dark:text-gray-300">Empresa S.A.</span>
+<div class="h-6 w-px bg-gray-200 dark:bg-gray-700"></div>
+<button class="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+                        Sair
+                    </button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-8 scrollbar-hide">
+<div class="mx-auto max-w-[1200px] space-y-8">
+<!-- Page Title -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div>
+<h1 class="text-2xl font-bold text-gray-900 dark:text-white">Cartão Corporativo Gold</h1>
+<p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Gerencie limites, bloqueios e faturas do seu cartão principal.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+                                Bloquear
+                            </button>
+<button class="flex items-center gap-2 rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#1d3f4d] transition-colors">
+<span class="material-symbols-outlined text-[18px]">settings</span>
+                                Configurar
+                            </button>
+</div>
+</div>
+<!-- Top Dashboard Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Card Visual -->
+<div class="col-span-1">
+<div class="relative h-56 w-full overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900 to-secondary p-6 shadow-xl text-white flex flex-col justify-between group cursor-pointer transition-transform hover:scale-[1.01]">
+<div class="absolute right-0 top-0 h-40 w-40 translate-x-10 translate-y-[-20%] rounded-full bg-white opacity-5 blur-2xl"></div>
+<div class="absolute bottom-0 left-0 h-32 w-32 translate-x-[-20%] translate-y-10 rounded-full bg-primary opacity-10 blur-xl"></div>
+<div class="flex justify-between items-start z-10">
+<div class="flex items-center gap-2">
+<div class="h-8 w-8 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center font-bold text-lg">U</div>
+<span class="font-medium tracking-wide">UNIQ Bank</span>
+</div>
+<span class="material-symbols-outlined text-white/80">contactless</span>
+</div>
+<div class="z-10 mt-4">
+<div class="flex items-center gap-3">
+<span class="font-mono text-xl tracking-widest text-white/90">****</span>
+<span class="font-mono text-xl tracking-widest text-white/90">****</span>
+<span class="font-mono text-xl tracking-widest text-white/90">****</span>
+<span class="font-mono text-xl tracking-widest text-white">4829</span>
+<button class="ml-2 rounded-full p-1 hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-[18px] text-white/60">visibility</span>
+</button>
+</div>
+</div>
+<div class="flex justify-between items-end z-10">
+<div>
+<p class="text-[10px] uppercase text-white/60 tracking-wider">Titular</p>
+<p class="font-medium tracking-wide">JOÃO DA SILVA</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] uppercase text-white/60 tracking-wider">Validade</p>
+<p class="font-medium tracking-wide">12/28</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Limit Status -->
+<div class="col-span-1 lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Available Limit -->
+<div class="rounded-xl bg-white p-6 shadow-sm border border-gray-100 dark:bg-[#1a2c26] dark:border-gray-800 flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Limite Disponível</h3>
+<div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[20px]">trending_up</span>
+</div>
+</div>
+<div>
+<p class="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">R$ 12.450,00</p>
+<div class="mt-4">
+<div class="flex justify-between text-xs mb-1">
+<span class="text-gray-500">Utilizado: R$ 7.550,00</span>
+<span class="text-gray-500">Total: R$ 20.000,00</span>
+</div>
+<div class="h-2 w-full rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden">
+<div class="h-full rounded-full bg-primary w-[37.75%]"></div>
+</div>
+</div>
+<button class="mt-4 text-sm font-medium text-primary hover:text-primary-dark flex items-center gap-1 transition-colors">
+                                        Ajustar Limite <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Current Invoice -->
+<div class="rounded-xl bg-white p-6 shadow-sm border border-gray-100 dark:bg-[#1a2c26] dark:border-gray-800 flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Fatura Atual</h3>
+<span class="rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">Aberta</span>
+</div>
+<div>
+<p class="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">R$ 3.240,50</p>
+<p class="text-sm text-gray-500 mt-1">Vencimento em 15 Out</p>
+<div class="mt-4 flex gap-2">
+<button class="flex-1 rounded-lg bg-primary py-2 text-sm font-medium text-white shadow-sm hover:bg-primary-dark transition-colors">
+                                            Pagar Fatura
+                                        </button>
+<button class="rounded-lg border border-gray-200 p-2 text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Actions -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+<button class="flex flex-col items-center justify-center gap-2 rounded-xl bg-white p-4 shadow-sm border border-gray-100 hover:border-primary/30 hover:shadow-md transition-all group dark:bg-[#1a2c26] dark:border-gray-800">
+<div class="h-10 w-10 rounded-full bg-purple-50 flex items-center justify-center group-hover:bg-purple-100 transition-colors dark:bg-purple-900/20">
+<span class="material-symbols-outlined text-purple-600 dark:text-purple-300">password</span>
+</div>
+<span class="text-sm font-medium text-gray-700 dark:text-gray-300">Alterar Senha</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-2 rounded-xl bg-white p-4 shadow-sm border border-gray-100 hover:border-primary/30 hover:shadow-md transition-all group dark:bg-[#1a2c26] dark:border-gray-800">
+<div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors dark:bg-blue-900/20">
+<span class="material-symbols-outlined text-blue-600 dark:text-blue-300">credit_card</span>
+</div>
+<span class="text-sm font-medium text-gray-700 dark:text-gray-300">Cartão Virtual</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-2 rounded-xl bg-white p-4 shadow-sm border border-gray-100 hover:border-primary/30 hover:shadow-md transition-all group dark:bg-[#1a2c26] dark:border-gray-800">
+<div class="h-10 w-10 rounded-full bg-orange-50 flex items-center justify-center group-hover:bg-orange-100 transition-colors dark:bg-orange-900/20">
+<span class="material-symbols-outlined text-orange-600 dark:text-orange-300">flight</span>
+</div>
+<span class="text-sm font-medium text-gray-700 dark:text-gray-300">Aviso Viagem</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-2 rounded-xl bg-white p-4 shadow-sm border border-gray-100 hover:border-primary/30 hover:shadow-md transition-all group dark:bg-[#1a2c26] dark:border-gray-800">
+<div class="h-10 w-10 rounded-full bg-red-50 flex items-center justify-center group-hover:bg-red-100 transition-colors dark:bg-red-900/20">
+<span class="material-symbols-outlined text-red-600 dark:text-red-300">block</span>
+</div>
+<span class="text-sm font-medium text-gray-700 dark:text-gray-300">Contestar Compra</span>
+</button>
+</div>
+<!-- Recent Transactions -->
+<div class="rounded-xl bg-white shadow-sm border border-gray-100 dark:bg-[#1a2c26] dark:border-gray-800">
+<div class="flex items-center justify-between border-b border-gray-100 p-6 dark:border-gray-800">
+<h3 class="text-lg font-semibold text-gray-900 dark:text-white">Últimas Transações</h3>
+<button class="text-sm font-medium text-primary hover:text-primary-dark">Ver extrato completo</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm">
+<thead class="bg-gray-50 text-gray-500 dark:bg-[#14231e] dark:text-gray-400">
+<tr>
+<th class="px-6 py-4 font-medium">Data</th>
+<th class="px-6 py-4 font-medium">Estabelecimento</th>
+<th class="px-6 py-4 font-medium">Categoria</th>
+<th class="px-6 py-4 font-medium">Status</th>
+<th class="px-6 py-4 font-medium text-right">Valor</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+<tr class="hover:bg-gray-50 dark:hover:bg-[#14231e] transition-colors">
+<td class="whitespace-nowrap px-6 py-4 text-gray-600 dark:text-gray-300">Hoje, 14:30</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center dark:bg-gray-800">
+<span class="material-symbols-outlined text-[16px] text-gray-500">store</span>
+</div>
+<span class="font-medium text-gray-900 dark:text-white">Amazon Marketplace</span>
+</div>
+</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">Equipamentos</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20 dark:bg-green-900/30 dark:text-green-400">Aprovado</span>
+</td>
+<td class="px-6 py-4 text-right font-medium text-gray-900 dark:text-white">R$ 1.250,00</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-[#14231e] transition-colors">
+<td class="whitespace-nowrap px-6 py-4 text-gray-600 dark:text-gray-300">Ontem, 09:15</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center dark:bg-gray-800">
+<span class="material-symbols-outlined text-[16px] text-gray-500">local_cafe</span>
+</div>
+<span class="font-medium text-gray-900 dark:text-white">Café Corporativo</span>
+</div>
+</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">Alimentação</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20 dark:bg-green-900/30 dark:text-green-400">Aprovado</span>
+</td>
+<td class="px-6 py-4 text-right font-medium text-gray-900 dark:text-white">R$ 45,90</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-[#14231e] transition-colors">
+<td class="whitespace-nowrap px-6 py-4 text-gray-600 dark:text-gray-300">02 Out, 18:20</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center dark:bg-gray-800">
+<span class="material-symbols-outlined text-[16px] text-gray-500">local_taxi</span>
+</div>
+<span class="font-medium text-gray-900 dark:text-white">Uber *Trip</span>
+</div>
+</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">Transporte</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-full bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20 dark:bg-yellow-900/30 dark:text-yellow-400">Pendente</span>
+</td>
+<td class="px-6 py-4 text-right font-medium text-gray-900 dark:text-white">R$ 32,50</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-[#14231e] transition-colors">
+<td class="whitespace-nowrap px-6 py-4 text-gray-600 dark:text-gray-300">01 Out, 10:00</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center dark:bg-gray-800">
+<span class="material-symbols-outlined text-[16px] text-gray-500">dns</span>
+</div>
+<span class="font-medium text-gray-900 dark:text-white">AWS Services</span>
+</div>
+</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">Infraestrutura</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20 dark:bg-green-900/30 dark:text-green-400">Aprovado</span>
+</td>
+<td class="px-6 py-4 text-right font-medium text-gray-900 dark:text-white">R$ 450,00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

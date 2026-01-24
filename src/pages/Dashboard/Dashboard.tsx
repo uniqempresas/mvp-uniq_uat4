@@ -2,6 +2,7 @@ import { useState } from 'react'
 import MainSidebar from '../../components/Sidebar/MainSidebar'
 import SubSidebar from '../../components/Sidebar/SubSidebar'
 import DashboardHome from './components/DashboardHome'
+import FinanceLayout from '../Finance/FinanceLayout'
 import ModuleStore from './components/ModuleStore'
 import ProductList from '../../components/Catalog/ProductList'
 import ProductForm from '../Catalog/ProductForm'
@@ -23,6 +24,7 @@ export default function Dashboard() {
 
     const renderContent = () => {
         if (activeContext === 'store') return <ModuleStore />
+        if (activeContext === 'finance') return <FinanceLayout />
 
         // Dashboard Context Views
         switch (activeView) {

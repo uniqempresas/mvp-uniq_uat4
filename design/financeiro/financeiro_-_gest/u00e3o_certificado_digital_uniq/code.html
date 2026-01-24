@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Financeiro - Gestão Certificado Digital UNIQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10B981", // Using requested #10B981
+                        "primary-dark": "#059669",
+                        "sidebar-dark": "#1F2937",
+                        "background-light": "#F3F4F6",
+                        "surface": "#FFFFFF",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem", // 12px
+                        "xl": "1rem",
+                        "2xl": "1.5rem",
+                    },
+                    boxShadow: {
+                        "sm": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                        "card": "0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02)",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D1D5DB;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9CA3AF;
+        }
+    </style>
+</head>
+<body class="bg-background-light text-gray-800 h-screen overflow-hidden flex selection:bg-primary/20 selection:text-primary-dark">
+<!-- 1. Primary Sidebar (Dark) -->
+<aside class="w-20 bg-sidebar-dark flex flex-col items-center py-6 gap-8 z-20 shrink-0">
+<!-- Logo Icon -->
+<div class="size-10 bg-primary rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.4)] cursor-pointer hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-white" style="font-size: 24px;">diamond</span>
+</div>
+<!-- Main Navigation -->
+<nav class="flex flex-col gap-4 w-full px-3">
+<button class="flex items-center justify-center p-3 rounded-xl text-gray-400 hover:text-white hover:bg-gray-700 transition-colors group relative">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">Dashboard</span>
+</button>
+<button class="flex items-center justify-center p-3 rounded-xl bg-primary/10 text-primary transition-colors group relative">
+<span class="material-symbols-outlined font-variations-fill">account_balance</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">Financeiro</span>
+</button>
+<button class="flex items-center justify-center p-3 rounded-xl text-gray-400 hover:text-white hover:bg-gray-700 transition-colors group relative">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">Vendas</span>
+</button>
+<button class="flex items-center justify-center p-3 rounded-xl text-gray-400 hover:text-white hover:bg-gray-700 transition-colors group relative">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">Estoque</span>
+</button>
+</nav>
+<!-- Bottom Actions -->
+<div class="mt-auto flex flex-col gap-4 w-full px-3">
+<button class="flex items-center justify-center p-3 rounded-xl text-gray-400 hover:text-white hover:bg-gray-700 transition-colors group relative">
+<span class="material-symbols-outlined">settings</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">Configurações</span>
+</button>
+<div class="h-10 w-10 rounded-full bg-cover bg-center ring-2 ring-gray-700 cursor-pointer" data-alt="User profile avatar abstract" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCIRukdykH6ZJzdfcwQU9cTRtba7pSzMC9-DNtTsE9JeVjAnieM8hvKoFwQVPIXjE2EZOwGCw66Ci0mrdisuP5to3w8im1SjU3LyTupKli6-QvzokDDUMC2rBe5keCQ7mV0zDfEiMuV-eX6L8l_E4PHNodvqyvwFXM7F0lE7sUV2M37sePKyoLGIp3hc4wpoLKuDqnZZ58axl7OhLNKKem8dOnB82J2VNN6qqDK40E8rQxmmv9IcNePA6wJavmJK_L6msGq-5Ks_8K1');"></div>
+</div>
+</aside>
+<!-- 2. Context Sidebar (Light) -->
+<aside class="w-72 bg-surface border-r border-gray-200 flex flex-col z-10 shrink-0 hidden md:flex">
+<div class="p-6 pb-2">
+<h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Módulo</h2>
+<h1 class="text-xl font-bold text-gray-900 leading-tight">Financeiro &amp;<br/><span class="text-primary">UNIQ Bank</span></h1>
+</div>
+<div class="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-6">
+<!-- Group 1 -->
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">bar_chart</span>
+<span class="text-sm font-medium">Visão Geral</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+<span class="text-sm font-medium">Fluxo de Caixa</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+<span class="text-sm font-medium">Contas a Pagar</span>
+</a>
+</div>
+<!-- Group 2: Fiscal -->
+<div class="flex flex-col gap-1">
+<div class="px-3 py-1 mb-1">
+<p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Gerenciamento Fiscal</p>
+</div>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">description</span>
+<span class="text-sm font-medium">Emissão de NF-e</span>
+</a>
+<!-- Active Item -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-green-50 text-primary border border-green-100 shadow-sm transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px] fill-current">verified_user</span>
+<span class="text-sm font-semibold">Certificado Digital (A1)</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">folder_open</span>
+<span class="text-sm font-medium">Arquivos XML</span>
+</a>
+</div>
+<!-- Group 3: Help -->
+<div class="mt-auto pt-6 border-t border-gray-100">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">help</span>
+<span class="text-sm font-medium">Central de Ajuda</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- 3. Main Content Area -->
+<main class="flex-1 overflow-y-auto bg-background-light relative">
+<div class="max-w-5xl mx-auto px-6 py-8 md:px-10 md:py-10 flex flex-col h-full">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 text-sm text-gray-500 mb-6">
+<a class="hover:text-primary transition-colors" href="#">Financeiro</a>
+<span class="material-symbols-outlined text-[16px] text-gray-400">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Gerenciamento Fiscal</a>
+<span class="material-symbols-outlined text-[16px] text-gray-400">chevron_right</span>
+<span class="text-gray-900 font-medium">Certificado Digital</span>
+</nav>
+<!-- Page Heading -->
+<div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-8">
+<div>
+<h1 class="text-3xl font-bold text-gray-900 tracking-tight mb-2">Gestão de Certificado Digital (A1)</h1>
+<p class="text-gray-500 text-base max-w-2xl">Configure seu arquivo .pfx ou .p12 para habilitar a emissão de notas fiscais e autenticação segura no UNIQ Bank.</p>
+</div>
+<button class="shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm transition-all">
+<span class="material-symbols-outlined text-[20px]">play_circle</span>
+<span>Tutorial de Configuração</span>
+</button>
+</div>
+<!-- Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Current Status (Empty State) -->
+<div class="lg:col-span-5 flex flex-col gap-6">
+<section class="bg-surface rounded-lg p-6 shadow-sm border border-gray-100 flex flex-col h-full relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-[100px] -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+<div class="relative z-10 flex flex-col h-full">
+<h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-gray-400">info</span>
+                                Status Atual
+                            </h3>
+<div class="flex-1 flex flex-col items-center justify-center text-center py-8">
+<div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-4 relative">
+<span class="material-symbols-outlined text-4xl text-gray-300">lock</span>
+<div class="absolute bottom-0 right-0 size-6 bg-red-500 rounded-full border-2 border-white flex items-center justify-center">
+<span class="material-symbols-outlined text-xs text-white">close</span>
+</div>
+</div>
+<h4 class="text-gray-900 font-bold mb-2">Nenhum certificado instalado</h4>
+<p class="text-gray-500 text-sm leading-relaxed max-w-[280px]">
+                                    Para emitir notas fiscais, você precisa fazer o upload de um certificado modelo A1 válido.
+                                </p>
+</div>
+<div class="mt-auto pt-6 border-t border-gray-100">
+<div class="flex items-center gap-3 p-3 bg-blue-50/50 rounded-lg border border-blue-100">
+<span class="material-symbols-outlined text-blue-600">lightbulb</span>
+<p class="text-xs text-blue-800 font-medium">O modelo A1 é um arquivo digital que pode ser instalado em múltiplos computadores.</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Action Form -->
+<div class="lg:col-span-7">
+<section class="bg-surface rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+<div class="p-6 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+<h3 class="text-lg font-bold text-gray-900">Novo Certificado</h3>
+<span class="px-2.5 py-1 rounded-full bg-gray-200 text-xs font-semibold text-gray-600">Configuração</span>
+</div>
+<div class="p-6 md:p-8">
+<form action="#" class="flex flex-col gap-6" onsubmit="return false;">
+<!-- Upload Zone -->
+<div class="space-y-2">
+<label class="text-sm font-medium text-gray-700">Arquivo do Certificado (.pfx ou .p12)</label>
+<div class="relative group cursor-pointer">
+<input class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" type="file"/>
+<div class="border-2 border-dashed border-gray-300 rounded-lg p-8 flex flex-col items-center justify-center text-center bg-gray-50 group-hover:bg-green-50 group-hover:border-primary/50 transition-colors">
+<div class="size-12 bg-white rounded-full shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-2xl">cloud_upload</span>
+</div>
+<p class="text-sm font-medium text-gray-900">Clique para selecionar ou arraste o arquivo</p>
+<p class="text-xs text-gray-500 mt-1">Suporta arquivos .PFX ou .P12 de até 5MB</p>
+</div>
+</div>
+</div>
+<!-- Password Input -->
+<div class="space-y-2">
+<label class="text-sm font-medium text-gray-700" for="cert-password">Senha do Certificado</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400">key</span>
+</div>
+<input class="block w-full pl-10 pr-10 py-3 rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm transition-shadow bg-white text-gray-900" id="cert-password" placeholder="Digite a senha de instalação" type="password"/>
+<button class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer" type="button">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+</div>
+<p class="text-xs text-gray-500 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+                                        Sua senha será armazenada de forma criptografada.
+                                    </p>
+</div>
+<!-- Actions -->
+<div class="pt-4 flex flex-col sm:flex-row gap-3">
+<button class="flex-1 inline-flex justify-center items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors" type="submit">
+<span class="material-symbols-outlined mr-2">save</span>
+                                        Instalar Certificado
+                                    </button>
+<button class="inline-flex justify-center items-center px-6 py-3 border border-gray-300 text-sm font-medium rounded-lg shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors" type="button">
+                                        Testar Conexão
+                                    </button>
+</div>
+</form>
+</div>
+</section>
+<!-- History / Logs (Optional Context) -->
+<div class="mt-8">
+<h4 class="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-gray-400 text-lg">history</span>
+                            Histórico de Instalação
+                        </h4>
+<div class="bg-surface rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+<div class="overflow-x-auto">
+<table class="min-w-full divide-y divide-gray-200">
+<thead class="bg-gray-50">
+<tr>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">Data</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">Arquivo</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">Status</th>
+</tr>
+</thead>
+<tbody class="bg-white divide-y divide-gray-200">
+<tr>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                Hoje, 10:23
+                                            </td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                --
+                                            </td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                    Aguardando Configuração
+                                                </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

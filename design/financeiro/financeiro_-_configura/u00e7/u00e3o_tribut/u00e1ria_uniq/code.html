@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Financeiro - Configuração Tributária UNIQ</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b77f",
+                        "primary-dark": "#059669",
+                        "sidebar-dark": "#1F2937",
+                        "background-light": "#F3F4F6", // As requested: #F3F4F6
+                        "background-dark": "#111827",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1f2937",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "sans": ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem", // 12px
+                        "xl": "1rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .form-input-custom {
+            @apply block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-white transition-all duration-200;
+        }
+        .form-label-custom {
+            @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-gray-900 dark:text-gray-100 antialiased overflow-hidden h-screen flex">
+<!-- Primary Sidebar (Dark) -->
+<aside class="w-20 bg-sidebar-dark flex flex-col items-center py-6 gap-8 shrink-0 z-20 shadow-xl">
+<!-- Brand Logo -->
+<div class="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-emerald-400 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/20 cursor-pointer">
+            U
+        </div>
+<!-- Navigation Icons -->
+<div class="flex flex-col gap-6 w-full items-center">
+<button class="p-3 rounded-xl text-gray-400 hover:text-white hover:bg-gray-700/50 transition-all group relative">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50">Dashboard</span>
+</button>
+<button class="p-3 rounded-xl text-gray-400 hover:text-white hover:bg-gray-700/50 transition-all group relative">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50">Vendas</span>
+</button>
+<button class="p-3 rounded-xl bg-primary text-white shadow-lg shadow-primary/30 transition-all group relative">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50">Financeiro</span>
+</button>
+<button class="p-3 rounded-xl text-gray-400 hover:text-white hover:bg-gray-700/50 transition-all group relative">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50">Estoque</span>
+</button>
+<button class="p-3 rounded-xl text-gray-400 hover:text-white hover:bg-gray-700/50 transition-all group relative">
+<span class="material-symbols-outlined">settings</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50">Configurações</span>
+</button>
+</div>
+<div class="mt-auto flex flex-col gap-6 w-full items-center">
+<button class="h-10 w-10 rounded-full bg-cover bg-center border-2 border-gray-600 hover:border-white transition-colors" data-alt="User profile avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAF7mjgxBuzsZ9TTMXCKznl9Y-wBgMCREzQaQG_KmccR5R8rbwneu0x_qWjQnUJHHSVFzMnmTWqnnL4UhxQre6rlPGEZ8VnwKYTDZ7pcizLzTqhhqDeaLx6qr60Y3TkYOTh6UzKr_micFEy-5c3RqwUUy36pVjuTgS1M-9PkJjNPh_cih1SeYl_o08dhcLnisHpOwQOAP01RZgUktTqTH-tnJ0qododp9Gya1Q0xWrX_ioSKJI_LHKqX_aciNSeW0KCj9FFUft8v3oU');"></button>
+</div>
+</aside>
+<!-- Context Sidebar (Secondary) -->
+<aside class="w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col shrink-0 hidden md:flex">
+<div class="p-6 pb-2">
+<h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Módulo</h2>
+<h1 class="text-xl font-bold text-gray-900 dark:text-white leading-tight">Financeiro &amp;<br/><span class="text-primary">UNIQ Bank</span></h1>
+</div>
+<div class="flex-1 overflow-y-auto px-4 py-4 space-y-6">
+<!-- Section 1 -->
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors" style="font-size: 20px;">pie_chart</span>
+<span class="text-sm font-medium">Visão Geral</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors" style="font-size: 20px;">payments</span>
+<span class="text-sm font-medium">Contas a Pagar</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors" style="font-size: 20px;">account_balance</span>
+<span class="text-sm font-medium">Contas a Receber</span>
+</a>
+</div>
+<!-- Section 2: Active -->
+<div>
+<h3 class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Gerenciamento Fiscal</h3>
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 bg-primary/10 text-primary rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-primary" style="font-size: 20px; font-variation-settings: 'FILL' 1;">tune</span>
+<span class="text-sm font-medium">Configuração Tributária</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors" style="font-size: 20px;">receipt_long</span>
+<span class="text-sm font-medium">Notas Fiscais</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors" style="font-size: 20px;">bar_chart</span>
+<span class="text-sm font-medium">Relatórios Fiscais</span>
+</a>
+</div>
+</div>
+<!-- Section 3 -->
+<div>
+<h3 class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Automação</h3>
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors" style="font-size: 20px;">smart_toy</span>
+<span class="text-sm font-medium">Regras Automáticas</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Help Section -->
+<div class="p-4 border-t border-gray-200 dark:border-gray-800">
+<div class="bg-gradient-to-r from-primary/10 to-emerald-500/10 rounded-xl p-4 flex gap-3 items-start">
+<span class="material-symbols-outlined text-primary mt-0.5" style="font-size: 20px;">headset_mic</span>
+<div>
+<p class="text-xs font-bold text-gray-900 dark:text-white">Precisa de ajuda?</p>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Fale com nosso contador parceiro.</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-full overflow-hidden relative">
+<!-- Top Bar / Breadcrumbs -->
+<header class="h-16 flex items-center justify-between px-8 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 shrink-0 z-10">
+<div class="flex items-center gap-2 text-sm text-gray-500">
+<a class="hover:text-primary transition-colors" href="#">Home</a>
+<span class="material-symbols-outlined text-gray-300" style="font-size: 16px;">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Financeiro</a>
+<span class="material-symbols-outlined text-gray-300" style="font-size: 16px;">chevron_right</span>
+<span class="text-gray-900 dark:text-white font-medium">Configuração Tributária</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center h-9 w-9 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 20px;">notifications</span>
+</button>
+<button class="flex items-center justify-center h-9 w-9 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 20px;">help</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-8 pb-32">
+<div class="max-w-5xl mx-auto space-y-6">
+<!-- Page Heading -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-2">
+<div>
+<h1 class="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Configuração Tributária</h1>
+<p class="text-gray-500 dark:text-gray-400 mt-2 text-base">Defina o regime tributário e as alíquotas padrões para a emissão automática de notas fiscais.</p>
+</div>
+<!-- Action Buttons for desktop, mirrored in sticky footer for mobile/scroll -->
+<div class="hidden md:flex gap-3">
+<button class="px-5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-sm">
+                            Descartar
+                        </button>
+<button class="px-5 py-2.5 rounded-lg bg-primary hover:bg-primary-dark text-white font-medium shadow-md shadow-primary/20 transition-all text-sm flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 18px;">save</span>
+                            Salvar Configurações
+                        </button>
+</div>
+</div>
+<!-- Alert/Info Banner -->
+<div class="rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 p-4 flex gap-3 items-start">
+<span class="material-symbols-outlined text-blue-600 dark:text-blue-400 mt-0.5">info</span>
+<div>
+<h4 class="text-sm font-semibold text-blue-900 dark:text-blue-100">Atualização Fiscal 2024</h4>
+<p class="text-sm text-blue-700 dark:text-blue-300 mt-1">As alíquotas de ICMS interestadual sofreram alterações. Verifique se suas configurações estão de acordo com a tabela vigente.</p>
+</div>
+</div>
+<!-- Regime Tributário Card -->
+<section class="bg-surface-light dark:bg-surface-dark rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+<div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="p-2 bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary" style="font-size: 20px;">corporate_fare</span>
+</div>
+<h3 class="text-lg font-semibold text-gray-900 dark:text-white">Regime Tributário</h3>
+</div>
+</div>
+<div class="p-6">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+<label class="relative flex cursor-pointer rounded-xl border border-primary bg-primary/5 p-4 shadow-sm focus:outline-none ring-2 ring-primary ring-offset-2 dark:ring-offset-gray-900">
+<input checked="" class="sr-only" name="regime" type="radio" value="simples"/>
+<span class="flex flex-1">
+<span class="flex flex-col">
+<span class="block text-sm font-medium text-gray-900 dark:text-white">Simples Nacional</span>
+<span class="mt-1 flex items-center text-sm text-gray-500 dark:text-gray-400">Micro e Pequenas empresas (ME/EPP).</span>
+</span>
+</span>
+<span class="material-symbols-outlined text-primary" style="font-size: 24px; font-variation-settings: 'FILL' 1;">check_circle</span>
+</label>
+<label class="relative flex cursor-pointer rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-sm focus:outline-none hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800/50 transition-all">
+<input class="sr-only" name="regime" type="radio" value="presumido"/>
+<span class="flex flex-1">
+<span class="flex flex-col">
+<span class="block text-sm font-medium text-gray-900 dark:text-white">Lucro Presumido</span>
+<span class="mt-1 flex items-center text-sm text-gray-500 dark:text-gray-400">Base de cálculo simplificada.</span>
+</span>
+</span>
+<span class="material-symbols-outlined text-gray-300" style="font-size: 24px;">radio_button_unchecked</span>
+</label>
+<label class="relative flex cursor-pointer rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-sm focus:outline-none hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800/50 transition-all">
+<input class="sr-only" name="regime" type="radio" value="real"/>
+<span class="flex flex-1">
+<span class="flex flex-col">
+<span class="block text-sm font-medium text-gray-900 dark:text-white">Lucro Real</span>
+<span class="mt-1 flex items-center text-sm text-gray-500 dark:text-gray-400">Baseado no lucro líquido apurado.</span>
+</span>
+</span>
+<span class="material-symbols-outlined text-gray-300" style="font-size: 24px;">radio_button_unchecked</span>
+</label>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="form-label-custom" for="cnae">CNAE Principal</label>
+<div class="relative">
+<input class="form-input-custom pl-10" id="cnae" placeholder="0000-0/00 - Selecione o CNAE" type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400" style="font-size: 20px;">search</span>
+</div>
+<p class="mt-1 text-xs text-gray-500">Código Nacional de Atividade Econômica</p>
+</div>
+<div>
+<label class="form-label-custom" for="inscricao">Inscrição Estadual</label>
+<input class="form-input-custom" id="inscricao" placeholder="000.000.000.000" type="text"/>
+<p class="mt-1 text-xs text-gray-500">Deixe em branco se for isento</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Tax Settings Tabs Card -->
+<section class="bg-surface-light dark:bg-surface-dark rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+<div class="border-b border-gray-200 dark:border-gray-700">
+<div class="px-6 py-4 flex items-center gap-2">
+<div class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+<span class="material-symbols-outlined text-purple-600 dark:text-purple-400" style="font-size: 20px;">percent</span>
+</div>
+<h3 class="text-lg font-semibold text-gray-900 dark:text-white">Alíquotas Padrão</h3>
+</div>
+<nav aria-label="Tabs" class="-mb-px flex gap-6 px-6 overflow-x-auto">
+<a class="border-primary text-primary whitespace-nowrap border-b-2 py-3 px-1 text-sm font-medium" href="#">Federal (PIS/COFINS/IPI)</a>
+<a class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-300 whitespace-nowrap border-b-2 py-3 px-1 text-sm font-medium" href="#">Estadual (ICMS)</a>
+<a class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-300 whitespace-nowrap border-b-2 py-3 px-1 text-sm font-medium" href="#">Municipal (ISS)</a>
+</nav>
+</div>
+<div class="p-6">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- PIS -->
+<div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-100 dark:border-gray-700">
+<div class="flex items-center justify-between mb-4">
+<h4 class="font-semibold text-gray-900 dark:text-white">PIS</h4>
+<div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-primary checked:right-0 right-5" id="toggle-pis" name="toggle-pis" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-5 rounded-full bg-primary cursor-pointer" for="toggle-pis"></label>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<label class="form-label-custom">Alíquota (%)</label>
+<input class="form-input-custom text-right" placeholder="0.00" type="number" value="0.65"/>
+</div>
+<div>
+<label class="form-label-custom">CST Padrão</label>
+<select class="form-input-custom">
+<option>01 - Operação Tributável</option>
+<option>02 - Operação Tributável (Aliq. Zero)</option>
+</select>
+</div>
+</div>
+</div>
+<!-- COFINS -->
+<div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-100 dark:border-gray-700">
+<div class="flex items-center justify-between mb-4">
+<h4 class="font-semibold text-gray-900 dark:text-white">COFINS</h4>
+<div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-primary checked:right-0 right-5" id="toggle-cofins" name="toggle-cofins" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-5 rounded-full bg-primary cursor-pointer" for="toggle-cofins"></label>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<label class="form-label-custom">Alíquota (%)</label>
+<input class="form-input-custom text-right" placeholder="0.00" type="number" value="3.00"/>
+</div>
+<div>
+<label class="form-label-custom">CST Padrão</label>
+<select class="form-input-custom">
+<option>01 - Operação Tributável</option>
+<option>02 - Operação Tributável (Aliq. Zero)</option>
+</select>
+</div>
+</div>
+</div>
+<!-- IPI -->
+<div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-100 dark:border-gray-700 opacity-60">
+<div class="flex items-center justify-between mb-4">
+<h4 class="font-semibold text-gray-900 dark:text-white">IPI</h4>
+<div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+<input class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-gray-300 checked:right-0 right-5" id="toggle-ipi" name="toggle-ipi" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-5 rounded-full bg-gray-300 cursor-pointer" for="toggle-ipi"></label>
+</div>
+</div>
+<div class="space-y-4 pointer-events-none">
+<div>
+<label class="form-label-custom">Alíquota (%)</label>
+<input class="form-input-custom text-right" disabled="" placeholder="0.00" type="number"/>
+</div>
+<div>
+<label class="form-label-custom">Código Enquadramento</label>
+<input class="form-input-custom" disabled="" placeholder="Ex: 999" type="text"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Advanced Settings / Exceptions -->
+<section class="bg-surface-light dark:bg-surface-dark rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+<div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
+<span class="material-symbols-outlined text-orange-600 dark:text-orange-400" style="font-size: 20px;">rule</span>
+</div>
+<h3 class="text-lg font-semibold text-gray-900 dark:text-white">Exceções Fiscais</h3>
+</div>
+<button class="text-primary hover:text-primary-dark font-medium text-sm flex items-center gap-1">
+<span class="material-symbols-outlined" style="font-size: 18px;">add</span>
+                             Adicionar Regra
+                        </button>
+</div>
+<!-- Empty State -->
+<div class="p-8 flex flex-col items-center justify-center text-center">
+<div class="h-24 w-24 bg-gray-50 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-gray-300 dark:text-gray-600" style="font-size: 48px;">folder_off</span>
+</div>
+<h4 class="text-base font-medium text-gray-900 dark:text-white">Nenhuma exceção cadastrada</h4>
+<p class="text-sm text-gray-500 dark:text-gray-400 max-w-sm mt-1 mb-4">
+                            Configure regras específicas para produtos ou estados que não seguem o padrão tributário da empresa.
+                        </p>
+<button class="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            Configurar primeira regra
+                        </button>
+</div>
+</section>
+</div>
+</div>
+<!-- Sticky Footer for Action (Mobile/Tablet Friendly) -->
+<div class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 p-4 md:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-end gap-3 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+<button class="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium">
+                Cancelar
+            </button>
+<button class="flex-1 px-4 py-3 rounded-lg bg-primary text-white font-medium shadow-md shadow-primary/20">
+                Salvar
+            </button>
+</div>
+</main>
+</body></html>

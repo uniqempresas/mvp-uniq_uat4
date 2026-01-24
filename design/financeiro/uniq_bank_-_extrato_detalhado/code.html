@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UNIQ Bank - Extrato Detalhado</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#244f60",
+                        "sidebar-dark": "#1F2937",
+                        "background-light": "#F3F4F6", // As requested: #F3F4F6
+                        "background-dark": "#141b1e",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1F2937",
+                        "text-primary": "#1F2937",
+                        "text-secondary": "#6B7280",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.75rem", // 12px
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        'sm': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-primary h-screen overflow-hidden flex">
+<!-- Primary Sidebar (Global Nav) -->
+<aside class="w-20 bg-sidebar-dark flex flex-col items-center py-6 gap-8 z-20 shrink-0">
+<!-- Logo Icon -->
+<div class="size-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined text-2xl">diamond</span>
+</div>
+<!-- Nav Items -->
+<nav class="flex flex-col gap-6 w-full items-center flex-1">
+<button class="size-10 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition-colors relative group">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">Dashboard</span>
+</button>
+<button class="size-10 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition-colors relative group">
+<span class="material-symbols-outlined">group</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">CRM</span>
+</button>
+<button class="size-10 rounded-lg bg-primary text-white shadow-md flex items-center justify-center transition-colors relative group">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">Financeiro</span>
+</button>
+<button class="size-10 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition-colors relative group">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">Estoque</span>
+</button>
+<button class="size-10 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition-colors relative group">
+<span class="material-symbols-outlined">settings</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">Configurações</span>
+</button>
+</nav>
+<!-- User Profile -->
+<div class="mt-auto">
+<div class="size-10 rounded-full bg-cover bg-center border-2 border-gray-600 cursor-pointer" data-alt="User profile picture placeholder with abstract gradient" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA6D50mlCQMvAWgVPbws50aAOAKLaYp6PLwRB9YCBEcEyk0n34wuwkcDHS0IwV71jwLpK8UTDJJWa_o5yNrLcK4klgaO3UFx6tlHJXUx8U8OJF9uiz0yZJKxf0JQA9pbzPwm2OgajdMZ3bugpzeexL2jHwgPMgdMC0BDBcikDBR3Bgtsg8OypHLDufdS6hn-08AT8lmSflNPWqtRgt9YNk7yIbI_YCS5Vb4AkHX3-XlCNOdaKj6w3J02v104i9eEIGV9p1vNAz2H1sj');"></div>
+</div>
+</aside>
+<!-- Context Sidebar (Module Nav) -->
+<aside class="w-64 bg-white dark:bg-surface-dark border-r border-gray-200 dark:border-gray-700 flex flex-col z-10 shrink-0 h-full overflow-y-auto hidden md:flex">
+<div class="p-6">
+<h2 class="text-sm font-semibold text-text-secondary uppercase tracking-wider mb-1">Módulo</h2>
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">account_balance</span>
+<h1 class="text-xl font-bold text-primary">UNIQ Bank</h1>
+</div>
+<div class="flex flex-col gap-1">
+<p class="px-3 py-2 text-xs font-semibold text-text-secondary uppercase mt-2 mb-1">Visão Geral</p>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-primary hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors text-[20px]">donut_large</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-primary hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors text-[20px]">credit_card</span>
+<span class="text-sm font-medium">Conta Corrente</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px] fill-1">receipt_long</span>
+<span class="text-sm font-bold">Extrato Detalhado</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-primary hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors text-[20px]">swap_horiz</span>
+<span class="text-sm font-medium">Transferências</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-primary hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors text-[20px]">bolt</span>
+<span class="text-sm font-medium">Pix &amp; Boletos</span>
+</a>
+</div>
+<div class="flex flex-col gap-1 mt-6">
+<p class="px-3 py-2 text-xs font-semibold text-text-secondary uppercase mb-1">Relatórios</p>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-primary hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors text-[20px]">bar_chart</span>
+<span class="text-sm font-medium">Análise de Fluxo</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-primary hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors text-[20px]">description</span>
+<span class="text-sm font-medium">Informes Fiscais</span>
+</a>
+</div>
+</div>
+<div class="mt-auto p-6">
+<div class="bg-gradient-to-br from-primary to-[#36687a] rounded-xl p-4 text-white shadow-lg relative overflow-hidden">
+<div class="absolute -right-4 -top-4 bg-white/10 size-20 rounded-full blur-xl"></div>
+<p class="text-xs font-medium text-white/80 mb-1">Limite Disponível</p>
+<p class="text-lg font-bold mb-3">R$ 50.000,00</p>
+<button class="w-full py-1.5 bg-white/20 hover:bg-white/30 rounded text-xs font-semibold transition-colors backdrop-blur-sm">Ajustar Limite</button>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-background-light dark:bg-background-dark relative">
+<!-- Header -->
+<header class="h-16 flex items-center justify-between px-8 py-4 bg-background-light dark:bg-background-dark shrink-0">
+<!-- Breadcrumbs -->
+<div class="flex items-center gap-2 text-sm">
+<span class="text-text-secondary">Financeiro</span>
+<span class="text-text-secondary">/</span>
+<span class="text-text-secondary">UNIQ Bank</span>
+<span class="text-text-secondary">/</span>
+<span class="font-semibold text-primary dark:text-white">Extrato Detalhado</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="size-9 flex items-center justify-center rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 text-text-secondary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="size-9 flex items-center justify-center rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 text-text-secondary transition-colors md:hidden">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto px-8 pb-8">
+<div class="max-w-[1200px] mx-auto flex flex-col gap-6">
+<!-- Page Title & Actions -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="text-3xl font-bold text-text-primary dark:text-white mb-2">Extrato da Conta</h1>
+<p class="text-text-secondary text-sm">Acompanhe todas as movimentações financeiras em tempo real.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium text-text-primary hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                            Exportar CSV
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold hover:bg-[#1d4150] transition-colors shadow-md shadow-primary/20">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                            Nova Transação
+                        </button>
+</div>
+</div>
+<!-- Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<!-- Balance -->
+<div class="bg-white dark:bg-surface-dark p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+<span class="material-symbols-outlined text-blue-600 dark:text-blue-400">account_balance_wallet</span>
+</div>
+<span class="flex items-center text-xs font-medium text-green-600 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px] mr-0.5">trending_up</span>
+                                +2.5%
+                            </span>
+</div>
+<p class="text-sm font-medium text-text-secondary mb-1">Saldo Disponível</p>
+<h3 class="text-2xl font-bold text-text-primary dark:text-white">R$ 12.450,00</h3>
+</div>
+<!-- Income -->
+<div class="bg-white dark:bg-surface-dark p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+<span class="material-symbols-outlined text-green-600 dark:text-green-400">arrow_downward</span>
+</div>
+</div>
+<p class="text-sm font-medium text-text-secondary mb-1">Entradas (Este Mês)</p>
+<h3 class="text-2xl font-bold text-text-primary dark:text-white">R$ 42.100,00</h3>
+</div>
+<!-- Expenses -->
+<div class="bg-white dark:bg-surface-dark p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-red-50 dark:bg-red-900/20 rounded-lg">
+<span class="material-symbols-outlined text-red-600 dark:text-red-400">arrow_upward</span>
+</div>
+<span class="flex items-center text-xs font-medium text-red-600 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px] mr-0.5">trending_up</span>
+                                +5% vs mês ant.
+                            </span>
+</div>
+<p class="text-sm font-medium text-text-secondary mb-1">Saídas (Este Mês)</p>
+<h3 class="text-2xl font-bold text-text-primary dark:text-white">R$ 29.650,00</h3>
+</div>
+</div>
+<!-- Filters & Table Section -->
+<div class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col overflow-hidden">
+<!-- Filter Toolbar -->
+<div class="p-4 border-b border-gray-100 dark:border-gray-700 flex flex-wrap gap-3 items-center justify-between bg-gray-50/50 dark:bg-gray-800/20">
+<div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+<!-- Date Filter -->
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400 text-[20px]">calendar_today</span>
+</div>
+<select class="pl-10 pr-8 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-text-primary focus:ring-primary focus:border-primary shadow-sm cursor-pointer hover:border-primary/50 transition-colors appearance-none">
+<option>Últimos 30 dias</option>
+<option>Este Mês</option>
+<option>Mês Passado</option>
+<option>Personalizado</option>
+</select>
+</div>
+<!-- Category Filter -->
+<div class="relative">
+<select class="pl-4 pr-8 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-text-primary focus:ring-primary focus:border-primary shadow-sm cursor-pointer hover:border-primary/50 transition-colors appearance-none">
+<option>Todas Categorias</option>
+<option>Vendas</option>
+<option>Infraestrutura</option>
+<option>Pessoal</option>
+<option>Marketing</option>
+</select>
+<div class="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400 text-[20px]">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Search -->
+<div class="relative w-full md:w-72">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400 text-[20px]">search</span>
+</div>
+<input class="w-full pl-10 pr-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-text-primary focus:ring-primary focus:border-primary shadow-sm placeholder-gray-400" placeholder="Buscar por descrição..." type="text"/>
+</div>
+</div>
+<!-- Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+<th class="px-6 py-4 text-xs font-semibold text-text-secondary uppercase tracking-wider w-32">Data</th>
+<th class="px-6 py-4 text-xs font-semibold text-text-secondary uppercase tracking-wider w-16">Tipo</th>
+<th class="px-6 py-4 text-xs font-semibold text-text-secondary uppercase tracking-wider">Descrição</th>
+<th class="px-6 py-4 text-xs font-semibold text-text-secondary uppercase tracking-wider">Categoria</th>
+<th class="px-6 py-4 text-xs font-semibold text-text-secondary uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-xs font-semibold text-text-secondary uppercase tracking-wider text-right">Valor</th>
+<th class="px-6 py-4 w-10"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+<!-- Row 1 -->
+<tr class="group hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<td class="px-6 py-4 text-sm text-text-primary font-medium">12 Out 2023</td>
+<td class="px-6 py-4">
+<div class="size-8 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">shopping_cart</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-medium text-text-primary">Supermercado Extra</p>
+<p class="text-xs text-text-secondary">Compra débito final 4521</p>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                                            Alimentação
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+<span class="size-1.5 rounded-full bg-green-500"></span>
+                                            Confirmado
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right text-sm font-semibold text-red-600">
+                                        - R$ 450,00
+                                    </td>
+<td class="px-6 py-4 text-right">
+<button class="text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<td class="px-6 py-4 text-sm text-text-primary font-medium">11 Out 2023</td>
+<td class="px-6 py-4">
+<div class="size-8 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">attach_money</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-medium text-text-primary">Recebimento Cliente X</p>
+<p class="text-xs text-text-secondary">Nota Fiscal #9021</p>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                                            Vendas
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+<span class="size-1.5 rounded-full bg-green-500"></span>
+                                            Confirmado
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right text-sm font-semibold text-green-600">
+                                        + R$ 2.500,00
+                                    </td>
+<td class="px-6 py-4 text-right">
+<button class="text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<td class="px-6 py-4 text-sm text-text-primary font-medium">10 Out 2023</td>
+<td class="px-6 py-4">
+<div class="size-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">dns</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-medium text-text-primary">AWS Services</p>
+<p class="text-xs text-text-secondary">Cobrança Mensal Cloud</p>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300">
+                                            Infraestrutura
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
+<span class="size-1.5 rounded-full bg-yellow-500"></span>
+                                            Processando
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right text-sm font-semibold text-red-600">
+                                        - R$ 120,00
+                                    </td>
+<td class="px-6 py-4 text-right">
+<button class="text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="group hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<td class="px-6 py-4 text-sm text-text-primary font-medium">09 Out 2023</td>
+<td class="px-6 py-4">
+<div class="size-8 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">campaign</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-medium text-text-primary">Google Ads</p>
+<p class="text-xs text-text-secondary">Campanha Black Friday</p>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
+                                            Marketing
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+<span class="size-1.5 rounded-full bg-green-500"></span>
+                                            Confirmado
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right text-sm font-semibold text-red-600">
+                                        - R$ 1.200,00
+                                    </td>
+<td class="px-6 py-4 text-right">
+<button class="text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="group hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<td class="px-6 py-4 text-sm text-text-primary font-medium">08 Out 2023</td>
+<td class="px-6 py-4">
+<div class="size-8 rounded-full bg-teal-100 dark:bg-teal-900/30 text-teal-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">bolt</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-medium text-text-primary">Transferência PIX</p>
+<p class="text-xs text-text-secondary">Enviado por João Silva</p>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                                            Vendas
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+<span class="size-1.5 rounded-full bg-green-500"></span>
+                                            Confirmado
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right text-sm font-semibold text-green-600">
+                                        + R$ 350,00
+                                    </td>
+<td class="px-6 py-4 text-right">
+<button class="text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
+<p class="text-sm text-text-secondary">Mostrando <span class="font-medium text-text-primary">1</span> a <span class="font-medium text-text-primary">5</span> de <span class="font-medium text-text-primary">42</span> resultados</p>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50" disabled="">Anterior</button>
+<button class="px-3 py-1.5 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-800">Próximo</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

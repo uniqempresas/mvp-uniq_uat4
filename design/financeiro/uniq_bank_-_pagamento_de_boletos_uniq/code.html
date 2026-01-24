@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UNIQ Bank - Pagamento de Boletos</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10B981", // User requested #10B981
+                        "primary-hover": "#059669",
+                        "secondary": "#244E5F", // User requested #244E5F for cancel/secondary
+                        "background-light": "#F3F4F6", // User requested #F3F4F6
+                        "sidebar-dark": "#1F2937", // User requested #1F2937
+                        "surface": "#FFFFFF",
+                        "border": "#E5E7EB",
+                        "text-main": "#111827",
+                        "text-muted": "#6B7280",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "sm": "0.375rem",
+                        "lg": "12px", // User requested 12px
+                        "xl": "1rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        "sm": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                        "DEFAULT": "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)",
+                        "card": "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="bg-background-light font-display text-text-main h-screen overflow-hidden flex selection:bg-primary/20 selection:text-primary">
+<!-- Primary Sidebar (Dark) -->
+<aside class="w-20 bg-sidebar-dark flex flex-col items-center py-6 gap-8 z-20 flex-shrink-0">
+<!-- Brand Icon -->
+<div class="size-10 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/20">
+            U
+        </div>
+<!-- Navigation Icons -->
+<nav class="flex flex-col gap-6 w-full px-2">
+<a class="flex flex-col items-center gap-1 group w-full p-2 rounded-lg text-gray-400 hover:bg-white/10 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined text-[24px]">dashboard</span>
+<span class="text-[10px] font-medium opacity-0 group-hover:opacity-100 transition-opacity">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 group w-full p-2 rounded-lg text-gray-400 hover:bg-white/10 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined text-[24px]">shopping_cart</span>
+<span class="text-[10px] font-medium opacity-0 group-hover:opacity-100 transition-opacity">Vendas</span>
+</a>
+<a class="relative flex flex-col items-center gap-1 group w-full p-2 rounded-lg bg-primary text-white shadow-md" href="#">
+<span class="material-symbols-outlined text-[24px]">account_balance_wallet</span>
+<span class="text-[10px] font-medium">Finan.</span>
+<!-- Active Indicator -->
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-white rounded-r-full -ml-2"></div>
+</a>
+<a class="flex flex-col items-center gap-1 group w-full p-2 rounded-lg text-gray-400 hover:bg-white/10 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined text-[24px]">inventory_2</span>
+<span class="text-[10px] font-medium opacity-0 group-hover:opacity-100 transition-opacity">Estoque</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-4">
+<a class="flex items-center justify-center w-10 h-10 rounded-lg text-gray-400 hover:bg-white/10 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+</a>
+<div class="w-8 h-8 rounded-full bg-cover bg-center border-2 border-gray-600" data-alt="User profile picture" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBrkE-b0GK0ZCE7carAUUcK2HCH37_qiSLCvDS4NRQWm0EUUKGQDGNy9IDVcpxc72sibI7V36CelsT6_t1mc7O7DdKF-a1WFknCNUi59Wdk0R-NiyEAozFBXLBdJYgA1jYWc6WgRkSjBcYxC-0eEgitLHaSFr_xFWVeDJrHGlmmoJ1NPk_W1jMBsXnZoAmkC3zdblSZfMJV_WqgOMaAQWl2p2J3Cdh_NxwwsQDOFt6y84sX12pzQpMJRzanOV26HIksud5Y9hQ-JMeJ');"></div>
+</div>
+</aside>
+<!-- Secondary Sidebar (Context: Financeiro) -->
+<aside class="w-64 bg-surface border-r border-border flex flex-col z-10 hidden md:flex">
+<div class="p-6 pb-2">
+<h2 class="text-sm font-semibold text-text-muted uppercase tracking-wider mb-1">Financeiro</h2>
+<h1 class="text-xl font-bold text-text-main flex items-center gap-2">
+                UNIQ Bank
+                <span class="material-symbols-outlined text-primary text-[20px] filled">verified</span>
+</h1>
+</div>
+<div class="p-4 flex flex-col gap-1 overflow-y-auto flex-1">
+<div class="text-xs font-semibold text-text-muted px-3 py-2 mt-2">GESTÃO FINANCEIRA</div>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-background-light hover:text-text-main transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+<span class="text-sm font-medium">Extrato</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-background-light hover:text-text-main transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">swap_horiz</span>
+<span class="text-sm font-medium">Transferências</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px] fill-current">qr_code_scanner</span>
+<span class="text-sm font-semibold">Pagamento de Boletos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-background-light hover:text-text-main transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">credit_card</span>
+<span class="text-sm font-medium">Cartões Corporativos</span>
+</a>
+<div class="text-xs font-semibold text-text-muted px-3 py-2 mt-4">CONTABILIDADE</div>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-background-light hover:text-text-main transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">description</span>
+<span class="text-sm font-medium">Notas Fiscais</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-background-light hover:text-text-main transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+<span class="text-sm font-medium">Relatórios</span>
+</a>
+</div>
+<div class="p-4 border-t border-border bg-background-light/50">
+<div class="bg-secondary/10 rounded-lg p-3 flex flex-col gap-2">
+<div class="flex items-center gap-2 text-secondary">
+<span class="material-symbols-outlined text-[18px]">support_agent</span>
+<span class="text-xs font-bold">Precisa de ajuda?</span>
+</div>
+<p class="text-xs text-text-muted leading-relaxed">Fale com seu gerente de conta para aumentar seu limite.</p>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+<!-- Top Header -->
+<header class="h-16 flex items-center justify-between px-8 bg-surface border-b border-border flex-shrink-0">
+<div class="flex items-center gap-2 text-sm">
+<span class="text-text-muted">Financeiro</span>
+<span class="text-text-muted">/</span>
+<span class="text-text-muted">UNIQ Bank</span>
+<span class="text-text-muted">/</span>
+<span class="font-medium text-primary">Pagamentos</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative p-2 text-text-muted hover:bg-background-light rounded-full transition-colors">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-4 md:p-8">
+<div class="max-w-5xl mx-auto space-y-6">
+<!-- Page Title & Balance -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="text-3xl font-bold text-text-main tracking-tight">Pagamento de Boletos</h1>
+<p class="text-text-muted mt-1">Realize pagamentos de contas e tributos com segurança.</p>
+</div>
+<div class="bg-surface p-4 rounded-lg shadow-sm border border-border min-w-[280px]">
+<p class="text-sm text-text-muted font-medium mb-1">Saldo em conta disponível</p>
+<div class="flex items-center gap-2">
+<span class="text-2xl font-bold text-text-main">R$ 45.230,00</span>
+<button class="text-text-muted hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Input Section -->
+<div class="bg-surface rounded-lg shadow-sm border border-border p-6 md:p-8">
+<label class="block text-sm font-medium text-text-main mb-2">Linha Digitável / Código de Barras</label>
+<div class="flex flex-col md:flex-row gap-4">
+<div class="relative flex-1">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-text-muted">barcode_reader</span>
+</div>
+<input class="w-full pl-11 pr-4 py-3.5 bg-background-light border-border rounded-lg text-text-main placeholder-text-muted focus:ring-2 focus:ring-primary focus:border-primary font-mono text-base shadow-sm transition-all" placeholder="00000.00000 00000.000000 00000.000000 0 00000000000000" type="text" value="23793.38128 60032.012354 59002.049204 4 92350000125000"/>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 px-4 py-3 bg-white border border-border rounded-lg text-text-main font-medium hover:bg-background-light hover:border-gray-300 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[20px]">upload_file</span>
+<span class="hidden md:inline">PDF</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-3 bg-white border border-border rounded-lg text-text-main font-medium hover:bg-background-light hover:border-gray-300 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[20px]">photo_camera</span>
+</button>
+</div>
+</div>
+<div class="mt-2 flex items-center gap-2 text-xs text-text-muted">
+<span class="material-symbols-outlined text-[14px] text-primary">check_circle</span>
+                        Boleto identificado com sucesso
+                    </div>
+</div>
+<!-- Payment Preview Card -->
+<div class="bg-surface rounded-lg shadow-card border border-border overflow-hidden animate-fade-in-up">
+<div class="bg-background-light/50 p-4 border-b border-border flex justify-between items-center">
+<h3 class="font-semibold text-text-main flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">description</span>
+                            Detalhes do Pagamento
+                        </h3>
+<span class="text-xs font-medium bg-green-100 text-green-700 px-2 py-1 rounded-full border border-green-200">Boleto Validado</span>
+</div>
+<div class="p-6 md:p-8">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+<div class="space-y-1">
+<span class="text-xs text-text-muted font-medium uppercase tracking-wide">Beneficiário</span>
+<p class="text-base font-semibold text-text-main truncate">Tech Solutions &amp; Software Ltda</p>
+<p class="text-xs text-text-muted">CNPJ: 12.345.678/0001-90</p>
+</div>
+<div class="space-y-1">
+<span class="text-xs text-text-muted font-medium uppercase tracking-wide">Vencimento</span>
+<p class="text-base font-semibold text-text-main">25/10/2023</p>
+<p class="text-xs text-orange-600 font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">warning</span>
+                                    Vence hoje
+                                </p>
+</div>
+<div class="space-y-1">
+<span class="text-xs text-text-muted font-medium uppercase tracking-wide">Agendar Para</span>
+<div class="relative">
+<input class="block w-full px-3 py-1.5 -ml-3 rounded-md border-0 text-text-main font-semibold ring-1 ring-inset ring-transparent hover:ring-gray-200 focus:ring-2 focus:ring-primary sm:text-sm sm:leading-6 bg-transparent" type="date" value="2023-10-25"/>
+</div>
+</div>
+<div class="space-y-1">
+<span class="text-xs text-text-muted font-medium uppercase tracking-wide">Valor a Pagar</span>
+<p class="text-2xl font-bold text-primary">R$ 1.250,00</p>
+<p class="text-xs text-text-muted">Juros/Multa: R$ 0,00</p>
+</div>
+</div>
+<div class="mb-8 p-4 bg-background-light rounded-lg border border-border">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-text-muted mt-0.5">info</span>
+<div class="space-y-1">
+<p class="text-sm font-medium text-text-main">Descrição no extrato</p>
+<input class="bg-transparent border-0 border-b border-gray-300 p-0 text-sm w-full focus:ring-0 focus:border-primary placeholder-gray-400" placeholder="Ex: Mensalidade Software ERP" type="text" value="Pagamento Fornecedor Tech"/>
+</div>
+</div>
+</div>
+<div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-4 pt-4 border-t border-border">
+<button class="w-full sm:w-auto px-6 py-2.5 rounded-lg border border-transparent text-secondary font-semibold hover:bg-secondary/10 hover:text-secondary transition-all focus:ring-2 focus:ring-offset-2 focus:ring-secondary" style="color: #244E5F">
+                                Cancelar
+                            </button>
+<button class="w-full sm:w-auto px-8 py-2.5 rounded-lg bg-primary text-white font-bold hover:bg-primary-hover shadow-lg shadow-primary/30 transform active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">lock</span>
+                                Pagar R$ 1.250,00
+                            </button>
+</div>
+</div>
+</div>
+<!-- Recent History / Empty State -->
+<div class="pt-6">
+<h3 class="text-lg font-bold text-text-main mb-4">Pagamentos Recentes</h3>
+<div class="bg-surface rounded-lg shadow-sm border border-border overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm">
+<thead class="bg-background-light border-b border-border">
+<tr>
+<th class="px-6 py-3 font-semibold text-text-muted">Data</th>
+<th class="px-6 py-3 font-semibold text-text-muted">Beneficiário</th>
+<th class="px-6 py-3 font-semibold text-text-muted">Descrição</th>
+<th class="px-6 py-3 font-semibold text-text-muted text-right">Valor</th>
+<th class="px-6 py-3 font-semibold text-text-muted text-center">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border">
+<tr class="hover:bg-background-light/50 transition-colors">
+<td class="px-6 py-4 text-text-main">Hoje, 10:23</td>
+<td class="px-6 py-4 font-medium text-text-main">Cemig Distribuição S.A.</td>
+<td class="px-6 py-4 text-text-muted">Energia Elétrica Filial 1</td>
+<td class="px-6 py-4 text-right font-medium text-text-main">- R$ 450,20</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                Pago
+                                            </span>
+</td>
+</tr>
+<tr class="hover:bg-background-light/50 transition-colors">
+<td class="px-6 py-4 text-text-main">Ontem, 16:45</td>
+<td class="px-6 py-4 font-medium text-text-main">AWS Services</td>
+<td class="px-6 py-4 text-text-muted">Servidores Cloud</td>
+<td class="px-6 py-4 text-right font-medium text-text-main">- R$ 890,00</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                Pago
+                                            </span>
+</td>
+</tr>
+<tr class="hover:bg-background-light/50 transition-colors opacity-60">
+<td class="px-6 py-4 text-text-main">20/10/2023</td>
+<td class="px-6 py-4 font-medium text-text-main">Google Workspace</td>
+<td class="px-6 py-4 text-text-muted">E-mail corporativo</td>
+<td class="px-6 py-4 text-right font-medium text-text-main">- R$ 120,00</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                Processado
+                                            </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 bg-background-light/30 border-t border-border flex justify-center">
+<button class="text-sm text-primary font-medium hover:underline">Ver todo o histórico</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

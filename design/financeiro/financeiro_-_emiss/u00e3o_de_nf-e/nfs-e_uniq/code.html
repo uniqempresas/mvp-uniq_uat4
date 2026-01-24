@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Financeiro - Emissão de NF-e/NFS-e UNIQ</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b77f",
+                        "primary-hover": "#0e9f6e",
+                        "secondary": "#244E5F",
+                        "secondary-hover": "#1d3d4b",
+                        "background-light": "#F3F4F6", 
+                        "background-dark": "#10221c",
+                        "sidebar-dark": "#1F2937",
+                        "sidebar-light": "#f8fcfa",
+                        "surface": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem", 
+                        "xl": "1rem", 
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for better aesthetics in sidebars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 overflow-hidden h-screen flex">
+<!-- Primary Sidebar (Dark) -->
+<aside class="w-20 bg-sidebar-dark flex flex-col items-center py-6 gap-8 z-20 shadow-xl shrink-0">
+<!-- Brand Icon -->
+<div class="size-10 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/20 cursor-pointer hover:scale-105 transition-transform">
+            U
+        </div>
+<!-- Navigation Items -->
+<nav class="flex flex-col gap-6 w-full items-center flex-1">
+<button class="p-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-colors group relative">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">Dashboard</span>
+</button>
+<button class="p-3 rounded-xl text-primary bg-white/10 shadow-inner relative group">
+<span class="material-symbols-outlined filled">account_balance_wallet</span>
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-r-full"></div>
+</button>
+<button class="p-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-colors group relative">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">Estoque</span>
+</button>
+<button class="p-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-colors group relative">
+<span class="material-symbols-outlined">groups</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">CRM</span>
+</button>
+<button class="p-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-colors group relative">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">Relatórios</span>
+</button>
+</nav>
+<!-- Bottom Actions -->
+<div class="flex flex-col gap-4 items-center">
+<button class="p-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="size-10 rounded-full bg-cover bg-center border-2 border-gray-600 cursor-pointer" data-alt="User profile avatar gradient" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDfU0sWQdui2o6ul7FDjcB_CJqideH1d4Iy6Kh3R4GB7dm7HxQ3UinE0_MYh8Fr5lxPoN_MMzZm4CtXUUQM8F_twQ7MC6deSm0TZ_faAxz9GKIFSTpwC8B1cAWWmz8QJQGGSG2WWU5GFl6485j9iICl4LotoNg3oaQOKDzgga0Bsp0MEkhUtTGHOkuJ5tXPPUvPgCgjKm49kEdnO_-2JizPAp1TtHGAu3cX_K7SjKqs7hScBrxePoq4vMrb1aKF1sUhGPbn25Oe4rbl');"></div>
+</div>
+</aside>
+<!-- Context Sidebar (Light) -->
+<aside class="w-64 bg-sidebar-light border-r border-slate-200 hidden md:flex flex-col z-10">
+<div class="p-5 border-b border-slate-100">
+<h2 class="text-slate-800 font-bold text-lg leading-tight">Financeiro &amp; <br/><span class="text-primary">UNIQ Bank</span></h2>
+<p class="text-slate-500 text-xs mt-1">Gestão completa v2.4</p>
+</div>
+<div class="flex-1 overflow-y-auto py-4 px-3 flex flex-col gap-1">
+<div class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Menu Principal</div>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">pie_chart</span>
+<span class="text-sm font-medium">Visão Geral</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+<span class="text-sm font-medium">Extrato Bancário</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+<span class="text-sm font-medium">Contas a Pagar</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">account_balance</span>
+<span class="text-sm font-medium">Contas a Receber</span>
+</a>
+<div class="mt-4 px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Fiscal</div>
+<div class="bg-[#e7f3ef] rounded-lg overflow-hidden">
+<a class="flex items-center gap-3 px-3 py-2 text-primary font-medium" href="#">
+<span class="material-symbols-outlined text-[20px] fill-current">description</span>
+<span class="text-sm">Gerenciamento Fiscal</span>
+</a>
+<div class="pl-10 pr-2 py-1 flex flex-col gap-1 border-l-2 border-primary/20 ml-5 mb-2">
+<a class="text-primary text-sm font-medium py-1 px-2 rounded bg-white shadow-sm" href="#">Emissão de NF-e</a>
+<a class="text-slate-500 hover:text-slate-800 text-sm py-1 px-2 transition-colors" href="#">Notas Emitidas</a>
+<a class="text-slate-500 hover:text-slate-800 text-sm py-1 px-2 transition-colors" href="#">Impostos</a>
+</div>
+</div>
+<div class="mt-auto pt-6">
+<div class="bg-gradient-to-br from-secondary to-slate-800 rounded-xl p-4 text-white relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 size-20 bg-primary/20 rounded-full blur-xl group-hover:bg-primary/30 transition-colors"></div>
+<div class="relative z-10">
+<span class="material-symbols-outlined mb-2 text-primary">support_agent</span>
+<h4 class="font-bold text-sm">Precisa de ajuda?</h4>
+<p class="text-xs text-slate-300 mt-1 mb-3">Fale com nosso contador parceiro.</p>
+<button class="w-full py-1.5 bg-white/10 hover:bg-white/20 text-xs font-semibold rounded-lg transition-colors border border-white/10">Abrir Chat</button>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-background-light relative">
+<!-- Header -->
+<header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shrink-0 z-10">
+<div class="flex items-center gap-2 text-sm">
+<span class="text-slate-400">Financeiro</span>
+<span class="text-slate-300">/</span>
+<span class="text-slate-400">Fiscal</span>
+<span class="text-slate-300">/</span>
+<span class="text-secondary font-medium px-2 py-0.5 bg-secondary/10 rounded-md">Emissão de NF-e</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="text-slate-400 hover:text-slate-600">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-4 w-px bg-slate-200 mx-1"></div>
+<button class="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 font-medium">
+<span class="material-symbols-outlined text-[18px]">help</span>
+                    Tutorial
+                </button>
+</div>
+</header>
+<!-- Scrollable Form Content -->
+<div class="flex-1 overflow-y-auto p-6 md:p-8 lg:px-12">
+<div class="max-w-5xl mx-auto flex flex-col gap-6">
+<!-- Title Section -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<h1 class="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight">Nova Nota Fiscal</h1>
+<p class="text-slate-500 mt-1">Preencha os dados abaixo para emitir sua nota fiscal eletrônica.</p>
+</div>
+<div class="flex items-center bg-white p-1 rounded-xl shadow-sm border border-slate-200 self-start">
+<label class="cursor-pointer px-4 py-2 rounded-lg bg-primary/10 text-primary text-sm font-semibold flex items-center gap-2 transition-all">
+<input checked="" class="hidden" name="nf_type" type="radio" value="nfe"/>
+<span class="material-symbols-outlined text-[18px]">inventory_2</span>
+                            NF-e (Produto)
+                        </label>
+<label class="cursor-pointer px-4 py-2 rounded-lg hover:bg-slate-50 text-slate-500 text-sm font-medium flex items-center gap-2 transition-all">
+<input class="hidden" name="nf_type" type="radio" value="nfse"/>
+<span class="material-symbols-outlined text-[18px]">design_services</span>
+                            NFS-e (Serviço)
+                        </label>
+</div>
+</div>
+<!-- Form Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Left Column (Main Data) -->
+<div class="lg:col-span-2 flex flex-col gap-6">
+<!-- Client Section -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+<div class="bg-slate-50/50 border-b border-slate-100 px-6 py-4 flex justify-between items-center">
+<h3 class="font-semibold text-slate-800 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">person</span>
+                                    Dados do Cliente
+                                </h3>
+<button class="text-xs font-medium text-primary hover:text-primary-hover flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">add</span> Novo Cliente
+                                </button>
+</div>
+<div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="md:col-span-2">
+<label class="block text-xs font-medium text-slate-500 mb-1">Destinatário / Razão Social</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-2 rounded-lg border-slate-200 text-sm focus:border-primary focus:ring-primary transition-shadow" placeholder="Pesquise por nome ou CNPJ..." type="text"/>
+</div>
+</div>
+<div>
+<label class="block text-xs font-medium text-slate-500 mb-1">CPF / CNPJ</label>
+<input class="w-full px-3 py-2 bg-slate-50 rounded-lg border-slate-200 text-sm text-slate-500" placeholder="00.000.000/0000-00" readonly="" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-medium text-slate-500 mb-1">Inscrição Estadual</label>
+<input class="w-full px-3 py-2 bg-slate-50 rounded-lg border-slate-200 text-sm text-slate-500" placeholder="Isento" readonly="" type="text"/>
+</div>
+<div class="md:col-span-2">
+<label class="block text-xs font-medium text-slate-500 mb-1">Endereço Completo</label>
+<input class="w-full px-3 py-2 bg-slate-50 rounded-lg border-slate-200 text-sm text-slate-500" placeholder="Selecione um cliente para carregar..." readonly="" type="text"/>
+</div>
+</div>
+</div>
+<!-- Products Section -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col min-h-[300px]">
+<div class="bg-slate-50/50 border-b border-slate-100 px-6 py-4 flex justify-between items-center">
+<h3 class="font-semibold text-slate-800 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">shopping_cart</span>
+                                    Produtos / Serviços
+                                </h3>
+<button class="px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary text-sm font-semibold rounded-lg transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">add</span> Adicionar Item
+                                </button>
+</div>
+<!-- Empty State (Placeholder) -->
+<!-- <div class="flex-1 flex flex-col items-center justify-center py-12 text-center px-4">
+                                <div class="bg-slate-50 p-4 rounded-full mb-3">
+                                    <span class="material-symbols-outlined text-slate-300 text-4xl">remove_shopping_cart</span>
+                                </div>
+                                <h4 class="text-slate-600 font-medium">Nenhum item adicionado</h4>
+                                <p class="text-slate-400 text-sm max-w-xs mt-1">Adicione produtos ou serviços para calcular os impostos e totais da nota.</p>
+                            </div> -->
+<!-- Table State -->
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm">
+<thead class="bg-slate-50 text-slate-500 font-medium border-b border-slate-100">
+<tr>
+<th class="px-6 py-3">Descrição</th>
+<th class="px-4 py-3 w-24">Qtd.</th>
+<th class="px-4 py-3 w-32">Vlr. Unit.</th>
+<th class="px-4 py-3 w-32">Total</th>
+<th class="px-4 py-3 w-16"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<tr class="group hover:bg-slate-50 transition-colors">
+<td class="px-6 py-3">
+<p class="font-medium text-slate-800">Consultoria de Software ERP</p>
+<p class="text-xs text-slate-400">Cod: 00123 • NCM: 85234990</p>
+</td>
+<td class="px-4 py-3">
+<input class="w-16 px-2 py-1 rounded border-slate-200 text-sm focus:border-primary focus:ring-primary" type="number" value="1"/>
+</td>
+<td class="px-4 py-3 text-slate-600">R$ 1.500,00</td>
+<td class="px-4 py-3 font-medium text-slate-800">R$ 1.500,00</td>
+<td class="px-4 py-3 text-right">
+<button class="text-slate-400 hover:text-red-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</td>
+</tr>
+<tr class="group hover:bg-slate-50 transition-colors">
+<td class="px-6 py-3">
+<p class="font-medium text-slate-800">Licença Mensal - Plano Pro</p>
+<p class="text-xs text-slate-400">Cod: 00441 • NCM: 85234990</p>
+</td>
+<td class="px-4 py-3">
+<input class="w-16 px-2 py-1 rounded border-slate-200 text-sm focus:border-primary focus:ring-primary" type="number" value="2"/>
+</td>
+<td class="px-4 py-3 text-slate-600">R$ 250,00</td>
+<td class="px-4 py-3 font-medium text-slate-800">R$ 500,00</td>
+<td class="px-4 py-3 text-right">
+<button class="text-slate-400 hover:text-red-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-3 border-t border-slate-100 bg-slate-50 flex justify-end">
+<div class="text-sm text-slate-500">
+                                    Total de Itens: <span class="font-semibold text-slate-800">3</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column (Settings & Totals) -->
+<div class="flex flex-col gap-6">
+<!-- Operation Details -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+<h3 class="font-semibold text-slate-800 mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">settings</span>
+                                Detalhes da Operação
+                            </h3>
+<div class="space-y-4">
+<div>
+<label class="block text-xs font-medium text-slate-500 mb-1">Natureza da Operação</label>
+<select class="w-full px-3 py-2 rounded-lg border-slate-200 text-sm focus:border-primary focus:ring-primary">
+<option>Venda de mercadoria</option>
+<option>Prestação de serviço</option>
+<option>Devolução</option>
+<option>Remessa para conserto</option>
+</select>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div>
+<label class="block text-xs font-medium text-slate-500 mb-1">Data de Emissão</label>
+<input class="w-full px-3 py-2 rounded-lg border-slate-200 text-sm focus:border-primary focus:ring-primary" type="date"/>
+</div>
+<div>
+<label class="block text-xs font-medium text-slate-500 mb-1">Hora Saída</label>
+<input class="w-full px-3 py-2 rounded-lg border-slate-200 text-sm focus:border-primary focus:ring-primary" type="time"/>
+</div>
+</div>
+<div>
+<label class="block text-xs font-medium text-slate-500 mb-1">Meio de Pagamento</label>
+<select class="w-full px-3 py-2 rounded-lg border-slate-200 text-sm focus:border-primary focus:ring-primary">
+<option>Boleto Bancário</option>
+<option>Cartão de Crédito</option>
+<option>PIX</option>
+<option>Dinheiro</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Totals & Taxes -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+<div class="p-6 space-y-3">
+<h3 class="font-semibold text-slate-800 mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">calculate</span>
+                                    Totais e Impostos
+                                </h3>
+<div class="flex justify-between text-sm text-slate-500">
+<span>Base de Cálculo</span>
+<span>R$ 2.000,00</span>
+</div>
+<div class="flex justify-between text-sm text-slate-500">
+<span>Valor ICMS</span>
+<span>R$ 0,00</span>
+</div>
+<div class="flex justify-between text-sm text-slate-500">
+<span>Valor IPI</span>
+<span>R$ 0,00</span>
+</div>
+<div class="flex justify-between text-sm text-slate-500 border-b border-slate-100 pb-3">
+<span>Desconto</span>
+<span class="text-green-600">- R$ 0,00</span>
+</div>
+<div class="flex justify-between items-center pt-1">
+<span class="text-base font-bold text-slate-800">Valor Total</span>
+<span class="text-xl font-bold text-primary">R$ 2.000,00</span>
+</div>
+</div>
+<div class="bg-slate-50 px-6 py-4 border-t border-slate-100 flex flex-col gap-3">
+<button class="w-full py-3 bg-primary hover:bg-primary-hover text-white font-bold rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-95 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">send</span>
+                                    Emitir NF-e
+                                </button>
+<div class="grid grid-cols-2 gap-3">
+<button class="w-full py-2.5 bg-secondary hover:bg-secondary-hover text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 text-sm">
+<span class="material-symbols-outlined text-[18px]">save</span>
+                                        Rascunho
+                                    </button>
+<button class="w-full py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 text-sm">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+                                        Visualizar
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer / Observations -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8">
+<label class="block text-sm font-semibold text-slate-800 mb-2">Informações Adicionais / Observações</label>
+<textarea class="w-full rounded-lg border-slate-200 text-sm focus:border-primary focus:ring-primary min-h-[80px]" placeholder="Insira aqui informações complementares de interesse do contribuinte..."></textarea>
+<p class="text-xs text-slate-400 mt-2 text-right">0/500 caracteres</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Overlay for mobile (optional if responsive logic added) -->
+<!-- <div class="fixed inset-0 bg-black/50 z-0 hidden md:hidden"></div> -->
+</body></html>

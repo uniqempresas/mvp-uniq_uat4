@@ -49,7 +49,11 @@ export const publicService = {
         return (data || []).map(p => ({
             ...p,
             preco: Number(p.preco || 0),
-            variacoes: p.variacoes || [],
+            variacoes: (p.variacoes || []).map((v: any) => ({
+                ...v,
+                preco: Number(v.preco || 0),
+                preco_varejo: Number(v.preco_varejo || 0)
+            })),
             imagens: (p.imagens || []).sort((a: any, b: any) => a.ordem_exibicao - b.ordem_exibicao)
         })) as PublicProduct[]
     },

@@ -1,4 +1,5 @@
 import { supabase } from '../../lib/supabase'
+import { useNavigate } from 'react-router-dom'
 
 interface MainSidebarProps {
     activeContext: string
@@ -6,14 +7,24 @@ interface MainSidebarProps {
 }
 
 export default function MainSidebar({ activeContext, onContextChange }: MainSidebarProps) {
+    const navigate = useNavigate()
+
     const navItems = [
         { id: 'dashboard', icon: 'fingerprint', label: 'Minha Empresa' },
         { id: 'storefront', icon: 'storefront', label: 'Loja' },
+        { id: 'finance', icon: 'attach_money', label: 'Financeiro', route: '/finance' },
         { id: 'inventory', icon: 'inventory_2', label: 'Estoque' },
         { id: 'store', icon: 'extension', label: 'Store' },
         { id: 'team', icon: 'group', label: 'Equipe' },
         { id: 'reports', icon: 'bar_chart', label: 'Relatórios' },
     ]
+
+    const handleNavClick = (item: typeof navItems[0]) => {
+        if (item.route) {
+            navigate(item.route)
+        }
+        onContextChange(item.id)
+    }
 
     return (
         <aside className="flex w-[70px] flex-col items-center justify-between bg-sidebar-dark py-6 z-30 shrink-0 h-full">
@@ -25,7 +36,7 @@ export default function MainSidebar({ activeContext, onContextChange }: MainSide
                     {navItems.map((item) => (
                         <button
                             key={item.id}
-                            onClick={() => onContextChange(item.id)}
+                            onClick={() => handleNavClick(item)}
                             className={`group relative flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${activeContext === item.id
                                 ? 'text-primary bg-primary/10 shadow-[inset_0_0_0_1px_rgba(16,185,129,0.2)]'
                                 : 'text-white/70 hover:bg-white/10 hover:text-white'

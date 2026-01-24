@@ -79,20 +79,73 @@ export default function Storefront() {
                         <div className="p-3 flex-1 flex flex-col">
                             <h3 className="text-sm font-medium leading-tight mb-1 line-clamp-2">{product.nome_produto}</h3>
                             <div className="mt-auto pt-2">
-                                <span className="block text-xs text-gray-400 line-through">
-                                    {product.preco_varejo && product.preco_varejo < product.preco ? `R$ ${product.preco.toFixed(2)}` : ''}
-                                </span>
-                                <div className="flex items-center justify-between">
-                                    <span className="font-bold text-primary">
-                                        R$ {(product.preco_varejo || product.preco).toFixed(2).replace('.', ',')}
-                                    </span>
-                                    <button
-                                        onClick={() => handleWhatsAppOrder(product)}
-                                        className="size-8 bg-green-500 rounded-full text-white flex items-center justify-center shadow-sm active:scale-95 transition-transform"
-                                    >
-                                        <span className="material-symbols-outlined text-[18px]">whatsapp</span>
-                                    </button>
-                                </div>
+                                {(() => {
+                                    // Produto com variações: pega o menor preço
+                                    if (product.variacoes && product.variacoes.length > 0) {
+                                        const precos = product.variacoes
+                                            .map((v: any) => Number(v.preco_varejo || 0))
+                                            .filter((p: number) => p > 0) // Só preços válidos
+
+                                        if (precos.length === 0) {
+                                            // Nenhuma variação com preço válido
+                                            return (
+                                                <>
+                                                    <div className="flex items-baseline gap-1 mb-2">
+                                                        <span className="text-sm text-gray-600 font-medium">Consulte-nos</span>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => handleWhatsAppOrder(product)}
+                                                        className="w-full bg-green-500 rounded-lg text-white py-2 flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform text-sm font-medium">
+                                                        <span className="text-lg">💬</span>
+                                                        Pedir
+                                                    </button>
+                                                </>
+                                            )
+                                        }
+
+                                        const menorPreco = Math.min(...precos)
+                                        return (
+                                            <>
+                                                <div className="flex items-baseline gap-1 mb-2">
+                                                    <span className="text-[10px] text-gray-500">A partir de</span>
+                                                    <span className="font-bold text-primary text-base">
+                                                        R$ {menorPreco.toFixed(2).replace('.', ',')}
+                                                    </span>
+                                                </div>
+                                                <button
+                                                    onClick={() => handleWhatsAppOrder(product)}
+                                                    className="w-full bg-green-500 rounded-lg text-white py-2 flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform text-sm font-medium">
+                                                    <span className="text-lg">💬</span>
+                                                    Pedir
+                                                </button>
+                                            </>
+                                        )
+                                    }
+
+                                    // Produto simples: preço normal ou promocional
+                                    const precoFinal = product.preco_varejo && product.preco_varejo < product.preco ? product.preco_varejo : product.preco
+                                    const temPromocao = product.preco_varejo && product.preco_varejo < product.preco
+
+                                    return (
+                                        <>
+                                            {temPromocao && (
+                                                <span className="block text-xs text-gray-400 line-through">
+                                                    R$ {product.preco.toFixed(2).replace('.', ',')}
+                                                </span>
+                                            )}
+                                            <div className="flex items-center justify-between">
+                                                <span className="font-bold text-primary">
+                                                    R$ {precoFinal.toFixed(2).replace('.', ',')}
+                                                </span>
+                                                <button
+                                                    onClick={() => handleWhatsAppOrder(product)}
+                                                    className="size-8 bg-green-500 rounded-full text-white flex items-center justify-center shadow-sm active:scale-95 transition-transform">
+                                                    <span className="text-base">💬</span>
+                                                </button>
+                                            </div>
+                                        </>
+                                    )
+                                })()}
                             </div>
                         </div>
                     </div>
