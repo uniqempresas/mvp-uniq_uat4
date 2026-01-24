@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Catálogo - Controle de Estoque UNIQ</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Theme Configuration -->
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b77f",
+                        "primary-dark": "#059669",
+                        "sidebar-dark": "#1F2937",
+                        "sidebar-light": "#FFFFFF",
+                        "background-main": "#F3F4F6",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "sans": ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem", // approx 12px requested
+                        "2xl": "1.5rem",
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background-main h-screen w-full flex overflow-hidden text-slate-800">
+<!-- 1. Primary Sidebar (Dark) -->
+<aside class="w-20 bg-sidebar-dark flex flex-col items-center py-6 gap-8 shrink-0 z-20">
+<!-- Logo Placeholder -->
+<div class="size-10 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/30">
+            U
+        </div>
+<!-- Main Navigation Icons -->
+<nav class="flex flex-col gap-6 w-full items-center">
+<a class="group flex items-center justify-center size-10 rounded-lg text-slate-400 hover:bg-slate-700 hover:text-white transition-colors" href="#" title="Dashboard">
+<span class="material-symbols-outlined">space_dashboard</span>
+</a>
+<a class="group flex items-center justify-center size-10 rounded-lg text-slate-400 hover:bg-slate-700 hover:text-white transition-colors" href="#" title="Financeiro">
+<span class="material-symbols-outlined">payments</span>
+</a>
+<!-- Active Module -->
+<a class="group flex items-center justify-center size-10 rounded-lg bg-primary text-white shadow-md shadow-primary/20" href="#" title="Catálogo">
+<span class="material-symbols-outlined filled">inventory_2</span>
+</a>
+<a class="group flex items-center justify-center size-10 rounded-lg text-slate-400 hover:bg-slate-700 hover:text-white transition-colors" href="#" title="CRM">
+<span class="material-symbols-outlined">group</span>
+</a>
+<a class="group flex items-center justify-center size-10 rounded-lg text-slate-400 hover:bg-slate-700 hover:text-white transition-colors" href="#" title="Relatórios">
+<span class="material-symbols-outlined">bar_chart</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-4 items-center">
+<a class="group flex items-center justify-center size-10 rounded-lg text-slate-400 hover:bg-slate-700 hover:text-white transition-colors" href="#" title="Configurações">
+<span class="material-symbols-outlined">settings</span>
+</a>
+<div class="size-8 rounded-full bg-cover bg-center border-2 border-slate-600" data-alt="User profile avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAT8e5Hu9K2UtMZZ-2UvBXyOOIh_LwKsu4rL7HIbUBZDcxnrcBNUfWbhK8nqh0-nrOkrX3YWeKeotZKmPYezGvqtKaKRWu0osmHEt_dn6bbQ8SVuxoyZ0PjsFhrXSc194Yv3CvqdInI_XrKpLEjoRoHnckD42m9gdkMM2nI8mYsfGe1o3uDdAh9iV367vB5H4Gni-G8LTx9JH72Kcg45YM-WcL3S1SS-bu5aR1GqzuKKUmtHuqF5BBlh6NzPUExhDQoF4BrwmGp94nD");'></div>
+</div>
+</aside>
+<!-- 2. Context Sidebar (Light) -->
+<aside class="w-64 bg-sidebar-light border-r border-slate-200 flex flex-col shrink-0 z-10 hidden md:flex">
+<div class="p-6 pb-2">
+<h2 class="text-xs font-bold text-primary uppercase tracking-wider mb-1">Operacional &amp; Vendas</h2>
+<h1 class="text-xl font-bold text-slate-900">Catálogo</h1>
+</div>
+<nav class="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-1">
+<div class="text-xs font-semibold text-slate-400 px-3 py-2 mt-2 uppercase">Gestão</div>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary">category</span>
+<span class="text-sm font-medium">Produtos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary">design_services</span>
+<span class="text-sm font-medium">Serviços</span>
+</a>
+<!-- Active Item -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/10 text-primary transition-colors" href="#">
+<span class="material-symbols-outlined filled">warehouse</span>
+<span class="text-sm font-bold">Controle de Estoque</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary">local_shipping</span>
+<span class="text-sm font-medium">Movimentações</span>
+</a>
+<div class="text-xs font-semibold text-slate-400 px-3 py-2 mt-6 uppercase">Configurações</div>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary">sell</span>
+<span class="text-sm font-medium">Categorias</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary">straighten</span>
+<span class="text-sm font-medium">Unidades de Medida</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-100">
+<button class="flex w-full items-center justify-center gap-2 rounded-xl h-11 bg-primary text-white text-sm font-bold hover:bg-primary-dark transition-colors shadow-sm shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                Novo Produto
+            </button>
+</div>
+</aside>
+<!-- 3. Main Content Area -->
+<main class="flex-1 flex flex-col h-full relative overflow-hidden bg-[#F3F4F6]">
+<!-- Header -->
+<header class="flex items-center justify-between px-8 py-5 bg-white border-b border-slate-200 shrink-0">
+<div class="flex flex-col gap-1">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 text-sm text-slate-500">
+<a class="hover:text-primary transition-colors" href="#">Home</a>
+<span class="text-slate-300">/</span>
+<a class="hover:text-primary transition-colors" href="#">Catálogo</a>
+<span class="text-slate-300">/</span>
+<span class="text-slate-900 font-medium">Estoque</span>
+</nav>
+<h2 class="text-2xl font-bold text-slate-900 tracking-tight">Visão Geral de Estoque</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">search</span>
+<input class="pl-10 pr-4 h-10 w-64 rounded-xl border-slate-200 bg-slate-50 text-sm focus:border-primary focus:ring-primary" placeholder="Buscar SKU, nome..." type="text"/>
+</div>
+<button class="size-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border border-white"></span>
+</button>
+<button class="size-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-8">
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+<!-- Card 1 -->
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-1 relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-slate-900">inventory_2</span>
+</div>
+<span class="text-sm font-medium text-slate-500">Total de Itens</span>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-bold text-slate-900">1,240</span>
+<span class="text-xs font-medium text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">+12%</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-1 relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-slate-900">attach_money</span>
+</div>
+<span class="text-sm font-medium text-slate-500">Valor em Estoque</span>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-bold text-slate-900">R$ 450.2k</span>
+<span class="text-xs font-medium text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">+5.4%</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-1 relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-amber-500">warning</span>
+</div>
+<span class="text-sm font-medium text-slate-500">Estoque Baixo</span>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-bold text-amber-600">12</span>
+<span class="text-xs font-medium text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">Requer Atenção</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-1 relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-red-500">block</span>
+</div>
+<span class="text-sm font-medium text-slate-500">Esgotado</span>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-bold text-red-600">5</span>
+<span class="text-xs font-medium text-slate-400">Desde ontem</span>
+</div>
+</div>
+</div>
+<!-- Table Section -->
+<div class="bg-white border border-slate-200 rounded-xl shadow-sm flex flex-col min-h-[500px]">
+<!-- Toolbar -->
+<div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0">
+<button class="px-4 py-2 rounded-xl bg-slate-900 text-white text-sm font-medium whitespace-nowrap">Todos os Itens</button>
+<button class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-50 text-sm font-medium whitespace-nowrap transition-colors">Baixo Estoque</button>
+<button class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-50 text-sm font-medium whitespace-nowrap transition-colors">Esgotados</button>
+</div>
+<div class="flex items-center gap-3">
+<button class="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                            Filtros
+                        </button>
+<button class="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                            Exportar
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-dark transition-colors shadow-sm shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+<span class="hidden sm:inline">Novo Ajuste</span>
+</button>
+</div>
+</div>
+<!-- Table -->
+<div class="flex-1 overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-slate-100 bg-slate-50/50 text-xs uppercase text-slate-500 font-semibold tracking-wide">
+<th class="p-4 w-12 text-center">
+<input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+</th>
+<th class="p-4">Produto</th>
+<th class="p-4">Categoria</th>
+<th class="p-4 text-center">Em Mãos</th>
+<th class="p-4 text-center">Reservado</th>
+<th class="p-4">Status</th>
+<th class="p-4 text-right">Ações</th>
+</tr>
+</thead>
+<tbody class="text-sm divide-y divide-slate-100">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50/80 transition-colors group">
+<td class="p-4 text-center">
+<input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-slate-100 border border-slate-200 bg-cover bg-center shrink-0" data-alt="Generic product thumbnail" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCGSRZJy8JpaK7N-7ZlFZOpYp8JNNwQt0t7xZKdu1DsJf6aTNeoyKXLrGsOts_bLAI-2ULPIGGEJqFjNqE7p7qL0_cV5xA4YWX0btagX7D5Mrq1M4jdfCu0yknLa9Fbttue7Y-DsMSHAVvHO4WOCWUTS2LlD79FMZQmI_ynX4KPOuyzUdAZcqmgcFRAnKvcaBfBo2NvPxhMYHfUMyRSdFgkBj9BFllbH1ivjWHNa1q-XbOeQKxNIa48EvU0Au2eNUBwwUiOn6Tx5vfS");'></div>
+<div class="flex flex-col">
+<span class="font-semibold text-slate-900">Camiseta Algodão Premium</span>
+<span class="text-xs text-slate-500">SKU: UNIQ-CS-001</span>
+</div>
+</div>
+</td>
+<td class="p-4 text-slate-600">Vestuário</td>
+<td class="p-4 text-center font-medium text-slate-900">156</td>
+<td class="p-4 text-center text-slate-500">24</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700 border border-emerald-200">
+<span class="size-1.5 rounded-full bg-emerald-500"></span>
+                                        Em Estoque
+                                    </span>
+</td>
+<td class="p-4 text-right">
+<button class="p-1.5 rounded-lg text-slate-400 hover:text-primary hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50/80 transition-colors group">
+<td class="p-4 text-center">
+<input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-slate-100 border border-slate-200 bg-cover bg-center shrink-0" data-alt="Sneakers product thumbnail" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAfH0WResqzs7xPjSokcwM8iBVwLQXx1cd0XX_AJtKDYRRY7C-Ec5aHlCuze1J_QFa4yFQ8rgRyNQw3pAiMfJgaVvhDZFIjpGd5RLWJgMoYKYw7udBkQYzARPxMokhEIMgod3vMOyFEACMdJDM8n8IURVR1akGKIZEFCJU_7zSAphpNFGO5uSNZcJk5Seb_IjXuFaMDK7fEr2ymzzEvZ5k38tWNCbbYf40h9UOTA9pswvs35nNiIoLZJW8N-wjausfizXfIUrWe2znm");'></div>
+<div class="flex flex-col">
+<span class="font-semibold text-slate-900">Tênis Esportivo V2</span>
+<span class="text-xs text-slate-500">SKU: UNIQ-TS-045</span>
+</div>
+</div>
+</td>
+<td class="p-4 text-slate-600">Calçados</td>
+<td class="p-4 text-center font-medium text-amber-600">5</td>
+<td class="p-4 text-center text-slate-500">2</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700 border border-amber-200">
+<span class="size-1.5 rounded-full bg-amber-500"></span>
+                                        Baixo
+                                    </span>
+</td>
+<td class="p-4 text-right">
+<button class="p-1.5 rounded-lg text-slate-400 hover:text-primary hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50/80 transition-colors group">
+<td class="p-4 text-center">
+<input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-slate-100 border border-slate-200 bg-cover bg-center shrink-0" data-alt="Cap product thumbnail" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCvNkoziVR8inEbTkxRIS7XdFxcYZoXRFW_rszL6NXYL9TjeABCf0wVJ8Hon7oDzuBEXX-fwM3t5U4p5IK9MkYzUEA_fT2u0VHEFsYVJ5IhZJj28LWOn5O-ZOTr-ahfg2RPer-OFgPWmuMFifvQEVo_U9OzT71jlP304xEe8RtwLqpRbaulLaL86ki5kCWGcVq45mVXda3s6JAwOPjuQ_7Uf-m9NFOh8nIR95X7QJzyb29yPNQS81amSzQQx3BQwg1VB1G_KOOw9Cv0");'></div>
+<div class="flex flex-col">
+<span class="font-semibold text-slate-900">Boné UNIQ Ltd.</span>
+<span class="text-xs text-slate-500">SKU: UNIQ-AC-099</span>
+</div>
+</div>
+</td>
+<td class="p-4 text-slate-600">Acessórios</td>
+<td class="p-4 text-center font-medium text-red-600">0</td>
+<td class="p-4 text-center text-slate-500">0</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700 border border-red-200">
+<span class="size-1.5 rounded-full bg-red-500"></span>
+                                        Esgotado
+                                    </span>
+</td>
+<td class="p-4 text-right">
+<button class="p-1.5 rounded-lg text-slate-400 hover:text-primary hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50/80 transition-colors group">
+<td class="p-4 text-center">
+<input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-slate-100 border border-slate-200 bg-cover bg-center shrink-0" data-alt="Water bottle thumbnail" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCceY1fkqxaXRKmbXj5qCo6LUvV-pE1HiFKeXyBFTfNi6nO0sYdzLMG6QZuCyXhKjYZSpKjJcOiuistEu6YRnDs61aY7g8XVkq_6njy48yXcvbBHoKoQ-63AORTiHy_UITtIaE7nZpcOpUy7rFLmd_Yej2rYaQitdHU0Gjikt6b6dk8dt22VAuzlEF1uyeM72PR_gbFRUkLmWyci4j0w6cve7TV4WsaV2sfHN6zane_9Ai6YTupXy56tJA5bWO3TihPMRMiHnvwrQYR");'></div>
+<div class="flex flex-col">
+<span class="font-semibold text-slate-900">Garrafa Térmica 500ml</span>
+<span class="text-xs text-slate-500">SKU: UNIQ-HM-012</span>
+</div>
+</div>
+</td>
+<td class="p-4 text-slate-600">Utilidades</td>
+<td class="p-4 text-center font-medium text-slate-900">432</td>
+<td class="p-4 text-center text-slate-500">10</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700 border border-emerald-200">
+<span class="size-1.5 rounded-full bg-emerald-500"></span>
+                                        Em Estoque
+                                    </span>
+</td>
+<td class="p-4 text-right">
+<button class="p-1.5 rounded-lg text-slate-400 hover:text-primary hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-slate-50/80 transition-colors group">
+<td class="p-4 text-center">
+<input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-slate-100 border border-slate-200 bg-cover bg-center shrink-0" data-alt="Backpack thumbnail" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB6TuTs-0f1ssmrt6LwdL1uxsCcPm9eSZ0GWjLNGOAx1Ip76urgqmhwgzPvXIoc6lhngKWF7aVaJ-_am-sS6xVCKIR3_QTI_MqWavXmxveuUwGygsMHpnBAykXvqkekPyAiII2h6TpK69tP9JO7ka-flPtl7h8veW3mtfdz6qvI_F09aZXsxjd2lUCtylNUwtJ1GGKTxpUU7jgVARVOXyTEGhwtyZRBu6wkQ_yGsy5JvJ93Ew2P3uw0oKeJfzeTAb6AZnqI-dFn3mgC");'></div>
+<div class="flex flex-col">
+<span class="font-semibold text-slate-900">Mochila Executiva</span>
+<span class="text-xs text-slate-500">SKU: UNIQ-BG-200</span>
+</div>
+</div>
+</td>
+<td class="p-4 text-slate-600">Acessórios</td>
+<td class="p-4 text-center font-medium text-slate-900">24</td>
+<td class="p-4 text-center text-slate-500">5</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700 border border-emerald-200">
+<span class="size-1.5 rounded-full bg-emerald-500"></span>
+                                        Em Estoque
+                                    </span>
+</td>
+<td class="p-4 text-right">
+<button class="p-1.5 rounded-lg text-slate-400 hover:text-primary hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="p-4 border-t border-slate-100 flex items-center justify-between">
+<span class="text-sm text-slate-500">Mostrando <span class="font-semibold text-slate-900">1-5</span> de <span class="font-semibold text-slate-900">1240</span> itens</span>
+<div class="flex items-center gap-2">
+<button class="size-9 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-50 hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="size-9 rounded-lg bg-primary text-white text-sm font-medium shadow-sm shadow-primary/30">1</button>
+<button class="size-9 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 hover:text-primary text-sm font-medium">2</button>
+<button class="size-9 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 hover:text-primary text-sm font-medium">3</button>
+<span class="text-slate-400 px-1">...</span>
+<button class="size-9 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 hover:text-primary text-sm font-medium">12</button>
+<button class="size-9 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 hover:text-primary">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<div class="h-8 w-full"></div> <!-- Spacing at bottom -->
+</div>
+</main>
+</body></html>

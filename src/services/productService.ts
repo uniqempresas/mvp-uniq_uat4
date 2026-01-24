@@ -12,6 +12,13 @@ export interface ProductVariation {
     foto_url?: string
 }
 
+export interface ProductImage {
+    id?: string
+    produto_id?: number
+    imagem_url: string
+    ordem_exibicao: number
+}
+
 export interface Product {
     id: number
     empresa_id: string
@@ -30,6 +37,8 @@ export interface Product {
     opcoes_config?: string[] // ex: ["Cor", "Tamanho"] stored as jsonb array
     variacoes?: ProductVariation[]
     ativo?: boolean
+    exibir_vitrine?: boolean // Added
+    imagens?: ProductImage[] // Added
 }
 
 export const productService = {
@@ -41,7 +50,8 @@ export const productService = {
             .from('me_produto')
             .select(`
                 *,
-                variacoes:me_produto_variacao(*)
+                variacoes:me_produto_variacao(*),
+                imagens:me_produto_imagem(*)
             `)
             .eq('empresa_id', empresaId)
             .order('nome_produto')
@@ -55,7 +65,9 @@ export const productService = {
             ...p,
             preco: Number(p.preco || 0),
             // Ensure variacoes is always an array
-            variacoes: p.variacoes || []
+            variacoes: p.variacoes || [],
+            imagens: (p.imagens || []).sort((a: any, b: any) => a.ordem_exibicao - b.ordem_exibicao),
+            exibir_vitrine: p.exibir_vitrine ?? false
         })) as Product[]
     },
 
@@ -64,7 +76,8 @@ export const productService = {
             .from('me_produto')
             .select(`
                 *,
-                variacoes:me_produto_variacao(*)
+                variacoes:me_produto_variacao(*),
+                imagens:me_produto_imagem(*)
             `)
             .eq('id', id)
             .single()
@@ -74,19 +87,22 @@ export const productService = {
         return {
             ...data,
             preco: Number(data.preco || 0),
-            variacoes: data.variacoes || []
+            variacoes: data.variacoes || [],
+            imagens: (data.imagens || []).sort((a: any, b: any) => a.ordem_exibicao - b.ordem_exibicao),
+            exibir_vitrine: data.exibir_vitrine ?? false
         } as Product
     },
 
-    async createProduct(product: Partial<Product>, variations: ProductVariation[] = []) {
+    async createProduct(product: Partial<Product>, variations: ProductVariation[] = [], images: ProductImage[] = []) {
         const empresaId = await authService.getEmpresaId()
         if (!empresaId) throw new Error('Empresa não encontrada')
 
         // 1. Create Parent Product
+        const { id: _id, variacoes: _v, imagens: _i, ...productData } = product
         const { data: parentData, error: parentError } = await supabase
             .from('me_produto')
             .insert([{
-                ...product,
+                ...productData,
                 empresa_id: empresaId,
                 tipo: variations.length > 0 ? 'variavel' : 'simples'
             }])
@@ -115,12 +131,27 @@ export const productService = {
             }
         }
 
+        // 3. Create Images if any
+        if (images.length > 0 && parentData) {
+            const imagesToInsert = images.map((img, idx) => ({
+                produto_id: parentData.id,
+                imagem_url: img.imagem_url,
+                ordem_exibicao: idx
+            }))
+
+            const { error: imgError } = await supabase
+                .from('me_produto_imagem')
+                .insert(imagesToInsert)
+
+            if (imgError) console.error('Error inserting images:', imgError)
+        }
+
         return parentData
     },
 
-    async updateProduct(id: number, product: Partial<Product>, variations: ProductVariation[]) {
-        // Remove 'variacoes' from the update payload as it's not a column
-        const { variacoes, ...productData } = product
+    async updateProduct(id: number, product: Partial<Product>, variations: ProductVariation[], images: ProductImage[]) {
+        // Remove 'variacoes' and 'imagens' from the update payload
+        const { variacoes, imagens: _imgs, ...productData } = product
 
         const { error: productError } = await supabase
             .from('me_produto')
@@ -160,6 +191,28 @@ export const productService = {
                 .insert(variationsToInsert)
 
             if (insertError) throw insertError
+        }
+
+        // 3. Handle Images (Delete All + Insert New)
+        const { error: deleteImgError } = await supabase
+            .from('me_produto_imagem')
+            .delete()
+            .eq('produto_id', id)
+
+        if (deleteImgError) throw deleteImgError
+
+        if (images.length > 0) {
+            const imagesToInsert = images.map((img, idx) => ({
+                produto_id: id,
+                imagem_url: img.imagem_url,
+                ordem_exibicao: idx
+            }))
+
+            const { error: insertImgError } = await supabase
+                .from('me_produto_imagem')
+                .insert(imagesToInsert)
+
+            if (insertImgError) throw insertImgError
         }
     },
 

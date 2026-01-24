@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Catálogo - Produtos Cadastrados | UNIQ ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#12ba55",
+                        "primary-hover": "#0ea64a",
+                        "secondary-dark": "#1F2937",
+                        "action-edit": "#244E5F",
+                        "background-light": "#f3f4f6", // Updated to user request
+                        "background-dark": "#112117",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem", // 12px approx
+                        "xl": "1rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        "sm": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                        "card": "0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02)"
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-background-light text-slate-900 font-display overflow-hidden h-screen w-full flex antialiased">
+<!-- Primary Sidebar (Dark) -->
+<aside class="w-[72px] bg-secondary-dark flex flex-col items-center py-6 shrink-0 z-20">
+<!-- Logo Icon -->
+<div class="size-10 bg-primary/20 rounded-xl flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-primary text-3xl">token</span>
+</div>
+<!-- Main Nav Icons -->
+<nav class="flex flex-col gap-6 w-full items-center">
+<button class="size-10 rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors" title="Dashboard">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+<button class="size-10 rounded-lg flex items-center justify-center bg-white/10 text-primary shadow-sm" title="Operacional &amp; Vendas">
+<span class="material-symbols-outlined">inventory_2</span>
+</button>
+<button class="size-10 rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors" title="Financeiro">
+<span class="material-symbols-outlined">payments</span>
+</button>
+<button class="size-10 rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors" title="Relatórios">
+<span class="material-symbols-outlined">bar_chart</span>
+</button>
+</nav>
+<!-- Bottom Icons -->
+<div class="mt-auto flex flex-col gap-6 w-full items-center">
+<button class="size-10 rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors" title="Configurações">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="size-9 rounded-full bg-cover bg-center border-2 border-gray-600 cursor-pointer" data-alt="User profile photo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCZJVh9wSF-3a60bqXTlJvr0xCyfchu8srZLMw9fMM6wBqngbd_xW2x25AjHWnKjUCBp3bpB6QQawyWjIY65u6snkAr4RXMxiNyaeRm9N3QDr8NkT7ft6Vbwu2dwITbEcEzj1M4dJUnQvaLrC3vpBBQL0lLCrCmMO0awCdA_gFqD6Rsypl9VnEEpzcI1u4DNNPMjVawbdy4n8EmPuBZ-8_FJ5wR09H0qYnD7eO4EyR_O4XqVkUYaK_fpbV7aewir7rYeo52xs0S-aP9');"></div>
+</div>
+</aside>
+<!-- Context Sidebar (Light) -->
+<aside class="w-64 bg-white border-r border-gray-200 flex flex-col shrink-0 overflow-y-auto hidden md:flex">
+<div class="p-6">
+<h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Módulo</h2>
+<h1 class="text-lg font-bold text-gray-900 leading-tight">Operacional &amp; Vendas</h1>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<!-- Section: Vendas -->
+<div class="py-2">
+<button class="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 group transition-colors">
+<span class="material-symbols-outlined mr-3 text-gray-400 group-hover:text-gray-600">shopping_cart</span>
+                    Vendas &amp; Pedidos
+                    <span class="ml-auto material-symbols-outlined text-gray-400 text-sm">expand_more</span>
+</button>
+</div>
+<!-- Section: Catálogo (Expanded) -->
+<div class="py-2">
+<button class="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-900 bg-gray-50 rounded-lg mb-1 transition-colors">
+<span class="material-symbols-outlined mr-3 text-primary">category</span>
+                    Catálogo
+                    <span class="ml-auto material-symbols-outlined text-gray-500 text-sm transform rotate-180">expand_more</span>
+</button>
+<!-- Submenu -->
+<div class="pl-10 pr-2 space-y-1">
+<a class="block px-3 py-2 text-sm font-medium text-primary bg-primary/10 rounded-lg" href="#">
+                        Produtos
+                    </a>
+<a class="block px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors" href="#">
+                        Categorias
+                    </a>
+<a class="block px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors" href="#">
+                        Variações
+                    </a>
+<a class="block px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors" href="#">
+                        Fornecedores
+                    </a>
+</div>
+</div>
+<!-- Section: Estoque -->
+<div class="py-2">
+<button class="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 group transition-colors">
+<span class="material-symbols-outlined mr-3 text-gray-400 group-hover:text-gray-600">warehouse</span>
+                    Controle de Estoque
+                    <span class="ml-auto material-symbols-outlined text-gray-400 text-sm">expand_more</span>
+</button>
+</div>
+</nav>
+<div class="p-4 border-t border-gray-100">
+<div class="bg-primary/5 rounded-xl p-4 border border-primary/10">
+<div class="flex items-start gap-3">
+<div class="bg-white p-1.5 rounded-lg shadow-sm text-primary">
+<span class="material-symbols-outlined text-xl">rocket_launch</span>
+</div>
+<div>
+<p class="text-sm font-bold text-gray-900">Plano Pro</p>
+<p class="text-xs text-gray-500 mt-1">Acesso total a todas as funcionalidades.</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-background-light relative">
+<!-- Header / Top Bar -->
+<header class="h-16 bg-background-light shrink-0 flex items-center justify-between px-6 lg:px-8 border-b border-transparent md:border-none">
+<!-- Mobile Menu Toggle (Visible only on mobile) -->
+<button class="md:hidden p-2 text-gray-500 rounded-lg hover:bg-gray-100">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Breadcrumbs -->
+<nav class="hidden sm:flex items-center text-sm font-medium text-gray-500">
+<a class="hover:text-primary transition-colors" href="#">Home</a>
+<span class="material-symbols-outlined text-base mx-2 text-gray-400">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Catálogo</a>
+<span class="material-symbols-outlined text-base mx-2 text-gray-400">chevron_right</span>
+<span class="text-gray-900">Produtos</span>
+</nav>
+<!-- Quick Actions -->
+<div class="flex items-center gap-3 ml-auto">
+<button class="size-10 rounded-full bg-white text-gray-500 hover:text-primary hover:bg-white shadow-sm flex items-center justify-center transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="size-10 rounded-full bg-white text-gray-500 hover:text-primary hover:bg-white shadow-sm flex items-center justify-center transition-all">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Page Content -->
+<div class="flex-1 overflow-y-auto p-4 lg:p-8 scroll-smooth">
+<div class="max-w-[1200px] mx-auto space-y-6">
+<!-- Page Heading & Actions -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div class="flex flex-col gap-1">
+<h1 class="text-3xl font-bold text-gray-900 tracking-tight">Produtos Cadastrados</h1>
+<p class="text-gray-500">Gerencie o inventário da sua loja aqui.</p>
+</div>
+<button class="flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white px-5 py-2.5 rounded-lg shadow-sm hover:shadow-md transition-all font-semibold text-sm cursor-pointer whitespace-nowrap">
+<span class="material-symbols-outlined text-xl">add</span>
+                        Novo Produto
+                    </button>
+</div>
+<!-- Filters & Search Toolbar -->
+<div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex flex-col lg:flex-row items-center gap-4">
+<!-- Search Input -->
+<div class="relative flex-1 w-full lg:max-w-md group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400 group-focus-within:text-primary">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2.5 border-gray-200 rounded-lg text-sm placeholder-gray-400 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-gray-50 focus:bg-white" placeholder="Buscar por nome, SKU ou tag..." type="text"/>
+</div>
+<!-- Filters -->
+<div class="flex items-center gap-3 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0">
+<select class="form-select bg-gray-50 border-gray-200 text-gray-600 text-sm rounded-lg focus:ring-primary focus:border-primary py-2.5 pl-3 pr-10 cursor-pointer min-w-[140px]">
+<option>Todas Categorias</option>
+<option>Roupas</option>
+<option>Calçados</option>
+<option>Acessórios</option>
+<option>Eletrônicos</option>
+</select>
+<select class="form-select bg-gray-50 border-gray-200 text-gray-600 text-sm rounded-lg focus:ring-primary focus:border-primary py-2.5 pl-3 pr-10 cursor-pointer min-w-[140px]">
+<option>Status: Todos</option>
+<option>Em Estoque</option>
+<option>Baixo Estoque</option>
+<option>Sem Estoque</option>
+</select>
+<button class="p-2.5 text-gray-500 hover:text-primary bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors" title="Mais Filtros">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Statistics Chips (Optional Quick View) -->
+<div class="flex gap-3 overflow-x-auto pb-2">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-full shadow-sm whitespace-nowrap">
+<span class="size-2 rounded-full bg-primary"></span>
+<span class="text-xs font-semibold text-gray-700">Todos (124)</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-full shadow-sm whitespace-nowrap opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+<span class="size-2 rounded-full bg-emerald-500"></span>
+<span class="text-xs font-medium text-gray-600">Em Estoque (98)</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-full shadow-sm whitespace-nowrap opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+<span class="size-2 rounded-full bg-amber-500"></span>
+<span class="text-xs font-medium text-gray-600">Baixo Estoque (21)</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-full shadow-sm whitespace-nowrap opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+<span class="size-2 rounded-full bg-red-500"></span>
+<span class="text-xs font-medium text-gray-600">Sem Estoque (5)</span>
+</div>
+</div>
+<!-- Product Table Card -->
+<div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-gray-50/50 border-b border-gray-100 text-xs uppercase tracking-wider text-gray-500 font-semibold">
+<th class="px-6 py-4 w-12 text-center">
+<input class="rounded border-gray-300 text-primary focus:ring-primary/20 size-4" type="checkbox"/>
+</th>
+<th class="px-6 py-4">Produto</th>
+<th class="px-6 py-4">Categoria</th>
+<th class="px-6 py-4">Estoque</th>
+<th class="px-6 py-4">Preço</th>
+<th class="px-6 py-4 text-right">Ações</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-100 text-sm">
+<!-- Item 1 -->
+<tr class="group hover:bg-gray-50 transition-colors">
+<td class="px-6 py-4 text-center">
+<input class="rounded border-gray-300 text-primary focus:ring-primary/20 size-4" type="checkbox"/>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-gray-100 shrink-0 bg-cover bg-center border border-gray-200" data-alt="White cotton t-shirt" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAlJLfHIMQuHSECd9IG7sTN-lb0o-dI0HQZ_PkBGLPVCS86tB3TB_hz7Guta8B6Ga-mx5Gdrnzkb4lF_kGHxagEZg46vqwN_ZAlA0O-7C3g6IZM_FRBXaTsjx9R0dIXfgcTq1DrPLLAQcYNgKfPM_uR4xkUBvZQkTQ76nQyqs9ludyjKnjNjSX-I6ffMTqFaxpVIzc9iQpE4oXS1duyYsuQhd-BHxyNA-SgcQSde6oV00gVPui33thXAIGehl46c_n0ufbCaDZv1lOi');"></div>
+<div>
+<div class="font-bold text-gray-900 group-hover:text-primary transition-colors">Camiseta Básica Algodão</div>
+<div class="text-xs text-gray-500">SKU: UNI-001-WHT</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                            Roupas
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="relative flex size-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full size-2 bg-emerald-500"></span>
+</span>
+<span class="text-gray-700 font-medium">150 unid.</span>
+</div>
+</td>
+<td class="px-6 py-4 font-semibold text-gray-900">
+                                        R$ 49,90
+                                    </td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 rounded-lg text-action-edit hover:bg-action-edit/10 transition-colors" title="Editar">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 rounded-lg text-red-500 hover:bg-red-50 transition-colors" title="Excluir">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Item 2 -->
+<tr class="group hover:bg-gray-50 transition-colors">
+<td class="px-6 py-4 text-center">
+<input class="rounded border-gray-300 text-primary focus:ring-primary/20 size-4" type="checkbox"/>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-gray-100 shrink-0 bg-cover bg-center border border-gray-200" data-alt="Red running shoe" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAYDMd5GAWM6NRCclcDLC9MJTbccM255Of94wz-y-IYziNfnTWluCLQotXPI65TXic79uxk8cpwJ_lK7QWcv-Gu_PeQZRuDGZzJJzqvsF2hoOarP2CPMhSsSKeurl3IAM5nQEqLUOELF3nK5jb2JoNyN2hJpF1vA6vXxp_5-8adWk75bIjwWLRAgSDDi3dZvQ1dY1ka2RxWRDuZ3bZMi8uwZFAdLjGiHbL39yad63wPmDSiOrxReHqplafCpFDoU4fa3opfy7nDAi40');"></div>
+<div>
+<div class="font-bold text-gray-900 group-hover:text-primary transition-colors">Tênis Runner Sport</div>
+<div class="text-xs text-gray-500">SKU: RUN-002-RED</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                            Calçados
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="size-2 rounded-full bg-amber-500"></span>
+<span class="text-gray-700 font-medium">12 unid.</span>
+</div>
+<span class="text-[10px] text-amber-600 font-medium">Estoque Baixo</span>
+</td>
+<td class="px-6 py-4 font-semibold text-gray-900">
+                                        R$ 299,90
+                                    </td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 rounded-lg text-action-edit hover:bg-action-edit/10 transition-colors" title="Editar">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 rounded-lg text-red-500 hover:bg-red-50 transition-colors" title="Excluir">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Item 3 -->
+<tr class="group hover:bg-gray-50 transition-colors">
+<td class="px-6 py-4 text-center">
+<input class="rounded border-gray-300 text-primary focus:ring-primary/20 size-4" type="checkbox"/>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-gray-100 shrink-0 bg-cover bg-center border border-gray-200" data-alt="Analog classic watch" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDwTafGVn5wgx2stSw_qTrrA3g9z1iCEH7FTSQi8mK_UzHpMmlAKm63eqdEYE0SBo_2G-bfS-TxyJxbq-9umL9cUCqZcsNPJ3MNqXjRUFtl-cirj-1bIhS4j78pDYPvBbrvbqPQzzF_h3b80cyKce3-hqQ3CtAMwR058xSlu6Dqqz2xLnhrY30eYLhFqLegVNQCISC0kh1uKxqkgqAlQJJeClSO88-ypDgFrDAg3wcqlzbNgF-030dczHhvu6Lb58sgg2QEhrPHangq');"></div>
+<div>
+<div class="font-bold text-gray-900 group-hover:text-primary transition-colors">Relógio Analógico Classic</div>
+<div class="text-xs text-gray-500">SKU: CLK-003-BLK</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                            Acessórios
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="size-2 rounded-full bg-emerald-500"></span>
+<span class="text-gray-700 font-medium">45 unid.</span>
+</div>
+</td>
+<td class="px-6 py-4 font-semibold text-gray-900">
+                                        R$ 189,90
+                                    </td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 rounded-lg text-action-edit hover:bg-action-edit/10 transition-colors" title="Editar">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 rounded-lg text-red-500 hover:bg-red-50 transition-colors" title="Excluir">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Item 4 -->
+<tr class="group hover:bg-gray-50 transition-colors">
+<td class="px-6 py-4 text-center">
+<input class="rounded border-gray-300 text-primary focus:ring-primary/20 size-4" type="checkbox"/>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-gray-100 shrink-0 bg-cover bg-center border border-gray-200" data-alt="Denim jeans shorts" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCpETHodHWcYSsKvAc_hir5HHImMyp3ykQYL2E0VaIFjiryRbD2YhZboMRXtttSXtIWXYfdCvRt0wx8RO0eb0m6TDL2ytGzrCaLQeK2Drss4oAMBWBqjpvIhjVNSbWbSxOH1XkiSNVwf53pLKcnYK8-pqim5gQ0DUJSmicZD9dNHYz-dsA9KNCpDLrNkH9wjsXSKP9XafdEBAfgRALyv89IIhHQYcDzJo_A9MVSzWYBCsRJEvONUBAUuuymHpbyjGH8lCijV8xJtl7f');"></div>
+<div>
+<div class="font-bold text-gray-900 group-hover:text-primary transition-colors">Shorts Jeans Denim</div>
+<div class="text-xs text-gray-500">SKU: JNS-004-BLU</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                            Roupas
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="size-2 rounded-full bg-red-500"></span>
+<span class="text-gray-700 font-medium">0 unid.</span>
+</div>
+<span class="text-[10px] text-red-600 font-medium">Esgotado</span>
+</td>
+<td class="px-6 py-4 font-semibold text-gray-900">
+                                        R$ 89,90
+                                    </td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 rounded-lg text-action-edit hover:bg-action-edit/10 transition-colors" title="Editar">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 rounded-lg text-red-500 hover:bg-red-50 transition-colors" title="Excluir">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Item 5 -->
+<tr class="group hover:bg-gray-50 transition-colors">
+<td class="px-6 py-4 text-center">
+<input class="rounded border-gray-300 text-primary focus:ring-primary/20 size-4" type="checkbox"/>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-gray-100 shrink-0 bg-cover bg-center border border-gray-200" data-alt="Headphones" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuARluLarerldwnKengO-ZvpWxbKhVwbW_BnOJWY-Ue2HURq5EPE7lw7C39SIzBqYJ6m3OTuQ7xX2BTZWLy7cPygXNANACv-t6_Suyo8g6HFwUPiQRAL49D2x2y0lJgKMu4ZWPLZKrKxS526usH8LYi1S2Bs70LY0NC_QPhpTOio1fAFnX9PVo2aSu6dL6IYR8vrAUDm3tXK3Zms8Fepng92xkDSi0Re9T0cb0DcqZ4m8D17fPoH5PM9tpOPhBn1nTx7C1ON-1b3aB2E');"></div>
+<div>
+<div class="font-bold text-gray-900 group-hover:text-primary transition-colors">Headphones Wireless Pro</div>
+<div class="text-xs text-gray-500">SKU: AUD-005-BLK</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                            Eletrônicos
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="size-2 rounded-full bg-emerald-500"></span>
+<span class="text-gray-700 font-medium">32 unid.</span>
+</div>
+</td>
+<td class="px-6 py-4 font-semibold text-gray-900">
+                                        R$ 549,90
+                                    </td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 rounded-lg text-action-edit hover:bg-action-edit/10 transition-colors" title="Editar">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 rounded-lg text-red-500 hover:bg-red-50 transition-colors" title="Excluir">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex items-center justify-between">
+<span class="text-sm text-gray-500">Mostrando <span class="font-semibold text-gray-900">1-5</span> de <span class="font-semibold text-gray-900">124</span> produtos</span>
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-lg bg-white border border-gray-200 text-gray-500 hover:bg-gray-100 disabled:opacity-50 shadow-sm" disabled="">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white text-sm font-medium shadow-sm">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-gray-200 text-gray-600 hover:bg-gray-100 text-sm font-medium shadow-sm">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-gray-200 text-gray-600 hover:bg-gray-100 text-sm font-medium shadow-sm">3</button>
+<span class="text-gray-400 px-1">...</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-gray-200 text-gray-600 hover:bg-gray-100 text-sm font-medium shadow-sm">12</button>
+<button class="p-2 rounded-lg bg-white border border-gray-200 text-gray-500 hover:bg-gray-100 shadow-sm">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

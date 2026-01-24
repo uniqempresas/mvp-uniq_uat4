@@ -66,7 +66,7 @@ export default function CRMOpportunities() {
                 tipo: activityForm.tipo as any,
                 descricao: activityForm.descricao,
                 data_vencimento: activityForm.data_vencimento ? new Date(activityForm.data_vencimento).toISOString() : undefined,
-                empresa_id: '', // Handled by service
+
                 concluido: false
             })
             setActivityForm({ tipo: 'nota', descricao: '', data_vencimento: '' })

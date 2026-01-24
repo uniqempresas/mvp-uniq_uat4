@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from './lib/supabase'
 
 import { useNavigate } from 'react-router-dom'
@@ -9,6 +9,14 @@ export default function Login() {
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                navigate('/dashboard')
+            }
+        })
+    }, [navigate])
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()

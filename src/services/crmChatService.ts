@@ -25,9 +25,10 @@ export interface ChatMessage {
     remetente_tipo: 'usuario' | 'sistema' | 'cliente'
     remetente_id?: string
     conteudo: string
-    tipo_conteudo: 'texto' | 'imagem' | 'arquivo'
+    tipo_conteudo: 'texto' | 'imagem' | 'arquivo' | 'agendamento'
     lido: boolean
     criado_em: string
+    metadados?: any // JSONB for flexible data (e.g. appointment details)
 }
 
 export const crmChatService = {
@@ -85,7 +86,9 @@ export const crmChatService = {
         conversaId: string,
         conteudo: string,
         remetenteTipo: 'usuario' | 'sistema' | 'cliente',
-        remetenteId?: string
+        remetenteId?: string,
+        tipoConteudo: 'texto' | 'imagem' | 'arquivo' | 'agendamento' = 'texto',
+        metadados?: any
     ): Promise<ChatMessage> {
         const { data, error } = await supabase
             .from('crm_chat_mensagens')
@@ -94,6 +97,8 @@ export const crmChatService = {
                 conteudo,
                 remetente_tipo: remetenteTipo,
                 remetente_id: remetenteId,
+                tipo_conteudo: tipoConteudo,
+                metadados: metadados, // Ensure DB column 'metadados' exists (JSONB)
                 lido: remetenteTipo === 'usuario' // If sent by user, it's read
             })
             .select()

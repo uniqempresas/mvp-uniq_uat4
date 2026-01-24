@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { productService, type Product, type ProductVariation } from '../../services/productService'
+import { productService, type Product, type ProductVariation, type ProductImage } from '../../services/productService'
 import { categoryService, type Category, type Subcategory } from '../../services/categoryService'
 import CategoryManagerModal from '../../components/Catalog/CategoryManagerModal'
 
@@ -70,7 +70,9 @@ export default function ProductForm({ onNavigate, productId }: ProductFormProps)
         ativo: true,
         categoria_id: undefined,
         subcategoria_id: undefined,
-        id: undefined
+        id: undefined,
+        exibir_vitrine: true,
+        imagens: []
     })
 
     // Variations State
@@ -244,6 +246,45 @@ export default function ProductForm({ onNavigate, productId }: ProductFormProps)
         setVariations(updated)
     }
 
+    const handleImageUpload = async (file: File) => {
+        try {
+            setLoading(true)
+            const url = await productService.uploadProductImage(file)
+            setFormData(prev => {
+                const currentImages = prev.imagens || []
+                const newImage: ProductImage = {
+                    imagem_url: url,
+                    ordem_exibicao: currentImages.length
+                }
+                const newImages = [...currentImages, newImage]
+                return {
+                    ...prev,
+                    imagens: newImages,
+                    foto_url: newImages[0]?.imagem_url
+                }
+            })
+        } catch (error) {
+            console.error(error)
+            alert('Erro ao fazer upload da imagem')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleRemoveImage = (index: number) => {
+        setFormData(prev => {
+            const currentImages = [...(prev.imagens || [])]
+            currentImages.splice(index, 1)
+            // Reorder
+            const reordered = currentImages.map((img, idx) => ({ ...img, ordem_exibicao: idx }))
+            return {
+                ...prev,
+                imagens: reordered,
+                foto_url: reordered[0]?.imagem_url || ''
+            }
+        })
+    }
+
     const handleSave = async () => {
         if (!formData.nome_produto) {
             alert('Nome do produto é obrigatório')
@@ -256,12 +297,12 @@ export default function ProductForm({ onNavigate, productId }: ProductFormProps)
                 await productService.updateProduct(productId || formData.id!, {
                     ...formData,
                     tipo: productType
-                }, productType === 'variavel' ? variations : [])
+                }, productType === 'variavel' ? variations : [], formData.imagens || [])
             } else {
                 await productService.createProduct({
                     ...formData,
                     tipo: productType
-                }, productType === 'variavel' ? variations : [])
+                }, productType === 'variavel' ? variations : [], formData.imagens || [])
             }
 
             alert('Produto salvo com sucesso!')
@@ -668,44 +709,51 @@ export default function ProductForm({ onNavigate, productId }: ProductFormProps)
 
                         {/* Right Column: Media & Organization */}
                         <div className="lg:col-span-1 space-y-6">
-                            {/* Card: Imagem do Produto */}
+                            {/* Card: Imagem do Produto (Gallery) */}
                             <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
                                 <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
                                     <span className="material-symbols-outlined text-primary">image</span>
-                                    Mídia
+                                    Mídia ({formData.imagens?.length || 0})
                                 </h3>
-                                <div className="w-full aspect-square bg-gray-50 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-all group/upload relative overflow-hidden">
-                                    {formData.foto_url ? (
-                                        <>
-                                            <img src={formData.foto_url} alt="Produto" className="w-full h-full object-cover" />
-                                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover/upload:opacity-100 transition-opacity flex items-center justify-center">
-                                                <span className="text-white text-sm font-medium">Alterar Imagem</span>
-                                            </div>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <div className="size-16 rounded-full bg-gray-100 flex items-center justify-center mb-3 group-hover/upload:scale-110 transition-transform">
-                                                <span className="material-symbols-outlined text-gray-400 text-3xl group-hover/upload:text-primary">cloud_upload</span>
-                                            </div>
-                                            <p className="text-sm font-medium text-slate-700">Clique ou arraste</p>
-                                            <p className="text-xs text-slate-500 mt-1">PNG, JPG até 5MB</p>
-                                        </>
-                                    )}
-                                    <input className="absolute inset-0 opacity-0 cursor-pointer z-10" type="file" onChange={async (e) => {
-                                        const file = e.target.files?.[0]
-                                        if (file) {
-                                            try {
-                                                setLoading(true)
-                                                const url = await productService.uploadProductImage(file)
-                                                handleChange('foto_url', url)
-                                            } catch (err) {
-                                                console.error(err)
-                                                alert('Erro ao fazer upload da imagem')
-                                            } finally {
-                                                setLoading(false)
+
+                                {/* Dropzone */}
+                                <div className="w-full aspect-square bg-gray-50 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-all group/upload relative overflow-hidden mb-4">
+                                    <input
+                                        className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                                        type="file"
+                                        multiple
+                                        onChange={(e) => {
+                                            if (e.target.files) {
+                                                Array.from(e.target.files).forEach(handleImageUpload)
                                             }
-                                        }
-                                    }} />
+                                        }}
+                                    />
+                                    <div className="size-16 rounded-full bg-gray-100 flex items-center justify-center mb-3 group-hover/upload:scale-110 transition-transform">
+                                        <span className="material-symbols-outlined text-gray-400 text-3xl group-hover/upload:text-primary">cloud_upload</span>
+                                    </div>
+                                    <p className="text-sm font-medium text-slate-700">Clique ou arraste</p>
+                                    <p className="text-xs text-slate-500 mt-1">PNG, JPG até 5MB</p>
+                                </div>
+
+                                {/* Thumbnails */}
+                                <div className="grid grid-cols-4 gap-2">
+                                    {formData.imagens?.map((img, idx) => (
+                                        <div key={idx} className="aspect-square rounded-lg bg-gray-100 border border-gray-200 overflow-hidden relative group">
+                                            <img src={img.imagem_url} alt="" className="w-full h-full object-cover" />
+                                            <div className="absolute inset-0 bg-black/40 hidden group-hover:flex items-center justify-center transition-all gap-2">
+                                                <button
+                                                    onClick={() => handleRemoveImage(idx)}
+                                                    className="p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                                                    title="Remover"
+                                                >
+                                                    <span className="material-symbols-outlined text-[16px]">close</span>
+                                                </button>
+                                            </div>
+                                            {idx === 0 && (
+                                                <div className="absolute top-1 left-1 bg-primary text-white text-[8px] px-1.5 py-0.5 rounded font-bold uppercase">Capa</div>
+                                            )}
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
 
@@ -764,6 +812,21 @@ export default function ProductForm({ onNavigate, productId }: ProductFormProps)
                                             type="checkbox"
                                             checked={formData.ativo}
                                             onChange={(e) => handleChange('ativo', e.target.checked)}
+                                            className="sr-only peer"
+                                        />
+                                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                    </label>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <div className="flex flex-col">
+                                        <span className="text-sm font-medium text-slate-700">Exibir no Catálogo</span>
+                                        <span className="text-xs text-slate-500">Público na vitrine digital</span>
+                                    </div>
+                                    <label className="relative inline-flex items-center cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            checked={formData.exibir_vitrine}
+                                            onChange={(e) => handleChange('exibir_vitrine', e.target.checked)}
                                             className="sr-only peer"
                                         />
                                         <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>

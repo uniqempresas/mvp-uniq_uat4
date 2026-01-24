@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Catálogo - Controle de Estoque (Empty State) UNIQ</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b77f", // Matching the request's green tone
+                        "primary-dark": "#059669",
+                        "background-light": "#F3F4F6", // Explicitly requested background
+                        "background-dark": "#10221c",
+                        "sidebar-dark": "#1F2937", // Requested primary sidebar color
+                        "text-main": "#111827",
+                        "text-secondary": "#6B7280",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "0.75rem", // Requested 12px = 0.75rem approx, adjusting to match
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        "sm": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                        "card": "0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02)"
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main h-screen overflow-hidden flex">
+<!-- Primary Sidebar (Dark) -->
+<aside class="w-20 bg-sidebar-dark flex flex-col items-center py-6 gap-8 z-20 flex-shrink-0">
+<!-- Brand Logo Icon -->
+<div class="size-10 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-xl shadow-lg">
+            U
+        </div>
+<!-- Navigation Icons -->
+<nav class="flex flex-col gap-6 w-full items-center">
+<a class="p-3 text-gray-400 hover:text-white hover:bg-white/10 rounded-xl transition-colors group relative" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">Início</span>
+</a>
+<a class="p-3 text-white bg-white/10 rounded-xl transition-colors relative" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+</a>
+<a class="p-3 text-gray-400 hover:text-white hover:bg-white/10 rounded-xl transition-colors relative" href="#">
+<span class="material-symbols-outlined">analytics</span>
+</a>
+<a class="p-3 text-gray-400 hover:text-white hover:bg-white/10 rounded-xl transition-colors relative" href="#">
+<span class="material-symbols-outlined">folder_open</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-6 items-center">
+<a class="p-3 text-gray-400 hover:text-white hover:bg-white/10 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+</a>
+<div class="size-8 rounded-full bg-gray-600 overflow-hidden border-2 border-gray-500 cursor-pointer">
+<div class="w-full h-full bg-cover bg-center" data-alt="User profile avatar placeholder" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBFucwyDt3rTgtMlk-BHA13ZUA3nxGMurYvtGt_Hw3PabhMPHhZbooRDRvGokZVeVqZmaPvjqMrBEv0xcTzblSZNV-GGV0Y-744POG-GumoIGsgFFQBSJ3Ykx9nV2NYK-knuU_zFVi8ffY4yoSR_gKDtHQoEduo9iHYf7bg91EP2eCDmK8sGbj0ebB_uPJqCjVI25VlHN6BGgD68Wtm4kKILdbVRMGJsN9QZVM9zyHSA-mc3-SPS2L7WbKoGoJiZ8Ctx3rtsJAKEYKf');"></div>
+</div>
+</div>
+</aside>
+<!-- Context Sidebar (Light) -->
+<aside class="w-64 bg-white dark:bg-[#1A2C26] border-r border-gray-100 dark:border-gray-800 flex flex-col z-10 hidden md:flex flex-shrink-0">
+<!-- Header -->
+<div class="h-20 flex flex-col justify-center px-6 border-b border-gray-50 dark:border-gray-800">
+<h1 class="text-text-main dark:text-white text-lg font-bold tracking-tight">UNIQ</h1>
+<p class="text-primary text-xs font-medium uppercase tracking-wider">Operacional &amp; Vendas</p>
+</div>
+<!-- Menu Items -->
+<nav class="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-text-secondary hover:bg-gray-50 dark:hover:bg-white/5 dark:text-gray-400 transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-text-secondary hover:bg-gray-50 dark:hover:bg-white/5 dark:text-gray-400 transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]">shopping_cart</span>
+<span class="text-sm font-medium">Vendas</span>
+</a>
+<!-- Active Item -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/10 text-primary dark:text-primary dark:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px] font-semibold">warehouse</span>
+<span class="text-sm font-semibold">Catálogo</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-text-secondary hover:bg-gray-50 dark:hover:bg-white/5 dark:text-gray-400 transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]">group</span>
+<span class="text-sm font-medium">Clientes</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-text-secondary hover:bg-gray-50 dark:hover:bg-white/5 dark:text-gray-400 transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]">local_shipping</span>
+<span class="text-sm font-medium">Entregas</span>
+</a>
+</nav>
+<!-- Sidebar Footer -->
+<div class="p-4 border-t border-gray-50 dark:border-gray-800">
+<div class="bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl p-4 flex flex-col gap-2">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-sm">rocket_launch</span>
+<span class="text-xs font-bold uppercase">Plano Pro</span>
+</div>
+<p class="text-xs text-text-secondary dark:text-gray-400">Você atingiu 80% do seu limite de produtos.</p>
+<button class="text-xs font-semibold text-primary hover:underline text-left">Fazer upgrade</button>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-background-light dark:bg-background-dark relative">
+<!-- Top Navigation Bar -->
+<header class="h-20 bg-white dark:bg-[#1A2C26] border-b border-gray-100 dark:border-gray-800 px-8 flex items-center justify-between flex-shrink-0 z-10">
+<!-- Breadcrumbs / Page Title -->
+<div class="flex flex-col">
+<div class="flex items-center gap-2 text-xs text-text-secondary mb-1">
+<span>Catálogo</span>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span class="text-primary font-medium">Estoque</span>
+</div>
+<h2 class="text-xl font-bold text-text-main dark:text-white">Controle de Estoque</h2>
+</div>
+<!-- Right Actions -->
+<div class="flex items-center gap-6">
+<!-- Search Bar -->
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[20px]">search</span>
+<input class="pl-10 pr-4 py-2 w-64 bg-background-light dark:bg-white/5 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/50 text-text-main dark:text-white placeholder-gray-400" placeholder="Buscar produtos..." type="text"/>
+</div>
+<!-- Icons -->
+<div class="flex items-center gap-3">
+<button class="size-10 flex items-center justify-center rounded-xl hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2.5 right-2.5 size-2 bg-red-500 rounded-full border-2 border-white dark:border-[#1A2C26]"></span>
+</button>
+<button class="size-10 flex items-center justify-center rounded-xl hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-8 flex items-center justify-center">
+<!-- Empty State Card -->
+<div class="w-full max-w-lg bg-white dark:bg-[#1A2C26] rounded-[12px] shadow-sm p-12 flex flex-col items-center text-center animate-in fade-in zoom-in duration-500">
+<!-- Illustration Area -->
+<div class="relative mb-8 size-48">
+<!-- Decorative Background Blob -->
+<div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-blue-50 dark:from-primary/10 dark:to-transparent rounded-full blur-2xl opacity-60"></div>
+<!-- Main Icon Illustration -->
+<div class="relative h-full w-full flex items-center justify-center">
+<!-- We use a background image for the illustrative feel as requested, but keeping it abstract/clean -->
+<div class="size-32 bg-contain bg-center bg-no-repeat opacity-90" data-alt="Illustration of an empty open box with floating plus signs" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAJdmChxIziHKc7lJrI7no4EW8ReWKgcHZOvsbAlm26nxlIAgdwqbs4qQZ7PAeiUnhWiN5ue6aowPgv22oWDIloUZU-vDeMluVtbCFF8fyD7Cl6OC--gNbqELtv4HWhVyOIkkVkCgNkDHdN6KIlteLT0U7gwT6vLunXaR13DuqfsmWXwTzUMMvrhqXDWKXVpzgaJkkxK08Gi0KHNaCnXNcTkvwUe4oAotzAkbZoxK0p1s76dtP_wSYEnZGixq7h4gYDqOV8Kdw1lZt1');">
+</div>
+</div>
+</div>
+<!-- Text Content -->
+<div class="flex flex-col gap-3 mb-8 max-w-sm">
+<h3 class="text-2xl font-bold text-text-main dark:text-white">Seu estoque está vazio</h3>
+<p class="text-text-secondary dark:text-gray-400 leading-relaxed">
+                        Gerencie seu inventário de forma eficiente. Cadastre itens para começar a acompanhar suas vendas e estoque.
+                    </p>
+</div>
+<!-- Primary Action -->
+<button class="bg-primary hover:bg-primary-dark text-white h-12 px-8 rounded-[12px] font-semibold text-sm flex items-center gap-2 transition-all shadow-lg shadow-primary/25 hover:shadow-primary/40 transform hover:-translate-y-0.5">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+<span>Cadastrar Produto</span>
+</button>
+<!-- Secondary Link -->
+<button class="mt-6 text-sm text-primary font-medium hover:underline">
+                    Importar planilha de produtos
+                </button>
+</div>
+</div>
+</main>
+</body></html>

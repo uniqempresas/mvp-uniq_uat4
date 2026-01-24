@@ -16,6 +16,7 @@ import CRMDashboard from '../CRM/CRMDashboard'
 export default function Dashboard() {
     const [activeContext, setActiveContext] = useState('dashboard')
     const [activeView, setActiveView] = useState('home')
+    const [viewParams, setViewParams] = useState<any>(null)
     const [editingProductId, setEditingProductId] = useState<number | undefined>(undefined)
 
     console.log('Dashboard activeView:', activeView)
@@ -38,9 +39,9 @@ export default function Dashboard() {
             case 'crm-opportunities':
                 return <CRMOpportunities />
             case 'crm-activities':
-                return <CRMActivities />
+                return <CRMActivities highlightId={viewParams?.activityId} />
             case 'crm-chat':
-                return <CRMChat />
+                return <CRMChat onNavigate={(view, params) => { setActiveView(view); setViewParams(params) }} />
             case 'crm-attendances':
                 return <CRMAttendances />
             case 'home':

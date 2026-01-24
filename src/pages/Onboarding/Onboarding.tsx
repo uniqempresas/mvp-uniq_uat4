@@ -79,13 +79,27 @@ export default function Onboarding() {
             if (authError) throw authError
             if (!authData.user) throw new Error("Erro ao criar usuário")
 
+            // Helper to generate slug
+            const generateSlug = (name: string) => {
+                return name
+                    .toLowerCase()
+                    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove accents
+                    .trim()
+                    .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric with hyphens
+                    .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
+                    + '-' + Math.floor(Math.random() * 1000) // Add random suffix to ensure uniqueness
+            }
+
+            const slug = generateSlug(formData.companyName)
+
             // 2. Call RPC to create company and initial settings
             const { data: empresaId, error: rpcError } = await supabase.rpc('criar_empresa_e_configuracoes_iniciais', {
                 p_usuario_id: authData.user.id,
                 p_nome_fantasia: formData.companyName,
                 p_cnpj: formData.cnpj,
                 p_telefone: formData.phone,
-                p_email_contato: formData.email
+                p_email_contato: formData.email,
+                p_slug: slug
             })
 
             if (rpcError) throw rpcError

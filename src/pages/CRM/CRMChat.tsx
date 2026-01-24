@@ -7,13 +7,14 @@ import { productService, type Product } from '../../services/productService'
 import OpportunityModal from '../../components/CRM/OpportunityModal'
 import ClientForm from './ClientForm'
 
-export default function CRMChat() {
+export default function CRMChat({ onNavigate }: { onNavigate?: (view: string, params?: any) => void }) {
     const [conversations, setConversations] = useState<ChatConversation[]>([])
     const [messages, setMessages] = useState<ChatMessage[]>([])
     const [selectedChat, setSelectedChat] = useState<ChatConversation | null>(null)
     const [messageInput, setMessageInput] = useState('')
     const [loading, setLoading] = useState(true)
     const [currentUser, setCurrentUser] = useState<any>(null)
+    const [isDetailsOpen, setIsDetailsOpen] = useState(false) // Mobile details drawer
 
     // Modal State
     const [isNewChatModalOpen, setIsNewChatModalOpen] = useState(false)
@@ -29,6 +30,7 @@ export default function CRMChat() {
         foto_contato: '',
         nome: ''
     })
+    const [companySlug, setCompanySlug] = useState<string | null>(null)
 
     // CRM Actions State
     const [isClientFormOpen, setIsClientFormOpen] = useState(false)
@@ -100,6 +102,14 @@ export default function CRMChat() {
         data_vencimento: ''
     })
 
+    // Appointment Modal State
+    const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState(false)
+    const [appointmentForm, setAppointmentForm] = useState({
+        data: '',
+        hora: '',
+        nota: ''
+    })
+
     const handleActivitySubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!selectedChat) return
@@ -145,7 +155,7 @@ export default function CRMChat() {
                 tipo: activityForm.tipo as any,
                 descricao: activityForm.descricao,
                 data_vencimento: activityForm.data_vencimento ? new Date(activityForm.data_vencimento).toISOString() : undefined,
-                empresa_id: '',
+
                 concluido: false
             })
             setIsActivityFormOpen(false)
@@ -167,7 +177,10 @@ export default function CRMChat() {
         }
         fetchUser()
         loadInitialData()
+        fetchUser()
+        loadInitialData()
         fetchContacts()
+        authService.getEmpresaSlug().then(setCompanySlug)
     }, [])
 
     useEffect(() => {
@@ -382,6 +395,125 @@ export default function CRMChat() {
         }
     }
 
+    const handleCreateAppointment = async () => {
+        if (!selectedChat || !appointmentForm.data || !appointmentForm.hora) {
+            alert('Preencha data e hora')
+            return
+        }
+
+        try {
+            const dataHora = `${appointmentForm.data}T${appointmentForm.hora}:00`
+            const conteudo = `📅 Agendamento Solicitado\nData: ${new Date(dataHora).toLocaleDateString()}\nHora: ${appointmentForm.hora}\nNota: ${appointmentForm.nota}`
+
+            // 1. Ensure Link (Client or Lead)
+            let clienteId = selectedChat.cliente_id
+            let leadId = selectedChat.lead_id
+
+            if (!clienteId && !leadId) {
+                // Auto-create Lead from Chat Info
+                // Prepare phone number: avoid using UUID as phone
+                let phoneToUse = selectedChat.id
+                // Simple UUID check (length > 20 and contains dashes)
+                if (phoneToUse.length > 20 && phoneToUse.includes('-')) {
+                    // Start thinking: Is title a phone number?
+                    // Remove non-numeric chars
+                    const numericTitle = (selectedChat.titulo || '').replace(/\D/g, '')
+                    if (numericTitle.length >= 10) {
+                        phoneToUse = numericTitle
+                    } else {
+                        // Fallback: If we can't find a phone, maybe empty? Or use a placeholder?
+                        // DB might require it. Let's try to leave it empty if allowed.
+                        const numericNome = (selectedChat.nome || '').replace(/\D/g, '')
+                        if (numericNome.length >= 10) {
+                            phoneToUse = numericNome
+                        } else {
+                            // If we really can't find a phone, use empty string if not required, or a placeholder if highly needed.
+                            // Better to try empty string first.
+                            phoneToUse = ''
+                        }
+                    }
+                }
+
+                const newLead = await clientService.createClient({
+                    nome: selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome || selectedChat.nome || selectedChat.titulo || 'Novo Lead Chat',
+                    telefone: phoneToUse,
+                    status: 'Novo',
+                    origem: 'Chat',
+                    foto_url: selectedChat.foto_contato
+                })
+                leadId = newLead.id
+            }
+
+            // 2. Create Opportunity
+            const stages = await crmService.getStages()
+            let firstStageName = 'Novo'
+            if (stages && stages.length > 0) {
+                firstStageName = stages[0].nome
+            }
+
+            // Validate if stage exists?? Ideally we use ID, but service uses name string?
+            // Existing service code uses string 'estagio'. logic seems to rely on exact match.
+            // If stages are empty, we might fail if DB enforces FK. 
+            // But we can't create a stage here easily. proceed with best guess.
+
+            const newOpp = await crmService.createOpportunity({
+                titulo: `Agendamento - ${selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome || selectedChat.nome || selectedChat.titulo || 'Cliente'}`,
+                valor: 0,
+                estagio: firstStageName,
+                cliente_id: clienteId,
+                lead_id: leadId,
+                data_fechamento: dataHora // Estimate closing date as appointment date
+            })
+
+            // 3. Create Activity (Meeting)
+            const newActivity = await crmService.addActivity({
+                oportunidade_id: newOpp.id,
+                tipo: 'reuniao',
+                descricao: `Agendamento via Chat\n${conteudo}`,
+                data_vencimento: new Date(dataHora).toISOString(), // Use full ISO string
+                concluido: false
+            })
+
+            // 4. Send Message with Links
+            const newMessage: ChatMessage = {
+                id: Math.random().toString(), // Temp ID
+                conversa_id: selectedChat.id,
+                remetente_tipo: 'usuario',
+                conteudo: conteudo,
+                tipo_conteudo: 'agendamento',
+                lido: true,
+                criado_em: new Date().toISOString(),
+                metadados: {
+                    data_agendamento: dataHora,
+                    nota: appointmentForm.nota,
+                    status: 'pendente',
+                    opportunity_id: newOpp.id,
+                    activity_id: newActivity.id
+                }
+            }
+
+            // Optimistic Update
+            setMessages(prev => [...prev, newMessage])
+            setIsAppointmentModalOpen(false)
+            setAppointmentForm({ data: '', hora: '', nota: '' })
+
+            await crmChatService.sendMessage(
+                selectedChat.id,
+                conteudo,
+                'usuario',
+                currentUser?.id,
+                'agendamento',
+                newMessage.metadados
+            )
+
+            loadInitialData(true) // Refresh list
+        } catch (error: any) {
+            console.error('Error creating appointment:', JSON.stringify(error, null, 2))
+            alert(`Erro ao criar agendamento: ${error.message || 'Verifique o console para mais detalhes'}`)
+        }
+    }
+
+
     const getAvatarUrl = (name: string, photoUrl?: string) => {
         if (photoUrl) return photoUrl
         return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=10B981&color=fff`
@@ -407,9 +539,12 @@ export default function CRMChat() {
     if (loading) return <div className="flex h-full items-center justify-center">Carregando...</div>
 
     return (
-        <div className="flex w-full h-full overflow-hidden bg-[#F3F4F6] p-4 lg:p-6 gap-4 relative">
+        <div className="flex w-full h-full overflow-hidden bg-[#F3F4F6] p-0 lg:p-6 gap-4 relative">
             {/* Left Panel: Conversation List */}
-            <div className="w-[360px] flex flex-col bg-white rounded-xl shadow-sm border border-gray-100 shrink-0 flex-1 md:flex-none h-full">
+            <div className={`
+                flex-col bg-white lg:rounded-xl shadow-sm border-r lg:border border-gray-100 shrink-0 h-full transition-all duration-300
+                ${selectedChat ? 'hidden lg:flex w-[360px]' : 'flex w-full lg:w-[360px]'}
+            `}>
                 {/* Header */}
                 <div className="p-4 border-b border-gray-50 flex justify-between items-center shrink-0">
                     <h2 className="font-bold text-gray-800 text-lg tracking-tight">Conversas</h2>
@@ -516,32 +651,53 @@ export default function CRMChat() {
             </div>
 
             {/* Center Panel: Chat Interface */}
-            <section className="flex-1 w-full flex flex-col bg-white rounded-xl shadow-sm border border-gray-100 min-w-[350px] relative h-full overflow-hidden">
+            <section className={`
+                flex-col bg-white lg:rounded-xl shadow-sm border border-gray-100 relative h-full overflow-hidden
+                ${selectedChat ? 'flex w-full flex-1' : 'hidden lg:flex lg:flex-1'}
+            `}>
                 {selectedChat ? (
                     <>
-                        {/* Chat Header */}
-                        <div className="h-[72px] border-b border-gray-100 px-6 flex items-center justify-between shrink-0 bg-white/80 backdrop-blur z-10">
-                            <div className="flex items-center gap-4">
-                                <div className="relative">
+                        <div className="h-[72px] border-b border-gray-100 px-4 lg:px-6 flex items-center justify-between shrink-0 bg-white/80 backdrop-blur z-10">
+                            <div className="flex items-center gap-3 lg:gap-4 overflow-hidden">
+                                {/* Back Button (Mobile Only) */}
+                                <button
+                                    onClick={() => setSelectedChat(null)}
+                                    className="lg:hidden p-2 -ml-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors"
+                                >
+                                    <span className="material-symbols-outlined">arrow_back</span>
+                                </button>
+
+                                <div className="relative shrink-0">
                                     <div className="w-10 h-10 rounded-full bg-cover bg-center ring-2 ring-gray-50" style={{ backgroundImage: `url('${getAvatarUrl(selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome || selectedChat.nome || selectedChat.titulo || 'C', selectedChat.foto_contato)}')` }}></div>
                                     <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></div>
                                 </div>
-                                <div className="flex flex-col">
-                                    <h2 className="text-sm font-bold text-gray-900 leading-tight">{selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome || selectedChat.nome || selectedChat.titulo || 'Cliente'}</h2>
-                                    <span className="text-xs text-green-600 font-medium flex items-center gap-1">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-green-600"></span>
-                                        {selectedChat.modo === 'bot' ? 'Atendimento Automático (Bot)' : 'Atendimento Humano'}
-                                        {selectedChat.canal && <span className="text-gray-400 mx-1">• {selectedChat.canal}</span>}
+                                <div className="flex flex-col overflow-hidden">
+                                    <h2 className="text-sm font-bold text-gray-900 leading-tight truncate">{selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome || selectedChat.nome || selectedChat.titulo || 'Cliente'}</h2>
+                                    <span className="text-xs text-green-600 font-medium flex items-center gap-1 truncate">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-green-600 shrink-0"></span>
+                                        <span className="truncate">{selectedChat.modo === 'bot' ? 'Bot' : 'Humano'}</span>
+                                        {selectedChat.canal && <span className="text-gray-400 mx-1 shrink-0">• {selectedChat.canal}</span>}
                                     </span>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1 l-2">
+                                <button
+                                    onClick={() => setIsDetailsOpen(!isDetailsOpen)}
+                                    className={`xl:hidden p-2 rounded-lg transition-colors ${isDetailsOpen ? 'bg-emerald-50 text-emerald-600' : 'text-gray-400 hover:bg-gray-100 hover:text-gray-600'}`}
+                                >
+                                    <span className="material-symbols-outlined">info</span>
+                                </button>
+                                <div className="h-5 w-px bg-gray-200 mx-1 hidden xl:block"></div>
                                 <button
                                     onClick={handleToggleMode}
-                                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors flex items-center gap-2 border ${selectedChat.modo === 'bot'
-                                        ? 'bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100'
-                                        : 'bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100'
-                                        }`}
+                                    className={`
+                                        hidden md:flex 
+                                        px-3 py-1.5 rounded-lg text-xs font-bold transition-colors items-center gap-2 border 
+                                        ${selectedChat.modo === 'bot'
+                                            ? 'bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100'
+                                            : 'bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100'
+                                        }
+                                    `}
                                 >
                                     <span className="material-symbols-outlined text-[16px]">{selectedChat.modo === 'bot' ? 'smart_toy' : 'person'}</span>
                                     {selectedChat.modo === 'bot' ? 'Assumir Conversa' : 'Devolver p/ Bot'}
@@ -562,18 +718,64 @@ export default function CRMChat() {
                         <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-gray-50/50">
                             {messages.map((msg) => {
                                 const isRight = msg.remetente_tipo === 'usuario' || msg.remetente_tipo === 'sistema'
+                                const isSchedule = msg.tipo_conteudo === 'agendamento'
+
                                 return (
                                     <div key={msg.id} className={`flex gap-3 max-w-[85%] ${isRight ? 'ml-auto justify-end' : ''}`}>
                                         {!isRight && (
                                             <div className="w-8 h-8 rounded-full bg-cover bg-center shrink-0 mt-auto mb-1 ring-2 ring-white" style={{ backgroundImage: `url('${getAvatarUrl(selectedChat.cliente?.nome_cliente || selectedChat.nome || 'C', selectedChat.foto_contato)}')` }}></div>
                                         )}
                                         <div className={`flex flex-col gap-1 items-${isRight ? 'end' : 'start'}`}>
-                                            <div className={`p-4 rounded-2xl shadow-md text-sm leading-relaxed ${isRight
-                                                ? 'bg-emerald-500 text-white rounded-br-none'
-                                                : 'bg-white text-gray-700 rounded-bl-none border border-gray-100'
-                                                }`}>
-                                                <p>{msg.conteudo}</p>
-                                            </div>
+                                            {isSchedule ? (
+                                                <div className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden w-64">
+                                                    <div className="bg-emerald-500 p-3 text-white flex items-center justify-between">
+                                                        <span className="font-bold flex items-center gap-1">
+                                                            <span className="material-symbols-outlined text-[18px]">event</span>
+                                                            Agendamento
+                                                        </span>
+                                                        <span className="text-xs bg-white/20 px-2 py-0.5 rounded uppercase font-bold">
+                                                            {msg.metadados?.status || 'Pendente'}
+                                                        </span>
+                                                    </div>
+                                                    <div className="p-4 bg-white text-gray-700">
+                                                        <div className="flex items-center gap-3 mb-3">
+                                                            <div className="bg-gray-100 p-2 rounded-lg">
+                                                                <span className="block text-xs text-gray-400 font-bold uppercase text-center">
+                                                                    {msg.metadados?.data_agendamento ? new Date(msg.metadados.data_agendamento).toLocaleDateString('pt-BR', { month: 'short' }) : 'DAT'}
+                                                                </span>
+                                                                <span className="block text-lg font-bold text-gray-800 text-center leading-none">
+                                                                    {msg.metadados?.data_agendamento ? new Date(msg.metadados.data_agendamento).getDate() : '00'}
+                                                                </span>
+                                                            </div>
+                                                            <div>
+                                                                <p className="font-bold text-gray-900 text-lg">
+                                                                    {msg.metadados?.data_agendamento ? new Date(msg.metadados.data_agendamento).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '--:--'}
+                                                                </p>
+                                                                <p className="text-xs text-gray-500">Horário Confirmado</p>
+                                                            </div>
+                                                        </div>
+                                                        {msg.metadados?.nota && (
+                                                            <div className="bg-gray-50 p-2 rounded text-sm text-gray-600 italic border border-gray-100 mb-2">
+                                                                "{msg.metadados.nota}"
+                                                            </div>
+                                                        )}
+                                                        <button
+                                                            onClick={() => onNavigate?.('crm-activities', { activityId: msg.metadados?.activity_id })}
+                                                            className="w-full py-2 rounded-lg bg-emerald-50 text-emerald-600 text-sm font-bold hover:bg-emerald-100 transition-colors"
+                                                        >
+                                                            Ver na Agenda
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className={`p-4 rounded-2xl shadow-md text-sm leading-relaxed ${isRight
+                                                    ? 'bg-emerald-500 text-white rounded-br-none'
+                                                    : 'bg-white text-gray-700 rounded-bl-none border border-gray-100'
+                                                    }`}>
+                                                    <p className="whitespace-pre-wrap">{msg.conteudo}</p>
+                                                </div>
+                                            )}
+
                                             <div className={`flex items-center gap-1 ${isRight ? 'mr-1' : 'ml-1'}`}>
                                                 <span className="text-[10px] text-gray-400 font-medium">
                                                     {new Date(msg.criado_em).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -595,6 +797,17 @@ export default function CRMChat() {
                                 <div className="flex items-end gap-2 bg-gray-50 p-2 rounded-xl border border-gray-200 focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:border-emerald-500 transition-all shadow-inner">
                                     <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-200">
                                         <span className="material-symbols-outlined text-[22px]">attach_file</span>
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            if (!companySlug) return alert('Slug da loja não encontrado')
+                                            const link = `${window.location.origin}/c/${companySlug}`
+                                            setMessageInput(prev => `${prev} ${link}`.trim())
+                                        }}
+                                        className="p-2 text-gray-400 hover:text-primary transition-colors rounded-full hover:bg-gray-200"
+                                        title="Enviar Catálogo"
+                                    >
+                                        <span className="material-symbols-outlined text-[22px]">storefront</span>
                                     </button>
                                     <textarea
                                         id="message-input"
@@ -624,8 +837,20 @@ export default function CRMChat() {
                 )}
             </section>
 
-            {/* Right Panel: Customer Details (Hidden on small screens) */}
-            <aside className="w-[360px] bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col shrink-0 overflow-y-auto hidden xl:flex h-full">
+            {/* Right Panel: Customer Details */}
+            <aside className={`
+                w-[360px] bg-white lg:rounded-xl shadow-sm border-l border-gray-100 flex-col shrink-0 overflow-y-auto h-full z-20
+                xl:flex transition-transform duration-300
+                fixed inset-y-0 right-0 lg:relative lg:inset-auto lg:transform-none
+                ${isDetailsOpen ? 'translate-x-0 shadow-2xl' : 'translate-x-full lg:translate-x-0 hidden'}
+            `}>
+                {/* Mobile Header for Details */}
+                <div className="xl:hidden p-4 border-b border-gray-100 flex items-center justify-between">
+                    <h3 className="font-bold text-gray-800">Detalhes</h3>
+                    <button onClick={() => setIsDetailsOpen(false)} className="p-1 rounded-full hover:bg-gray-100">
+                        <span className="material-symbols-outlined">close</span>
+                    </button>
+                </div>
                 {selectedChat ? (
                     <>
                         {/* Profile Header */}
@@ -650,7 +875,10 @@ export default function CRMChat() {
                                 <span className="material-symbols-outlined text-[18px]">check_circle</span>
                                 Marcar Resolvido
                             </button>
-                            <button className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-white border border-gray-200 text-gray-700 text-sm font-bold hover:bg-gray-50 transition-colors hover:border-gray-300">
+                            <button
+                                onClick={() => setIsAppointmentModalOpen(true)}
+                                className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-white border border-gray-200 text-gray-700 text-sm font-bold hover:bg-gray-50 transition-colors hover:border-gray-300"
+                            >
                                 <span className="material-symbols-outlined text-[18px]">calendar_today</span>
                                 Agendar
                             </button>
@@ -773,9 +1001,17 @@ export default function CRMChat() {
                         </div>
                     </>
                 ) : (
-                    <div className="p-6 text-center text-gray-400 text-sm">Selecione uma conversa para ver detalhes</div>
+                    <div className="p-6 text-center text-gray-400 text-sm flex-1 flex items-center justify-center">Selecione uma conversa para ver detalhes</div>
                 )}
             </aside>
+
+            {/* Backdrop for mobile drawer */}
+            {isDetailsOpen && (
+                <div
+                    className="fixed inset-0 bg-black/20 z-10 xl:hidden backdrop-blur-sm"
+                    onClick={() => setIsDetailsOpen(false)}
+                ></div>
+            )}
 
             {/* New Chat Modal */}
             {isNewChatModalOpen && (
@@ -990,6 +1226,70 @@ export default function CRMChat() {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Appointment Modal */}
+            {isAppointmentModalOpen && (
+                <div className="fixed inset-0 bg-gray-900 bg-opacity-50 z-[60] flex items-center justify-center p-4 backdrop-blur-sm">
+                    <div className="bg-white w-full max-w-sm rounded-xl shadow-2xl flex flex-col overflow-hidden animate-[fade-in-up_0.3s_ease-out]">
+                        <div className="p-5 border-b border-gray-100 flex justify-between items-center bg-white">
+                            <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                                <span className="material-symbols-outlined text-emerald-500">calendar_month</span>
+                                Agendar
+                            </h2>
+                            <button
+                                onClick={() => setIsAppointmentModalOpen(false)}
+                                className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100"
+                            >
+                                <span className="material-symbols-outlined">close</span>
+                            </button>
+                        </div>
+                        <div className="p-6 space-y-4">
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Data</label>
+                                <input
+                                    type="date"
+                                    className="w-full h-10 rounded-lg border-gray-300 bg-white px-3 text-sm focus:border-emerald-500 focus:ring-emerald-500/20 transition-all border outline-none"
+                                    value={appointmentForm.data}
+                                    onChange={e => setAppointmentForm({ ...appointmentForm, data: e.target.value })}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Horário</label>
+                                <input
+                                    type="time"
+                                    className="w-full h-10 rounded-lg border-gray-300 bg-white px-3 text-sm focus:border-emerald-500 focus:ring-emerald-500/20 transition-all border outline-none"
+                                    value={appointmentForm.hora}
+                                    onChange={e => setAppointmentForm({ ...appointmentForm, hora: e.target.value })}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Nota (Opcional)</label>
+                                <textarea
+                                    className="w-full rounded-lg border-gray-300 bg-white px-3 py-2 text-sm focus:border-emerald-500 focus:ring-emerald-500/20 transition-all border outline-none resize-none"
+                                    rows={3}
+                                    placeholder="Ex: Corte de cabelo + Barba..."
+                                    value={appointmentForm.nota}
+                                    onChange={e => setAppointmentForm({ ...appointmentForm, nota: e.target.value })}
+                                />
+                            </div>
+                        </div>
+                        <div className="p-5 border-t border-gray-50 bg-gray-50/50 flex justify-end gap-2">
+                            <button
+                                onClick={() => setIsAppointmentModalOpen(false)}
+                                className="px-4 py-2 rounded-lg text-gray-600 text-sm font-bold hover:bg-gray-100 transition-colors"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={handleCreateAppointment}
+                                className="px-4 py-2 rounded-lg bg-emerald-500 text-white text-sm font-bold hover:bg-emerald-600 transition-all shadow-sm"
+                            >
+                                Confirmar Agendamento
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

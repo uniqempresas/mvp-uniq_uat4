@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import type { Activity, Opportunity } from '../../services/crmService'
 import { crmService } from '../../services/crmService'
 
-export default function CRMActivities() {
+export default function CRMActivities({ highlightId }: { highlightId?: string }) {
     const [activities, setActivities] = useState<(Activity & {
         oportunidade?: {
             titulo: string,
@@ -32,6 +32,17 @@ export default function CRMActivities() {
     const [statusFilter, setStatusFilter] = useState('pendentes') // 'pendentes', 'concluidas', 'todas'
     const [dateFilter, setDateFilter] = useState('qualquer_data') // 'qualquer_data', 'hoje', 'vencidas', 'a_vencer'
     const [sortOrder, setSortOrder] = useState('recentes') // 'recentes', 'antigas'
+
+    // Auto-filter if highlightId provided
+    useEffect(() => {
+        if (highlightId) {
+            // Check if we have this activity
+            setSearchTerm(highlightId)
+            // Also enable 'all' status/date to ensure it's visible
+            setStatusFilter('todas')
+            setDateFilter('qualquer_data')
+        }
+    }, [highlightId])
 
     useEffect(() => {
         loadData()
@@ -97,11 +108,12 @@ export default function CRMActivities() {
     // Filters
     const filteredActivities = activities.filter(act => {
         // Search
-        const searchLower = searchTerm.toLowerCase()
+        const searchLower = String(searchTerm || '').toLowerCase()
         const matchesSearch =
-            act.descricao.toLowerCase().includes(searchLower) ||
-            act.oportunidade?.titulo.toLowerCase().includes(searchLower) ||
-            act.oportunidade?.cliente?.nome_cliente.toLowerCase().includes(searchLower) ||
+            String(act.id || '').toLowerCase().includes(searchLower) ||
+            String(act.descricao || '').toLowerCase().includes(searchLower) ||
+            String(act.oportunidade?.titulo || '').toLowerCase().includes(searchLower) ||
+            String(act.oportunidade?.cliente?.nome_cliente || '').toLowerCase().includes(searchLower) ||
             false
 
         // Type

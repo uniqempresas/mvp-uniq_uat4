@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Catálogo - Serviços Cadastrados UNIQ</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0fb86f",
+                        "background-light": "#f3f4f6",
+                        "background-dark": "#10221a",
+                        "sidebar-dark": "#1F2937",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-sidebar-item {
+            background-color: #e7f3ee;
+            border-radius: 0.75rem;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 h-screen overflow-hidden flex">
+<!-- Primary Sidebar (Dark) -->
+<aside class="w-20 bg-sidebar-dark flex flex-col items-center py-6 gap-8 border-r border-slate-700/50">
+<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white font-black text-xl mb-4">
+            U
+        </div>
+<nav class="flex flex-col gap-6 flex-1">
+<button class="p-2 text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl">dashboard</span>
+</button>
+<button class="p-2 text-white bg-primary rounded-xl">
+<span class="material-symbols-outlined text-3xl">shopping_cart</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl">account_balance</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl">inventory_2</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl">bar_chart</span>
+</button>
+</nav>
+<button class="p-2 text-slate-400 hover:text-white transition-colors mt-auto">
+<span class="material-symbols-outlined text-3xl">settings</span>
+</button>
+</aside>
+<!-- Contextual Sidebar (Light) -->
+<aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4">
+<div class="mb-8 px-2">
+<h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Operacional &amp; Vendas</h2>
+</div>
+<div class="flex flex-col gap-1 flex-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">pie_chart</span>
+<span class="text-sm font-medium">Dashboard Vendas</span>
+</a>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 bg-primary/10 text-primary rounded-lg" href="#">
+<span class="material-symbols-outlined">book_4</span>
+<span class="text-sm font-semibold">Catálogo</span>
+</a>
+<!-- Submenu active -->
+<div class="ml-9 flex flex-col gap-1 mt-1 border-l-2 border-primary/20">
+<a class="pl-4 py-2 text-sm text-slate-500 hover:text-primary transition-colors" href="#">Produtos</a>
+<a class="pl-4 py-2 text-sm text-primary font-bold border-l-2 border-primary -ml-[2px]" href="#">Cadastro de Serviços</a>
+<a class="pl-4 py-2 text-sm text-slate-500 hover:text-primary transition-colors" href="#">Categorias</a>
+</div>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-medium">Clientes</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-sm font-medium">Pedidos</span>
+</a>
+</div>
+<div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-4">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-2.5 rounded-lg text-sm flex items-center justify-center gap-2 transition-all shadow-md shadow-primary/20">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+                Novo Pedido
+            </button>
+<div class="flex items-center gap-3 px-3 py-2 text-slate-500">
+<span class="material-symbols-outlined">help</span>
+<span class="text-sm font-medium">Suporte</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto flex flex-col">
+<!-- Header -->
+<header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 p-6 flex flex-wrap justify-between items-center gap-4">
+<div class="flex flex-col">
+<h1 class="text-2xl font-black text-slate-800 dark:text-white tracking-tight">Serviços Cadastrados</h1>
+<p class="text-slate-500 text-sm">Gerencie o catálogo de serviços oferecidos pela sua empresa.</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-full text-xs font-semibold text-slate-500">
+<span class="w-2 h-2 bg-primary rounded-full mr-2"></span>
+                    24 Serviços
+                </div>
+<button class="bg-primary text-white font-bold px-5 py-2.5 rounded-lg text-sm flex items-center gap-2 hover:bg-primary/90 transition-all shadow-sm">
+<span class="material-symbols-outlined text-lg">add</span>
+                    Novo Serviço
+                </button>
+</div>
+</header>
+<!-- Toolbar / Filters -->
+<section class="bg-white dark:bg-slate-900 px-6 py-4 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800">
+<div class="flex-1 min-w-[300px] relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-lg text-sm transition-all" placeholder="Buscar serviço por nome ou código..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<button class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+<span class="material-symbols-outlined text-lg">filter_list</span>
+                    Todas as Categorias
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+<span class="material-symbols-outlined text-lg">sort</span>
+                    Ordenar
+                </button>
+<div class="h-8 w-[1px] bg-slate-200 dark:bg-slate-700 mx-2"></div>
+<div class="flex border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
+<button class="p-2 bg-slate-100 dark:bg-slate-800 text-primary">
+<span class="material-symbols-outlined text-lg">grid_view</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-slate-600">
+<span class="material-symbols-outlined text-lg">list</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Services Grid -->
+<div class="p-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow group">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl">business_center</span>
+</div>
+<div class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+<button class="p-1.5 text-slate-400 hover:text-primary"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-red-500"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</div>
+<h3 class="font-bold text-slate-800 dark:text-white text-lg mb-1">Consultoria Empresarial</h3>
+<div class="flex items-center gap-3 mb-3">
+<span class="inline-flex items-center gap-1 text-xs font-medium text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-sm">schedule</span> 1h 00m
+                    </span>
+<span class="text-xs text-slate-400">• Consultoria</span>
+</div>
+<p class="text-slate-500 text-sm mb-6 line-clamp-2">Análise de processos operacionais e planejamento estratégico para otimização de gestão.</p>
+<div class="flex justify-between items-center pt-4 border-t border-slate-50 dark:border-slate-800">
+<div class="text-xs text-slate-400 uppercase font-bold tracking-wider">Preço Base</div>
+<div class="text-primary font-black text-xl">R$ 250,00</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow group">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500">
+<span class="material-symbols-outlined text-2xl">build</span>
+</div>
+<div class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+<button class="p-1.5 text-slate-400 hover:text-primary"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-red-500"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</div>
+<h3 class="font-bold text-slate-800 dark:text-white text-lg mb-1">Manutenção Preventiva</h3>
+<div class="flex items-center gap-3 mb-3">
+<span class="inline-flex items-center gap-1 text-xs font-medium text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-sm">schedule</span> 2h 30m
+                    </span>
+<span class="text-xs text-slate-400">• Manutenção</span>
+</div>
+<p class="text-slate-500 text-sm mb-6 line-clamp-2">Revisão completa de maquinário industrial e lubrificação de componentes essenciais.</p>
+<div class="flex justify-between items-center pt-4 border-t border-slate-50 dark:border-slate-800">
+<div class="text-xs text-slate-400 uppercase font-bold tracking-wider">Preço Base</div>
+<div class="text-primary font-black text-xl">R$ 180,00</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow group">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500">
+<span class="material-symbols-outlined text-2xl">draw</span>
+</div>
+<div class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+<button class="p-1.5 text-slate-400 hover:text-primary"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-red-500"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</div>
+<h3 class="font-bold text-slate-800 dark:text-white text-lg mb-1">Design de Logotipo</h3>
+<div class="flex items-center gap-3 mb-3">
+<span class="inline-flex items-center gap-1 text-xs font-medium text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-sm">schedule</span> 5 dias
+                    </span>
+<span class="text-xs text-slate-400">• Design</span>
+</div>
+<p class="text-slate-500 text-sm mb-6 line-clamp-2">Criação de identidade visual completa, incluindo manual da marca e arquivos vetoriais.</p>
+<div class="flex justify-between items-center pt-4 border-t border-slate-50 dark:border-slate-800">
+<div class="text-xs text-slate-400 uppercase font-bold tracking-wider">Preço Base</div>
+<div class="text-primary font-black text-xl">R$ 1.200,00</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow group">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-500">
+<span class="material-symbols-outlined text-2xl">campaign</span>
+</div>
+<div class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+<button class="p-1.5 text-slate-400 hover:text-primary"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-red-500"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</div>
+<h3 class="font-bold text-slate-800 dark:text-white text-lg mb-1">Gestão de Tráfego Pago</h3>
+<div class="flex items-center gap-3 mb-3">
+<span class="inline-flex items-center gap-1 text-xs font-medium text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-sm">schedule</span> Mensal
+                    </span>
+<span class="text-xs text-slate-400">• Marketing</span>
+</div>
+<p class="text-slate-500 text-sm mb-6 line-clamp-2">Configuração e acompanhamento de campanhas no Google Ads e Meta Ads.</p>
+<div class="flex justify-between items-center pt-4 border-t border-slate-50 dark:border-slate-800">
+<div class="text-xs text-slate-400 uppercase font-bold tracking-wider">Preço Base</div>
+<div class="text-primary font-black text-xl">R$ 850,00</div>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow group">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-lg bg-red-500/10 flex items-center justify-center text-red-500">
+<span class="material-symbols-outlined text-2xl">support_agent</span>
+</div>
+<div class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+<button class="p-1.5 text-slate-400 hover:text-primary"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-red-500"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</div>
+<h3 class="font-bold text-slate-800 dark:text-white text-lg mb-1">Treinamento de Equipe</h3>
+<div class="flex items-center gap-3 mb-3">
+<span class="inline-flex items-center gap-1 text-xs font-medium text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-sm">schedule</span> 4h 00m
+                    </span>
+<span class="text-xs text-slate-400">• RH</span>
+</div>
+<p class="text-slate-500 text-sm mb-6 line-clamp-2">Workshop de atendimento ao cliente e técnicas de vendas internas para novos colaboradores.</p>
+<div class="flex justify-between items-center pt-4 border-t border-slate-50 dark:border-slate-800">
+<div class="text-xs text-slate-400 uppercase font-bold tracking-wider">Preço Base</div>
+<div class="text-primary font-black text-xl">R$ 500,00</div>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow group">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-lg bg-teal-500/10 flex items-center justify-center text-teal-500">
+<span class="material-symbols-outlined text-2xl">cleaning_services</span>
+</div>
+<div class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+<button class="p-1.5 text-slate-400 hover:text-primary"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-red-500"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</div>
+<h3 class="font-bold text-slate-800 dark:text-white text-lg mb-1">Limpeza Pós-Obra</h3>
+<div class="flex items-center gap-3 mb-3">
+<span class="inline-flex items-center gap-1 text-xs font-medium text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-sm">schedule</span> 8h 00m
+                    </span>
+<span class="text-xs text-slate-400">• Geral</span>
+</div>
+<p class="text-slate-500 text-sm mb-6 line-clamp-2">Higienização profunda de ambientes após reformas, incluindo remoção de resíduos de construção.</p>
+<div class="flex justify-between items-center pt-4 border-t border-slate-50 dark:border-slate-800">
+<div class="text-xs text-slate-400 uppercase font-bold tracking-wider">Preço Base</div>
+<div class="text-primary font-black text-xl">R$ 450,00</div>
+</div>
+</div>
+</div>
+<!-- Footer / Pagination -->
+<footer class="mt-auto bg-white dark:bg-slate-900 px-6 py-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<span class="text-sm text-slate-500 font-medium">Mostrando 1-6 de 24 serviços</span>
+<div class="flex items-center gap-2">
+<button class="p-2 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-400 hover:bg-slate-50 disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 bg-primary text-white font-bold rounded-lg shadow-sm shadow-primary/30">1</button>
+<button class="w-10 h-10 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">2</button>
+<button class="w-10 h-10 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">3</button>
+<button class="w-10 h-10 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">4</button>
+<button class="p-2 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-600 hover:bg-slate-50">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</footer>
+</main>
+</body></html>

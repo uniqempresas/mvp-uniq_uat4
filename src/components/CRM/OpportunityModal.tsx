@@ -173,7 +173,7 @@ export default function OpportunityModal({
                 descricao: activityForm.descricao,
                 data_vencimento: activityForm.data_vencimento ? new Date(activityForm.data_vencimento).toISOString() : undefined,
                 concluido: false,
-                empresa_id: '' // Service handles this
+
             })
             alert('Atividade adicionada!')
             setActivityForm(prev => ({ ...prev, descricao: '', data_vencimento: '' }))

@@ -25,6 +25,30 @@ export const authService = {
         return null
     },
 
+    async getEmpresaSlug(): Promise<string | null> {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) return null
+
+        // Try to get from me_usuario -> me_empresa
+        const { data: userData } = await supabase
+            .from('me_usuario')
+            .select('empresa:me_empresa(slug)')
+            .eq('id', user.id)
+            .single()
+
+        if (userData?.empresa) {
+            const empresa = Array.isArray(userData.empresa) ? userData.empresa[0] : userData.empresa
+            return empresa?.slug
+        }
+
+        // Fallback for development
+        if (user.email === 'luiz.padaria@gmail.com' || user.email?.includes('padaria')) {
+            return 'padaria-henriqueta'
+        }
+
+        return null
+    },
+
     async getCurrentUser() {
         const { data: { user } } = await supabase.auth.getUser()
         return user

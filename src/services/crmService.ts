@@ -252,7 +252,7 @@ export const crmService = {
         return (data || []) as Activity[]
     },
 
-    async addActivity(activity: Omit<Activity, 'id' | 'criado_em'>) {
+    async addActivity(activity: Omit<Activity, 'id' | 'criado_em' | 'empresa_id'>) {
         const empresaId = await authService.getEmpresaId()
         if (!empresaId) throw new Error('Empresa não identificada')
 
