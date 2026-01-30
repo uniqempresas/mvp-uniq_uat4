@@ -6,18 +6,11 @@ import FinanceLayout from '../Finance/FinanceLayout'
 import ModuleStore from './components/ModuleStore'
 import ProductList from '../../components/Catalog/ProductList'
 import ProductForm from '../Catalog/ProductForm'
-import ClientList from '../CRM/ClientList'
-import CRMSettings from '../CRM/CRMSettings'
-import CRMOpportunities from '../CRM/CRMOpportunities'
-import CRMActivities from '../CRM/CRMActivities'
-import CRMAttendances from '../CRM/CRMAttendances'
-import CRMChat from '../CRM/CRMChat'
-import CRMDashboard from '../CRM/CRMDashboard'
+import ServiceList from '../Services/ServiceList'
 
 export default function Dashboard() {
     const [activeContext, setActiveContext] = useState('dashboard')
     const [activeView, setActiveView] = useState('home')
-    const [viewParams, setViewParams] = useState<any>(null)
     const [editingProductId, setEditingProductId] = useState<number | undefined>(undefined)
 
     console.log('Dashboard activeView:', activeView)
@@ -32,20 +25,8 @@ export default function Dashboard() {
                 return <ProductList onNavigate={setActiveView} onEdit={(id) => { setEditingProductId(id); setActiveView('product-form') }} />
             case 'product-form':
                 return <ProductForm onNavigate={(view) => { setActiveView(view); setEditingProductId(undefined) }} productId={editingProductId} />
-            case 'crm-dashboard':
-                return <CRMDashboard />
-            case 'crm-clients':
-                return <ClientList />
-            case 'crm-settings':
-                return <CRMSettings />
-            case 'crm-opportunities':
-                return <CRMOpportunities />
-            case 'crm-activities':
-                return <CRMActivities highlightId={viewParams?.activityId} />
-            case 'crm-chat':
-                return <CRMChat onNavigate={(view, params) => { setActiveView(view); setViewParams(params) }} />
-            case 'crm-attendances':
-                return <CRMAttendances />
+            case 'services':
+                return <ServiceList onNavigate={setActiveView} />
             case 'home':
             default:
                 return <DashboardHome />

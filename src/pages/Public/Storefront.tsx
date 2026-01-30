@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { publicService, type PublicCompany, type PublicProduct } from '../../services/publicService'
+import { useCart } from '../../contexts/CartContext'
+import CartButton from '../../components/Storefront/CartButton'
+import CartDrawer from '../../components/Storefront/CartDrawer'
 
 export default function Storefront() {
     const { slug } = useParams<{ slug: string }>()
@@ -8,6 +11,8 @@ export default function Storefront() {
     const [products, setProducts] = useState<PublicProduct[]>([])
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
+    const [isCartOpen, setIsCartOpen] = useState(false)
+    const { addItem } = useCart()
 
     useEffect(() => {
         if (slug) loadData(slug)
@@ -36,6 +41,15 @@ export default function Storefront() {
         if (!company?.telefone) return
         const text = `Olá! Gostaria de pedir o produto: *${product.nome_produto}* (R$ ${product.preco}).`
         window.open(publicService.getWhatsAppLink(company.telefone, text), '_blank')
+    }
+
+    const handleAddToCart = (product: PublicProduct) => {
+        // Se tem variações, adiciona a primeira por padrão (pode melhorar depois)
+        const variacao = product.variacoes?.[0]
+        addItem(product, variacao)
+
+        // Feedback visual (opcional)
+        console.log('Adicionado ao carrinho:', product.nome_produto)
     }
 
     if (loading) return <div className="min-h-screen bg-gray-50 flex items-center justify-center text-gray-500">Carregando loja...</div>
@@ -93,12 +107,21 @@ export default function Storefront() {
                                                     <div className="flex items-baseline gap-1 mb-2">
                                                         <span className="text-sm text-gray-600 font-medium">Consulte-nos</span>
                                                     </div>
-                                                    <button
-                                                        onClick={() => handleWhatsAppOrder(product)}
-                                                        className="w-full bg-green-500 rounded-lg text-white py-2 flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform text-sm font-medium">
-                                                        <span className="text-lg">💬</span>
-                                                        Pedir
-                                                    </button>
+                                                    <div className="flex gap-1">
+                                                        <button
+                                                            onClick={() => handleAddToCart(product)}
+                                                            className="flex-1 bg-primary rounded-lg text-white py-2 flex items-center justify-center gap-1 shadow-sm active:scale-95 transition-transform text-xs font-medium"
+                                                        >
+                                                            <span className="material-symbols-outlined text-base">shopping_cart</span>
+                                                            Adicionar
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleWhatsAppOrder(product)}
+                                                            className="size-9 bg-green-500 rounded-lg text-white flex items-center justify-center shadow-sm active:scale-95 transition-transform"
+                                                        >
+                                                            <span className="text-base">💬</span>
+                                                        </button>
+                                                    </div>
                                                 </>
                                             )
                                         }
@@ -112,12 +135,21 @@ export default function Storefront() {
                                                         R$ {menorPreco.toFixed(2).replace('.', ',')}
                                                     </span>
                                                 </div>
-                                                <button
-                                                    onClick={() => handleWhatsAppOrder(product)}
-                                                    className="w-full bg-green-500 rounded-lg text-white py-2 flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform text-sm font-medium">
-                                                    <span className="text-lg">💬</span>
-                                                    Pedir
-                                                </button>
+                                                <div className="flex gap-1">
+                                                    <button
+                                                        onClick={() => handleAddToCart(product)}
+                                                        className="flex-1 bg-primary rounded-lg text-white py-2 flex items-center justify-center gap-1 shadow-sm active:scale-95 transition-transform text-xs font-medium"
+                                                    >
+                                                        <span className="material-symbols-outlined text-base">shopping_cart</span>
+                                                        Adicionar
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleWhatsAppOrder(product)}
+                                                        className="size-9 bg-green-500 rounded-lg text-white flex items-center justify-center shadow-sm active:scale-95 transition-transform"
+                                                    >
+                                                        <span className="text-base">💬</span>
+                                                    </button>
+                                                </div>
                                             </>
                                         )
                                     }
@@ -133,13 +165,23 @@ export default function Storefront() {
                                                     R$ {product.preco.toFixed(2).replace('.', ',')}
                                                 </span>
                                             )}
-                                            <div className="flex items-center justify-between">
+                                            <div className="flex items-center justify-between mb-2">
                                                 <span className="font-bold text-primary">
                                                     R$ {precoFinal.toFixed(2).replace('.', ',')}
                                                 </span>
+                                            </div>
+                                            <div className="flex gap-1">
+                                                <button
+                                                    onClick={() => handleAddToCart(product)}
+                                                    className="flex-1 bg-primary rounded-lg text-white py-2 flex items-center justify-center gap-1 shadow-sm active:scale-95 transition-transform text-xs font-medium"
+                                                >
+                                                    <span className="material-symbols-outlined text-base">shopping_cart</span>
+                                                    Adicionar
+                                                </button>
                                                 <button
                                                     onClick={() => handleWhatsAppOrder(product)}
-                                                    className="size-8 bg-green-500 rounded-full text-white flex items-center justify-center shadow-sm active:scale-95 transition-transform">
+                                                    className="size-9 bg-green-500 rounded-lg text-white flex items-center justify-center shadow-sm active:scale-95 transition-transform"
+                                                >
                                                     <span className="text-base">💬</span>
                                                 </button>
                                             </div>
@@ -163,6 +205,17 @@ export default function Storefront() {
             <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 text-center text-xs text-gray-400">
                 Catálogo Digital via <strong>UNIQ</strong>
             </div>
+
+            {/* Cart Button */}
+            <CartButton onClick={() => setIsCartOpen(true)} />
+
+            {/* Cart Drawer */}
+            <CartDrawer
+                isOpen={isCartOpen}
+                onClose={() => setIsCartOpen(false)}
+                companyPhone={company.telefone}
+                companyName={company.nome_fantasia}
+            />
         </div>
     )
 }

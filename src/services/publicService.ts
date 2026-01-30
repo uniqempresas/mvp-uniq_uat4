@@ -1,5 +1,6 @@
 import { supabase } from '../lib/supabase'
 import type { Product } from './productService'
+import { USE_MOCK_DATA, mockCompany, mockProducts } from '../mocks/storefront'
 
 export interface PublicCompany {
     id: string
@@ -15,6 +16,12 @@ export interface PublicProduct extends Product {
 
 export const publicService = {
     async getCompanyBySlug(slug: string): Promise<PublicCompany | null> {
+        // Usar mock data se configurado
+        if (USE_MOCK_DATA) {
+            console.log('🎭 Usando MOCK DATA para empresa')
+            return mockCompany.slug === slug ? mockCompany : null
+        }
+
         const { data, error } = await supabase
             .from('me_empresa')
             .select('id, nome_fantasia, telefone, slug')
@@ -29,6 +36,12 @@ export const publicService = {
     },
 
     async getPublicProducts(empresaId: string): Promise<PublicProduct[]> {
+        // Usar mock data se configurado
+        if (USE_MOCK_DATA) {
+            console.log('🎭 Usando MOCK DATA para produtos')
+            return mockProducts.filter(p => p.empresa_id === empresaId)
+        }
+
         const { data, error } = await supabase
             .from('me_produto')
             .select(`

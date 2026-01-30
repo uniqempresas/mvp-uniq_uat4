@@ -10,6 +10,7 @@ import PayablePage from './pages/Finance/PayablePage'
 import ReceivablePage from './pages/Finance/ReceivablePage'
 import AccountsPage from './pages/Finance/AccountsPage'
 import CategoriesPage from './pages/Finance/CategoriesPage'
+import CRMLayout from './pages/CRM/CRMLayout'
 
 function App() {
   return (
@@ -19,6 +20,9 @@ function App() {
         <Route path="/onboarding" element={<Onboarding />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
+
+          {/* CRM Routes */}
+          <Route path="/crm" element={<CRMLayout />} />
 
           {/* Finance Routes */}
           <Route path="/finance" element={<FinanceLayout />}>

@@ -48,7 +48,7 @@ const MENU_CONFIG: Record<string, { title: string; subtitle: string; items: Menu
                 href: '#',
                 children: [
                     { label: 'Produtos', icon: 'package_2', view: 'products' },
-                    { label: 'Serviços', icon: 'handyman', href: '#' },
+                    { label: 'Serviços', icon: 'handyman', view: 'services' },
                     { label: 'Clientes', icon: 'group', href: '#' },
                     { label: 'Fornecedores', icon: 'warehouse', href: '#' },
                     { label: 'Colaboradores', icon: 'badge', href: '#' }
