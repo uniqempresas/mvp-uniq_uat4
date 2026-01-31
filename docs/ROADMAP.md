@@ -3,8 +3,9 @@
 > **Última atualização**: 31/01/2026
 
 **📋 Documentos Relacionados:**
-- [Tracking Detalhado (TRACKING.md)](./TRACKING.md) - Status diário de tarefas
-- [Histórico de Mudanças (CHANGELOG.md)](./CHANGELOG.md) - Entregas por versão
+- [Tracking Detalhado (TRACKING.md)](./tracking/TRACKING.md) - Status diário de tarefas
+- [Histórico de Mudanças (CHANGELOG.md)](./tracking/CHANGELOG.md) - Entregas por versão
+- [Contexto do Projeto (CONTEXTO_PROJETO.md)](./tracking/CONTEXTO_PROJETO.md) - Visão geral e sincronização
 
 ---
 
