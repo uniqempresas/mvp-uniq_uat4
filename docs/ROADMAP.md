@@ -1,6 +1,10 @@
 # 🗺️ Roadmap UNIQ Empresas
 
-> **Última atualização**: 29/01/2026
+> **Última atualização**: 31/01/2026
+
+**📋 Documentos Relacionados:**
+- [Tracking Detalhado (TRACKING.md)](./TRACKING.md) - Status diário de tarefas
+- [Histórico de Mudanças (CHANGELOG.md)](./CHANGELOG.md) - Entregas por versão
 
 ---
 
