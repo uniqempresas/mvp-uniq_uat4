@@ -142,7 +142,25 @@ export default function Onboarding() {
 
             const empresaId = empresaData.id
 
-            // 3. Save Address
+            // 2.5. Criar registro do usuário em me_usuario (IMPORTANTE para RLS!)
+            const { error: usuarioError } = await supabase
+                .from('me_usuario')
+                .insert([{
+                    id: authData.user.id, // Mesmo ID do auth.users
+                    empresa_id: empresaId,
+                    nome: formData.fullName,
+                    email: formData.email,
+                    ativo: true
+                }])
+
+            if (usuarioError) {
+                console.error('Usuario error:', usuarioError)
+                alert(getErrorMessage(usuarioError))
+                setLoading(false)
+                return
+            }
+
+            // 3. Save Address (Agora RLS vai permitir porque usuário existe em me_usuario)
             const { error: addressError } = await supabase
                 .from('me_empresa_endereco')
                 .insert([{
