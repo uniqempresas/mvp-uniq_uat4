@@ -10,6 +10,8 @@ interface Props {
 
 export default function Step1Personal({ formData, updateFormData, onNext }: Props) {
     const [errors, setErrors] = useState<Record<string, string>>({})
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
@@ -128,12 +130,19 @@ export default function Step1Personal({ formData, updateFormData, onNext }: Prop
                         <div className="relative">
                             <input
                                 name="password"
-                                className={`w-full h-12 rounded-xl border ${errors.password ? 'border-red-500' : 'border-input-border'} bg-background-light dark:bg-background-dark/50 text-input-text dark:text-white placeholder:text-input-placeholder px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all`}
+                                className={`w-full h-12 rounded-xl border ${errors.password ? 'border-red-500' : 'border-input-border'} bg-background-light dark:bg-background-dark/50 text-input-text dark:text-white placeholder:text-input-placeholder px-4 py-3 pr-12 text-base focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all`}
                                 placeholder="••••••••"
-                                type="password"
+                                type={showPassword ? "text" : "password"}
                                 value={formData.password}
                                 onChange={e => { updateFormData({ password: e.target.value }); setErrors(prev => ({ ...prev, password: '', confirmPassword: '' })) }}
                             />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-input-placeholder hover:text-input-text transition-colors"
+                            >
+                                <span className="material-symbols-outlined text-xl">{showPassword ? 'visibility_off' : 'visibility'}</span>
+                            </button>
                             {errors.password && <p className="text-red-500 text-sm mt-1 absolute -bottom-6">{errors.password}</p>}
                         </div>
                     </div>
@@ -142,12 +151,19 @@ export default function Step1Personal({ formData, updateFormData, onNext }: Prop
                         <div className="relative">
                             <input
                                 name="confirmPassword"
-                                className={`w-full h-12 rounded-xl border ${errors.confirmPassword ? 'border-red-500' : 'border-input-border'} bg-background-light dark:bg-background-dark/50 text-input-text dark:text-white placeholder:text-input-placeholder px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all`}
+                                className={`w-full h-12 rounded-xl border ${errors.confirmPassword ? 'border-red-500' : 'border-input-border'} bg-background-light dark:bg-background-dark/50 text-input-text dark:text-white placeholder:text-input-placeholder px-4 py-3 pr-12 text-base focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all`}
                                 placeholder="••••••••"
-                                type="password"
+                                type={showConfirmPassword ? "text" : "password"}
                                 value={formData.confirmPassword}
                                 onChange={e => { updateFormData({ confirmPassword: e.target.value }); setErrors(prev => ({ ...prev, confirmPassword: '' })) }}
                             />
+                            <button
+                                type="button"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-input-placeholder hover:text-input-text transition-colors"
+                            >
+                                <span className="material-symbols-outlined text-xl">{showConfirmPassword ? 'visibility_off' : 'visibility'}</span>
+                            </button>
                             {errors.confirmPassword && <p className="text-red-500 text-sm mt-1 absolute -bottom-6">{errors.confirmPassword}</p>}
                         </div>
                     </div>

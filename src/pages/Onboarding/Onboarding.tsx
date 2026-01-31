@@ -123,7 +123,7 @@ export default function Onboarding() {
                     nome_fantasia: formData.companyName,
                     cnpj: formData.cnpj,
                     telefone: formData.phone,
-                    email_contato: formData.email,
+                    email: formData.email, // CORRIGIDO: era email_contato
                     slug: slug
                 }])
                 .select()
