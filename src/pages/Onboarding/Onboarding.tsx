@@ -1,14 +1,31 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import Step1Personal from './Step1Personal'
 import Step2Company from './Step2Company'
-import Step3Config from './Step3Config' // Step 3: Configuration
+import Step3Config from './Step3Config'
+import { getErrorMessage } from '../../utils/errorMessages'
 
 export default function Onboarding() {
     const [step, setStep] = useState(1)
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
+
+    // Forçar light mode durante onboarding
+    useEffect(() => {
+        const html = document.documentElement
+        const hadDarkClass = html.classList.contains('dark')
+
+        // Remove dark mode
+        html.classList.remove('dark')
+
+        // Restaura ao sair
+        return () => {
+            if (hadDarkClass) {
+                html.classList.add('dark')
+            }
+        }
+    }, [])
 
     const [formData, setFormData] = useState({
         // Step 1: Personal
@@ -76,7 +93,13 @@ export default function Onboarding() {
                 }
             })
 
-            if (authError) throw authError
+            if (authError) {
+                console.error('Auth error:', authError)
+                alert(getErrorMessage(authError))
+                setLoading(false)
+                return
+            }
+
             if (!authData.user) throw new Error("Erro ao criar usuário")
 
             // Helper to generate slug
@@ -92,18 +115,32 @@ export default function Onboarding() {
 
             const slug = generateSlug(formData.companyName)
 
-            // 2. Call RPC to create company and initial settings
-            const { data: empresaId, error: rpcError } = await supabase.rpc('criar_empresa_e_configuracoes_iniciais', {
-                p_usuario_id: authData.user.id,
-                p_nome_fantasia: formData.companyName,
-                p_cnpj: formData.cnpj,
-                p_telefone: formData.phone,
-                p_email_contato: formData.email,
-                p_slug: slug
-            })
+            // 2. Criar empresa diretamente
+            const { data: empresaData, error: empresaError } = await supabase
+                .from('me_empresa')
+                .insert([{
+                    id: authData.user.id,
+                    nome_fantasia: formData.companyName,
+                    cnpj: formData.cnpj,
+                    telefone: formData.phone,
+                    email_contato: formData.email,
+                    slug: slug
+                }])
+                .select()
+                .single()
 
-            if (rpcError) throw rpcError
-            if (!empresaId) throw new Error("Erro ao obter ID da empresa")
+            if (empresaError) {
+                console.error('Empresa error:', empresaError)
+                alert(getErrorMessage(empresaError))
+                // Cleanup: delete auth user if empresa creation failed
+                await supabase.auth.admin.deleteUser(authData.user.id)
+                setLoading(false)
+                return
+            }
+
+            if (!empresaData) throw new Error("Erro ao criar empresa")
+
+            const empresaId = empresaData.id
 
             // 3. Save Address
             const { error: addressError } = await supabase
@@ -120,15 +157,19 @@ export default function Onboarding() {
                     ibge: formData.address.ibge
                 }])
 
-            if (addressError) throw addressError
+            if (addressError) {
+                console.error('Address error:', addressError)
+                alert(getErrorMessage(addressError))
+                setLoading(false)
+                // Continue mesmo com erro de endereço
+            }
 
-            // Success
-            alert('Conta criada com sucesso!')
-            navigate('/dashboard') // Redirect to dashboard
+            // Success - auth.signUp já faz login automático!
+            navigate('/dashboard')
 
         } catch (error: any) {
             console.error("Error onboarding:", error)
-            alert('Erro ao criar conta: ' + (error.message || 'Erro desconhecido'))
+            alert(getErrorMessage(error))
         } finally {
             setLoading(false)
         }

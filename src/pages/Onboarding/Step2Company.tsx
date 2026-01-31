@@ -1,4 +1,6 @@
-import { formatCpfCnpj, formatPhone, formatCep } from '../../utils/format'
+import { useState } from 'react'
+import { formatCNPJ, formatPhone, formatCEP, validateCNPJ } from '../../utils/validators'
+import { ValidationMessages } from '../../utils/errorMessages'
 
 interface Props {
     formData: any
@@ -8,6 +10,8 @@ interface Props {
 }
 
 export default function Step2Company({ formData, updateFormData, onNext, onBack }: Props) {
+    const [errors, setErrors] = useState<Record<string, string>>({})
+
     const handleCepBlur = async () => {
         const cep = formData.address.cep.replace(/\D/g, '')
         if (cep.length !== 8) return
@@ -25,30 +29,61 @@ export default function Step2Company({ formData, updateFormData, onNext, onBack 
                         cidade: data.localidade,
                         uf: data.uf,
                         ibge: data.ibge,
-                        // Keep user-entered number/complement if any
                         numero: formData.address.numero,
                         complemento: formData.address.complemento
                     }
                 })
+                // Limpa erro de CEP se houver
+                setErrors(prev => ({ ...prev, cep: '' }))
             } else {
-                alert('CEP não encontrado.')
+                setErrors(prev => ({ ...prev, cep: 'CEP não encontrado' }))
             }
         } catch (error) {
             console.error('Error fetching CEP:', error)
-            alert('Erro ao buscar CEP. Preencha o endereço manualmente.')
+            setErrors(prev => ({ ...prev, cep: 'Erro ao buscar CEP' }))
         }
     }
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        if (!formData.companyName || !formData.cnpj || !formData.phone) {
-            alert('Preencha os campos obrigatórios (Nome, CNPJ, Telefone)')
+        const newErrors: Record<string, string> = {}
+
+        // Validar campos obrigatórios
+        if (!formData.companyName?.trim()) {
+            newErrors.companyName = ValidationMessages.FIELD_REQUIRED
+        }
+
+        if (!formData.cnpj?.trim()) {
+            newErrors.cnpj = ValidationMessages.FIELD_REQUIRED
+        } else if (!validateCNPJ(formData.cnpj)) {
+            newErrors.cnpj = ValidationMessages.CNPJ_INVALID
+        }
+
+        if (!formData.phone?.trim()) {
+            newErrors.phone = ValidationMessages.FIELD_REQUIRED
+        }
+
+        if (!formData.address.cep?.trim()) {
+            newErrors.cep = ValidationMessages.FIELD_REQUIRED
+        }
+
+        if (!formData.address.logradouro?.trim()) {
+            newErrors.logradouro = 'Digite o CEP para buscar o endereço'
+        }
+
+        if (!formData.address.numero?.trim()) {
+            newErrors.numero = ValidationMessages.FIELD_REQUIRED
+        }
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors)
+            const firstErrorField = Object.keys(newErrors)[0]
+            const element = document.querySelector(`[name="${firstErrorField}"]`)
+            element?.scrollIntoView({ behavior: 'smooth', block: 'center' })
             return
         }
-        if (!formData.address.cep || !formData.address.logradouro || !formData.address.numero) {
-            alert('Preencha o endereço completo (CEP, rua, número)')
-            return
-        }
+
+        setErrors({})
         onNext()
     }
 
@@ -63,12 +98,14 @@ export default function Step2Company({ formData, updateFormData, onNext, onBack 
                     <label className="text-sm font-semibold text-input-text dark:text-gray-200">Nome da Empresa</label>
                     <div className="relative">
                         <input
-                            className="w-full h-12 rounded-xl border border-input-border bg-background-light dark:bg-background-dark/50 text-input-text dark:text-white placeholder:text-input-placeholder px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                            name="companyName"
+                            className={`w-full h-12 rounded-xl border ${errors.companyName ? 'border-red-500' : 'border-input-border'} bg-background-light dark:bg-background-dark/50 text-input-text dark:text-white placeholder:text-input-placeholder px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all`}
                             placeholder="Ex: Minha Loja Ltda"
                             type="text"
                             value={formData.companyName}
-                            onChange={e => updateFormData({ companyName: e.target.value })}
+                            onChange={e => { updateFormData({ companyName: e.target.value }); setErrors(prev => ({ ...prev, companyName: '' })) }}
                         />
+                        {errors.companyName && <p className="text-red-500 text-sm mt-1">{errors.companyName}</p>}
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 text-input-placeholder">
                             <span className="material-symbols-outlined text-xl">store</span>
                         </div>
@@ -80,24 +117,30 @@ export default function Step2Company({ formData, updateFormData, onNext, onBack 
                         <label className="text-sm font-semibold text-input-text dark:text-gray-200">CNPJ</label>
                         <div className="relative">
                             <input
-                                className="w-full h-12 rounded-xl border border-input-border bg-background-light dark:bg-background-dark/50 text-input-text dark:text-white placeholder:text-input-placeholder px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                                name="cnpj"
+                                className={`w-full h-12 rounded-xl border ${errors.cnpj ? 'border-red-500' : 'border-input-border'} bg-background-light dark:bg-background-dark/50 text-input-text dark:text-white placeholder:text-input-placeholder px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all`}
                                 placeholder="00.000.000/0000-00"
                                 type="text"
                                 value={formData.cnpj}
-                                onChange={e => updateFormData({ cnpj: formatCpfCnpj(e.target.value) })}
+                                onChange={e => { updateFormData({ cnpj: formatCNPJ(e.target.value) }); setErrors(prev => ({ ...prev, cnpj: '' })) }}
+                                maxLength={18}
                             />
+                            {errors.cnpj && <p className="text-red-500 text-sm mt-1 absolute -bottom-6">{errors.cnpj}</p>}
                         </div>
                     </div>
                     <div className="flex flex-col gap-2">
                         <label className="text-sm font-semibold text-input-text dark:text-gray-200">Telefone</label>
                         <div className="relative">
                             <input
-                                className="w-full h-12 rounded-xl border border-input-border bg-background-light dark:bg-background-dark/50 text-input-text dark:text-white placeholder:text-input-placeholder px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                                name="phone"
+                                className={`w-full h-12 rounded-xl border ${errors.phone ? 'border-red-500' : 'border-input-border'} bg-background-light dark:bg-background-dark/50 text-input-text dark:text-white placeholder:text-input-placeholder px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all`}
                                 placeholder="(00) 00000-0000"
                                 type="text"
                                 value={formData.phone}
-                                onChange={e => updateFormData({ phone: formatPhone(e.target.value) })}
+                                onChange={e => { updateFormData({ phone: formatPhone(e.target.value) }); setErrors(prev => ({ ...prev, phone: '' })) }}
+                                maxLength={15}
                             />
+                            {errors.phone && <p className="text-red-500 text-sm mt-1 absolute -bottom-6">{errors.phone}</p>}
                         </div>
                     </div>
                 </div>
@@ -148,13 +191,16 @@ export default function Step2Company({ formData, updateFormData, onNext, onBack 
                         <label className="text-sm font-semibold text-input-text dark:text-gray-200">CEP</label>
                         <div className="relative">
                             <input
-                                className="w-full h-12 rounded-xl border border-input-border bg-background-light dark:bg-background-dark/50 text-input-text dark:text-white placeholder:text-input-placeholder px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                                name="cep"
+                                className={`w-full h-12 rounded-xl border ${errors.cep ? 'border-red-500' : 'border-input-border'} bg-background-light dark:bg-background-dark/50 text-input-text dark:text-white placeholder:text-input-placeholder px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all`}
                                 placeholder="00000-000"
                                 type="text"
                                 value={formData.address.cep}
-                                onChange={e => updateFormData({ address: { ...formData.address, cep: formatCep(e.target.value) } })}
+                                onChange={e => { updateFormData({ address: { ...formData.address, cep: formatCEP(e.target.value) } }); setErrors(prev => ({ ...prev, cep: '' })) }}
                                 onBlur={handleCepBlur}
+                                maxLength={9}
                             />
+                            {errors.cep && <p className="text-red-500 text-sm mt-1">{errors.cep}</p>}
                             {/* Optional: Add spinner if loading */}
                         </div>
                     </div>
