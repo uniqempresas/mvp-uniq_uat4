@@ -320,13 +320,11 @@ export default function ProductForm({ onNavigate, productId }: ProductFormProps)
             {/* Header */}
             <header className="h-16 bg-white/80 dark:bg-black/20 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-8 sticky top-0 z-10">
                 {/* Breadcrumbs */}
-                <div className="flex items-center gap-2 text-sm">
-                    <button onClick={() => onNavigate?.('home')} className="text-gray-500 hover:text-primary transition-colors">Minha Empresa</button>
-                    <span className="text-gray-300">/</span>
-                    <button onClick={() => onNavigate?.('products')} className="text-gray-500 hover:text-primary transition-colors">Catálogo</button>
-                    <span className="text-gray-300">/</span>
-                    <span className="text-gray-900 dark:text-white font-medium">{productId ? 'Editar Produto' : 'Novo Produto'}</span>
-                </div>
+                <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
+                    <button onClick={() => onNavigate?.('home')} className="text-gray-500 hover:text-primary transition-colors">Dashboard</button>
+                    <span className="material-symbols-outlined text-sm">chevron_right</span>
+                    <span className="text-gray-900 font-medium">Produtos</span>
+                </nav>
                 {/* Top Right Actions */}
                 <div className="flex items-center gap-4">
                     <button className="text-gray-500 hover:text-primary transition-colors">

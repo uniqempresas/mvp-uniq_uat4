@@ -88,7 +88,7 @@ export default function Onboarding() {
                 options: {
                     data: {
                         full_name: formData.fullName,
-                        phone: formData.phone // Initial phone for metadata
+                        phone: formData.phone
                     }
                 }
             })
@@ -115,74 +115,39 @@ export default function Onboarding() {
 
             const slug = generateSlug(formData.companyName)
 
-            // 2. Criar empresa diretamente
-            const { data: empresaData, error: empresaError } = await supabase
-                .from('me_empresa')
-                .insert([{
-                    id: authData.user.id,
-                    nome_fantasia: formData.companyName,
-                    cnpj: formData.cnpj,
-                    telefone: formData.phone,
-                    email: formData.email, // CORRIGIDO: era email_contato
-                    slug: slug
-                }])
-                .select()
-                .single()
+            // 2. Criar empresa + usuário + endereço + dados iniciais via RPC
+            const { data: rpcData, error: rpcError } = await supabase.rpc(
+                'criar_empresa_e_configuracoes_iniciais',
+                {
+                    p_usuario_id: authData.user.id,
+                    p_nome_fantasia: formData.companyName,
+                    p_cnpj: formData.cnpj,
+                    p_telefone: formData.phone,
+                    p_email: formData.email,
+                    p_slug: slug,
+                    // Endereço
+                    p_cep: formData.address.cep,
+                    p_logradouro: formData.address.logradouro,
+                    p_numero: formData.address.numero,
+                    p_complemento: formData.address.complemento,
+                    p_bairro: formData.address.bairro,
+                    p_cidade: formData.address.cidade,
+                    p_uf: formData.address.uf,
+                    p_ibge: formData.address.ibge
+                }
+            )
 
-            if (empresaError) {
-                console.error('Empresa error:', empresaError)
-                alert(getErrorMessage(empresaError))
-                // Cleanup: delete auth user if empresa creation failed
-                await supabase.auth.admin.deleteUser(authData.user.id)
+            if (rpcError) {
+                console.error('RPC error:', rpcError)
+                alert(getErrorMessage(rpcError))
+                // A RPC já faz rollback automático de empresa/usuário/endereço
+                // Mas o auth user ainda fica criado (limitação conhecida)
                 setLoading(false)
                 return
-            }
-
-            if (!empresaData) throw new Error("Erro ao criar empresa")
-
-            const empresaId = empresaData.id
-
-            // 2.5. Criar registro do usuário em me_usuario (IMPORTANTE para RLS!)
-            const { error: usuarioError } = await supabase
-                .from('me_usuario')
-                .insert([{
-                    id: authData.user.id, // Mesmo ID do auth.users
-                    empresa_id: empresaId,
-                    nome: formData.fullName,
-                    email: formData.email,
-                    ativo: true
-                }])
-
-            if (usuarioError) {
-                console.error('Usuario error:', usuarioError)
-                alert(getErrorMessage(usuarioError))
-                setLoading(false)
-                return
-            }
-
-            // 3. Save Address (Agora RLS vai permitir porque usuário existe em me_usuario)
-            const { error: addressError } = await supabase
-                .from('me_empresa_endereco')
-                .insert([{
-                    empresa_id: empresaId,
-                    cep: formData.address.cep,
-                    logradouro: formData.address.logradouro,
-                    numero: formData.address.numero,
-                    complemento: formData.address.complemento,
-                    bairro: formData.address.bairro,
-                    cidade: formData.address.cidade,
-                    uf: formData.address.uf,
-                    ibge: formData.address.ibge
-                }])
-
-            if (addressError) {
-                console.error('Address error:', addressError)
-                alert(getErrorMessage(addressError))
-                setLoading(false)
-                // Continue mesmo com erro de endereço
             }
 
             // Success - auth.signUp já faz login automático!
+            console.log('Empresa criada com dados iniciais:', rpcData)
             navigate('/dashboard')
 
         } catch (error: any) {

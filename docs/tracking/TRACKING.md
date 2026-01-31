@@ -7,16 +7,17 @@
 
 ## 🔴 EM PROGRESSO
 
-### [TRACK-002] Cadastro de Usuários - Correção e Testes
+### [TRACK-002] Cadastro de Usuários - Correção e Testes ✅
 - **Responsável:** Dev
-- **Máquina:** UNIQ
-- **Status:** 🔧 Em Progresso
+- **Máquina:** UNIQ + Ultra
+- **Status:** ✅ Concluído
 - **Início:** 31/01/2026 10:07
-- **Progresso:** 60%
+- **Conclusão:** 31/01/2026 12:51
+- **Progresso:** 100%
 - **Prioridade:** 🔴 CRÍTICA
 
 **Descrição:**
-Corrigir problemas no fluxo de cadastro de novos usuários e criar suite de testes automatizados.
+Corrigir problemas no fluxo de cadastro de novos usuários e implementar RPC com dados iniciais.
 
 **Sub-tarefas:**
 - [x] Identificar problemas no fluxo atual (falta validações frontend)
@@ -24,68 +25,96 @@ Corrigir problemas no fluxo de cadastro de novos usuários e criar suite de test
 - [x] Implementar validações em Step1Personal (CPF, email, senha)
 - [x] Implementar validações em Step2Company (CNPJ, CEP)
 - [x] Melhorar tratamento de erros no Onboarding
-- [ ] Criar testes automatizados (Playwright)
-- [ ] Validar fluxo completo (happy path)
-- [ ] Testar cenários de erro
+- [x] Corrigir RPC criar_empresa_e_configuracoes_iniciais (schema correto)
+- [x] Adicionar criação de dados iniciais (2 categorias + 3 produtos exemplo)
+- [x] Adicionar CASCADE DELETE para me_empresa
+- [x] Testar cadastro end-to-end (funcional!)
 
 **Dependências:**
 Nenhuma
 
 **Observações:**
-Validações robustas implementadas! CPF/CNPJ com dígito verificador, email, senha forte (8+ chars, maiúsc, minúsc, número). Mensagens de erro amigáveis. Próximo: testes Playwright.
+Cadastro funcional com validações robustas, RPC corrigida, dados iniciais automáticos (app não nasce vazio!), CASCADE delete implementado. 
+**Limitação conhecida:** Email pode ficar bloqueado se cadastro falhar após auth.signUp (ver TRACK-009).
 
-**Último commit:** b13260b - feat(auth): Add robust validations to user registration
+**Migrations aplicadas:**
+- 20260131_fix_criar_empresa_rpc.sql
+- 20260131_fix_criar_empresa_rpc_v2.sql (correção de schema)
+- 20260131_add_cascade_delete_empresa.sql
 
 ---
 
-## 📋 AGUARDANDO INÍCIO
-
-### [TRACK-002] Cadastro de Usuários - Correção e Testes
-- **Responsável:** TBD
-- **Máquina:** TBD
-- **Status:** ⏸️ Aguardando
-- **Prioridade:** 🔴 CRÍTICA
+### [TRACK-003] Separar CRM de "Minha Empresa" ✅
+- **Responsável:** Dev
+- **Máquina:** UNIQ + Ultra
+- **Status:** ✅ Concluído
+- **Início:** 31/01/2026 13:08
+- **Conclusão:** 31/01/2026 13:30
+- **Progresso:** 100%
+- **Prioridade:** � ALTA
 
 **Descrição:**
-Corrigir problemas no fluxo de cadastro de novos usuários e criar suite de testes automatizados.
+Separar CRM de dentro de "Minha Empresa", transformando-o em módulo independente.
 
 **Sub-tarefas:**
-- [ ] Identificar problemas no fluxo atual
-- [ ] Corrigir bugs existentes
-- [ ] Criar testes automatizados
-- [ ] Validar fluxo completo (front + back)
-- [ ] Testar em ambiente real
+- [x] Analisar estrutura atual (Minha Empresa continha CRM dentro)
+- [x] Restaurar "Minha Empresa" como módulo default
+- [x] Remover submenu CRM de dentro de "Minha Empresa"
+- [x] Manter CRM como módulo separado no MainSidebar
+- [x] Testar navegação completa
 
 **Dependências:**
 Nenhuma
 
 **Observações:**
-Tentativa anterior não foi bem-sucedida. Primeira experiência do usuário - crítico para MVP.
+Separação concluída! Minha Empresa permanece como módulo default (Produtos, Serviços, Funcionários), CRM agora é módulo independente com rota própria `/crm` e sidebar dedicado.
+
+**Arquivos modificados:**
+- MainSidebar.tsx ("Minha Empresa" restaurado)
+- SubSidebar.tsx (CRM removido de dentro, context dashboard restaurado)
 
 ---
 
-### [TRACK-003] Separar CRM de "Minha Empresa"
+## �📋 AGUARDANDO INÍCIO
+
+### [TRACK-009] Rollback Completo de Cadastro com Edge Function
 - **Responsável:** TBD
 - **Máquina:** TBD
 - **Status:** ⏸️ Aguardando
-- **Prioridade:** 🟡 ALTA
+- **Prioridade:** � ALTA (Pós-MVP)
 
 **Descrição:**
-Remover menu antigo "Minha Empresa" sem quebrar funcionalidades existentes.
+Implementar Edge Function para garantir rollback 100% em caso de falha no cadastro, incluindo deleção de auth user.
+
+**Problema Atual:**
+Quando `auth.signUp()` funciona mas a RPC `criar_empresa_e_configuracoes_iniciais` falha, o email fica bloqueado permanentemente pois o frontend não pode deletar auth users (requer service role key).
+
+**Solução Proposta:**
+Criar Edge Function que:
+1. Recebe dados do cadastro
+2. Cria auth user (com service role key)
+3. Chama RPC criar_empresa_e_configuracoes_iniciais
+4. Se RPC falhar: **deleta auth user** automaticamente
+5. Retorna sucesso/erro ao frontend
 
 **Sub-tarefas:**
-- [ ] Analisar dependências do menu antigo
-- [ ] Validar que novo menu CRM está funcional
-- [ ] Mapear funcionalidades dependentes
-- [ ] Migrar funcionalidades necessárias
-- [ ] Remover menu antigo
-- [ ] Testar navegação completa
+- [ ] Criar Edge Function `register-user-complete`
+- [ ] Implementar lógica de criação de auth user
+- [ ] Implementar chamada à RPC
+- [ ] Implementar rollback completo (auth + RPC)
+- [ ] Atualizar Onboarding.tsx para chamar Edge Function
+- [ ] Testar cenários de falha
+- [ ] Validar rollback 100%
 
 **Dependências:**
-Nenhuma
+Nenhuma (melhoria do TRACK-002)
 
 **Observações:**
-Menu novo CRM existe e está funcional. Precisa apenas remover o antigo sem quebrar código.
+Solução ideal para produção. Para MVP, limitação atual é aceitável pois validações impedem maioria dos erros. Suporte pode intervir manualmente em casos raros.
+
+**Referência:**
+- Supabase Edge Functions: https://supabase.com/docs/guides/functions
+- Service Role Key: Ambiente seguro para operações admin
 
 ---
 

@@ -57,13 +57,12 @@ export default function CRMDashboard() {
         <div className="flex flex-col h-full bg-slate-50/50">
             {/* Header */}
             <header className="flex-none px-8 py-6 pb-2 bg-white border-b border-gray-200">
-                <nav className="flex items-center text-sm font-medium text-slate-500 mb-4">
-                    <a className="hover:text-primary transition-colors" href="#">Minha Empresa</a>
-                    <span className="mx-2 text-gray-300">/</span>
-                    <a className="hover:text-primary transition-colors" href="#">CRM</a>
-                    <span className="mx-2 text-gray-300">/</span>
-                    <span className="text-primary font-semibold">Dashboard</span>
+                <nav className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+                    <a className="hover:text-primary transition-colors" href="#">Dashboard</a>
+                    <span className="material-symbols-outlined text-sm">chevron_right</span>
+                    <span className="text-gray-900 font-medium">CRM</span>
                 </nav>
+
                 <div className="flex flex-wrap items-end justify-between gap-4">
                     <div>
                         <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Dashboard CRM</h1>

@@ -25,21 +25,6 @@ const MENU_CONFIG: Record<string, { title: string; subtitle: string; items: Menu
         items: [
             { icon: 'grid_view', label: 'Dashboard Hub', active: true, view: 'home', href: '#' },
             { type: 'divider' },
-            {
-                id: 'crm',
-                icon: 'person_search',
-                label: 'CRM',
-                href: '#',
-                children: [
-                    { label: 'Dashboard', icon: 'dashboard', view: 'crm-dashboard' },
-                    { label: 'Leads/Clientes', icon: 'groups', view: 'crm-clients' },
-                    { label: 'Chat', icon: 'chat', view: 'crm-chat' },
-                    { label: 'Oportunidades', icon: 'view_kanban', view: 'crm-opportunities' },
-                    { label: 'Atividades', icon: 'task', view: 'crm-activities' },
-                    { label: 'Atendimentos', icon: 'support_agent', view: 'crm-attendances' },
-                    { label: 'Configurações', icon: 'settings', view: 'crm-settings' },
-                ]
-            },
             { icon: 'point_of_sale', label: 'Vendas & PDV', href: '#' },
             {
                 id: 'cadastros',

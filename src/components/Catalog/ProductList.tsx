@@ -43,13 +43,11 @@ export default function ProductList({ onNavigate, onEdit }: Props) {
 
                 {/* Breadcrumb & Header */}
                 <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-2 text-sm text-slate-500">
-                        <span className="text-slate-500">Minha Empresa</span>
-                        <span className="text-slate-300">/</span>
-                        <span className="text-slate-500">Catálogo</span>
-                        <span className="text-slate-300">/</span>
-                        <span className="text-primary font-medium">Produtos</span>
-                    </div>
+                    <nav className="flex items-center gap-2 text-sm">
+                        <span className="text-slate-500">Dashboard</span>
+                        <span className="material-symbols-outlined text-sm text-slate-400">chevron_right</span>
+                        <span className="text-slate-900 font-medium">Produtos</span>
+                    </nav>
 
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div className="flex flex-col gap-1">

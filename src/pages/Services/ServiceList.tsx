@@ -242,8 +242,8 @@ export default function ServiceList({ onNavigate }: ServiceListProps) {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${service.ativo
-                                                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                                                        : 'bg-gray-50 text-gray-600 border-gray-200'
+                                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                                    : 'bg-gray-50 text-gray-600 border-gray-200'
                                                     }`}>
                                                     <span className={`size-1.5 rounded-full ${service.ativo ? 'bg-emerald-500' : 'bg-gray-400'}`}></span>
                                                     {service.ativo ? 'Ativo' : 'Inativo'}
