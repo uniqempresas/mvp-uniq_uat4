@@ -7,7 +7,34 @@
 
 ## 🔴 EM PROGRESSO
 
-*(Vazio - nenhuma tarefa em progresso)*
+### [TRACK-002] Cadastro de Usuários - Correção e Testes
+- **Responsável:** Dev
+- **Máquina:** UNIQ
+- **Status:** 🔧 Em Progresso
+- **Início:** 31/01/2026 10:07
+- **Progresso:** 60%
+- **Prioridade:** 🔴 CRÍTICA
+
+**Descrição:**
+Corrigir problemas no fluxo de cadastro de novos usuários e criar suite de testes automatizados.
+
+**Sub-tarefas:**
+- [x] Identificar problemas no fluxo atual (falta validações frontend)
+- [x] Criar utils de validação (validators.ts, errorMessages.ts)
+- [x] Implementar validações em Step1Personal (CPF, email, senha)
+- [x] Implementar validações em Step2Company (CNPJ, CEP)
+- [x] Melhorar tratamento de erros no Onboarding
+- [ ] Criar testes automatizados (Playwright)
+- [ ] Validar fluxo completo (happy path)
+- [ ] Testar cenários de erro
+
+**Dependências:**
+Nenhuma
+
+**Observações:**
+Validações robustas implementadas! CPF/CNPJ com dígito verificador, email, senha forte (8+ chars, maiúsc, minúsc, número). Mensagens de erro amigáveis. Próximo: testes Playwright.
+
+**Último commit:** b13260b - feat(auth): Add robust validations to user registration
 
 ---
 
