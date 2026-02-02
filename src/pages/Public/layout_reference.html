@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UNIQ Marketplace - Vitrine Principal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b77f",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#10221c",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0d1b17] dark:text-white transition-colors duration-300">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 w-full bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
+<div class="max-w-[1280px] mx-auto px-6 h-20 flex items-center justify-between gap-8">
+<!-- Logo -->
+<div class="flex items-center gap-3 shrink-0">
+<div class="size-10 bg-primary rounded-xl flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-2xl">auto_awesome</span>
+</div>
+<h1 class="text-xl font-extrabold tracking-tight">UNIQ <span class="text-primary">Market</span></h1>
+</div>
+<!-- Centralized Search Bar -->
+<div class="flex-1 max-w-2xl">
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="w-full h-12 pl-12 pr-4 bg-gray-100 dark:bg-gray-800 border-none rounded-full focus:ring-2 focus:ring-primary/50 text-sm font-medium transition-all" placeholder="O que você está procurando hoje?" type="text"/>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-4 shrink-0">
+<button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors relative">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="absolute top-1 right-1 size-4 bg-primary text-[10px] font-bold text-white rounded-full flex items-center justify-center border-2 border-white dark:border-background-dark">2</span>
+</button>
+<button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<div class="h-8 w-[1px] bg-gray-200 dark:bg-gray-700 mx-2"></div>
+<button class="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-full font-bold text-sm transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-lg">person</span>
+<span>Entrar</span>
+</button>
+</div>
+</div>
+</header>
+<main class="max-w-[1280px] mx-auto px-6 pb-20">
+<!-- Category Chips -->
+<nav class="flex items-center gap-3 py-6 overflow-x-auto hide-scrollbar">
+<button class="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-full text-sm font-bold shadow-sm shrink-0">
+<span class="material-symbols-outlined text-lg">grid_view</span>
+                Todas
+            </button>
+<button class="px-5 py-2.5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 hover:border-primary rounded-full text-sm font-semibold transition-colors shrink-0">Moda</button>
+<button class="px-5 py-2.5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 hover:border-primary rounded-full text-sm font-semibold transition-colors shrink-0">Eletrônicos</button>
+<button class="px-5 py-2.5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 hover:border-primary rounded-full text-sm font-semibold transition-colors shrink-0">Casa &amp; Decoração</button>
+<button class="px-5 py-2.5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 hover:border-primary rounded-full text-sm font-semibold transition-colors shrink-0">Beleza</button>
+<button class="px-5 py-2.5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 hover:border-primary rounded-full text-sm font-semibold transition-colors shrink-0">Esportes</button>
+<button class="px-5 py-2.5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 hover:border-primary rounded-full text-sm font-semibold transition-colors shrink-0">Brinquedos</button>
+<button class="px-5 py-2.5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 hover:border-primary rounded-full text-sm font-semibold transition-colors shrink-0">Livros</button>
+</nav>
+<!-- Hero Carousel Section -->
+<section class="relative rounded-xl overflow-hidden mb-12 h-[420px] bg-gradient-to-br from-[#10b77f] to-[#0a8a5f] group">
+<div class="absolute inset-0 bg-black/10"></div>
+<div class="relative h-full flex flex-col justify-center px-12 text-white max-w-2xl">
+<span class="inline-block px-4 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-widest mb-4">Coleção Primavera 2024</span>
+<h2 class="text-6xl font-extrabold leading-[1.1] mb-6">Renove seu estilo com ofertas exclusivas.</h2>
+<p class="text-xl text-white/90 mb-8 font-medium">Até 60% de desconto em marcas selecionadas e frete grátis para todo o país.</p>
+<div class="flex gap-4">
+<button class="bg-white text-primary px-8 py-4 rounded-full font-extrabold text-lg hover:bg-gray-100 transition-all transform hover:scale-105">Ver Ofertas</button>
+<button class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full font-extrabold text-lg hover:bg-white hover:text-primary transition-all">Saiba mais</button>
+</div>
+</div>
+<!-- Decorative image element -->
+<div class="absolute right-0 top-0 h-full w-1/2 bg-cover bg-center hidden lg:block" data-alt="Fashion lifestyle photo showing stylish clothing on models" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDavZt4y4HXjfaylBsV7XQLuOjXwvMnYnwk6pvBtSmtGAfRtzj7D8B8c-GsFbmbe9gN7dh2K6-Hm2is8egt_HShYhF-safF9TRwQChgUkk1rtEgjd6gVFzWsbmTZoZTX4YyXme6qdhx-lcncz5vYGnOGlzu7iiAGlytoUepNc6ussQ_UKpk5VO5ufaLI94b6QJD9_FEWTiyltKELgCDwK0rTRs_wsKI8Pra5YmuWsvhNl_5xPE3NPY6jVq94HJpjMOMSSLb5TQOYfyR');">
+</div>
+</section>
+<!-- Section Header -->
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="text-2xl font-bold tracking-tight">Ofertas em Destaque</h3>
+<p class="text-gray-500 dark:text-gray-400 font-medium">Preços imbatíveis por tempo limitado</p>
+</div>
+<a class="text-primary font-bold flex items-center gap-1 hover:underline" href="#">
+                Ver todas <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<!-- Product Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Product Card 1 -->
+<div class="group bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700">
+<div class="relative aspect-square bg-gray-100 dark:bg-gray-900 overflow-hidden">
+<div class="absolute top-3 left-3 z-10 px-2.5 py-1 bg-red-500 text-white text-[10px] font-bold rounded-lg uppercase tracking-wider">20% OFF</div>
+<button class="absolute top-3 right-3 z-10 size-8 bg-white/80 backdrop-blur shadow rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-primary hover:text-white">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</button>
+<div class="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-500" data-alt="Modern red running shoes on a neutral background" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC59vheYTUMo7hERgdAIDfJ3-IM0OEuXueLBNEoTwzIih1b-VusLi3y0GcWgOftuKWpR1z7OWu7LJ3OZ3rQWPt7Fdofpw40xUm2V7Ojq6XVCxH4AazAhefrc0gQBfZQ76P-XCSDzooJSSLw19aNFD_zU98vMaEVN5WU8hgJlDDtywlFzbjtAI2G-zPl3ZKZj4bJfsyQsBi6btU-KNxQDYmYgEGjy9b-oJD0lN6E4n_LbLBHHJ2mpU5XwKPXw6pkXqvfuv2y9IdJTMFp');"></div>
+</div>
+<div class="p-5">
+<p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">Loja Esportiva Oficial</p>
+<h4 class="font-bold text-lg mb-2 line-clamp-1 group-hover:text-primary transition-colors">Tênis HyperX Pro Runner</h4>
+<div class="flex items-center gap-1 mb-4">
+<span class="material-symbols-outlined text-sm text-yellow-400 fill-1">star</span>
+<span class="text-sm font-bold">4.8</span>
+<span class="text-sm text-gray-400">(124 avaliações)</span>
+</div>
+<div class="flex items-end justify-between">
+<div>
+<p class="text-xs text-gray-400 line-through">R$ 499,90</p>
+<p class="text-2xl font-extrabold text-primary">R$ 399,90</p>
+</div>
+<button class="size-10 bg-primary hover:bg-primary/90 text-white rounded-lg flex items-center justify-center transition-all shadow-lg shadow-primary/10">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="group bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700">
+<div class="relative aspect-square bg-gray-100 dark:bg-gray-900 overflow-hidden">
+<div class="absolute top-3 left-3 z-10 px-2.5 py-1 bg-primary text-white text-[10px] font-bold rounded-lg uppercase tracking-wider">Novo</div>
+<button class="absolute top-3 right-3 z-10 size-8 bg-white/80 backdrop-blur shadow rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-primary hover:text-white">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</button>
+<div class="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-500" data-alt="Minimalist white wristwatch with silver details" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBsGyGhnHxuzseB4mBGBX9bpMwnx-PbCq2vmY0s4rIGwhjSIBHJfmYV_7uis61w9aRQNBjKl03NHHnmS_t0ia9Wj8bav3PkuVWF_9duJw57gKUrhgv4ZQSKIW2sqvPl9d_t1y85ZtA3J822GB3NAIb2k3A1II6kUvqFkV-hj0N-4BK2yRwYdUWacsXEr6uz-SREuW3Ulk9Y9oYQVTT-rWGzaGT7TLnS-CDDcKGT6e-sMOkSCSnDWso6YZTgGeI_d3HGd0LHI7vhhDMR');"></div>
+</div>
+<div class="p-5">
+<p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">Minimalist Watches</p>
+<h4 class="font-bold text-lg mb-2 line-clamp-1 group-hover:text-primary transition-colors">Relógio Classic White</h4>
+<div class="flex items-center gap-1 mb-4">
+<span class="material-symbols-outlined text-sm text-yellow-400 fill-1">star</span>
+<span class="text-sm font-bold">4.9</span>
+<span class="text-sm text-gray-400">(56)</span>
+</div>
+<div class="flex items-end justify-between">
+<div>
+<p class="text-2xl font-extrabold text-primary">R$ 189,00</p>
+</div>
+<button class="size-10 bg-primary hover:bg-primary/90 text-white rounded-lg flex items-center justify-center transition-all shadow-lg shadow-primary/10">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="group bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700">
+<div class="relative aspect-square bg-gray-100 dark:bg-gray-900 overflow-hidden">
+<button class="absolute top-3 right-3 z-10 size-8 bg-white/80 backdrop-blur shadow rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-primary hover:text-white">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</button>
+<div class="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-500" data-alt="High-quality black wireless headphones" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBzXk1J7-mRu-M7PRnSb-0ujKRIUf712JZ0PYtgtksnhmb4F8b8aM1YSx9JbxeAFDE3Q4DwjB3zJPZ3KNwYeOYsvj1AC5p3Rol3Y5tKieU-Zkv5Gfsm44wT1aE3GEw1s2_sQSqHV04tMPlAupFuTqnfI5myMw0g05oxHBMC0lB0-TUYZ-70rthKjCOWIcuLZq67xD39qrDAANAzLvHfozYWj6WI6jo8BNdhwRBx-DLLDp8vpoB-qU3TiZ8eMCFw-BuYJNP7J5sYJYF3');"></div>
+</div>
+<div class="p-5">
+<p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">TechStore Brasil</p>
+<h4 class="font-bold text-lg mb-2 line-clamp-1 group-hover:text-primary transition-colors">Fone Bluetooth Studio Z</h4>
+<div class="flex items-center gap-1 mb-4">
+<span class="material-symbols-outlined text-sm text-yellow-400 fill-1">star</span>
+<span class="text-sm font-bold">4.7</span>
+<span class="text-sm text-gray-400">(2.4k)</span>
+</div>
+<div class="flex items-end justify-between">
+<div>
+<p class="text-2xl font-extrabold text-primary">R$ 845,90</p>
+</div>
+<button class="size-10 bg-primary hover:bg-primary/90 text-white rounded-lg flex items-center justify-center transition-all shadow-lg shadow-primary/10">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="group bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700">
+<div class="relative aspect-square bg-gray-100 dark:bg-gray-900 overflow-hidden">
+<div class="absolute top-3 left-3 z-10 px-2.5 py-1 bg-red-500 text-white text-[10px] font-bold rounded-lg uppercase tracking-wider">FRETE GRÁTIS</div>
+<button class="absolute top-3 right-3 z-10 size-8 bg-white/80 backdrop-blur shadow rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-primary hover:text-white">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</button>
+<div class="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-500" data-alt="Stylish sunglasses with golden frames" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDQR2882SwkT1RKmQRsL47HoXo5GvZChSg30lfEuxIL1C_dLoyy01dezYIZy4rXIPzrLGtLxvmWEtksbIMJHKB5N_CVgwm0lTYJUcgVYq9TfcuuvJm7Mv_Bvzjc7fR2CCQYChwPVmSxuDrkAKnGx0TgOoS9krulRlTVUhML2YjglF_IrOxV4P4lIetR00x9SO5lhj6U-XtcKDGPy_OWglUQE-I5RcW6jY8cmM0hdBnpO_qFfYmByWd6JdIvWBu5wiG_aRzfUyYCakez');"></div>
+</div>
+<div class="p-5">
+<p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">Visão Moderna</p>
+<h4 class="font-bold text-lg mb-2 line-clamp-1 group-hover:text-primary transition-colors">Óculos Aviator Gold</h4>
+<div class="flex items-center gap-1 mb-4">
+<span class="material-symbols-outlined text-sm text-yellow-400 fill-1">star</span>
+<span class="text-sm font-bold">4.6</span>
+<span class="text-sm text-gray-400">(89)</span>
+</div>
+<div class="flex items-end justify-between">
+<div>
+<p class="text-2xl font-extrabold text-primary">R$ 299,00</p>
+</div>
+<button class="size-10 bg-primary hover:bg-primary/90 text-white rounded-lg flex items-center justify-center transition-all shadow-lg shadow-primary/10">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Special Banner -->
+<section class="mt-16 bg-background-dark text-white rounded-xl overflow-hidden flex flex-col md:flex-row items-center relative">
+<div class="p-12 md:w-1/2 relative z-10">
+<h3 class="text-3xl font-bold mb-4">Quer vender no UNIQ?</h3>
+<p class="text-gray-400 text-lg mb-8">Traga sua marca para o nosso marketplace e alcance milhares de novos clientes diariamente.</p>
+<button class="bg-primary hover:bg-primary/90 text-white px-8 py-3.5 rounded-full font-bold transition-all transform hover:scale-105">Seja um Vendedor</button>
+</div>
+<div class="md:w-1/2 h-64 md:h-full min-h-[300px] w-full bg-cover bg-center opacity-50" data-alt="Modern store interior with clothes on racks" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBfQo10q8EV1aSn6xjdhlLgMZhT--hdpkmjfINNT4l57BM-wYT5s5sjllGxHslx0Yba4yxoxqWXJ0NWCdi3tQi17HhOovb0HQwUe8lSEkyn7Vzo0lgDlIy1sSicaIbk_PQep-xjftW_mYab2JNU1IQ7FVHf0LSvstEp4Hs-cneR93C-y8Ot1P2K3dEV3M0GFriMo08d8xLBf5csdu5sWZgyKsT5_rleBrpV5Vc2pztMkVgw8aCrQloQHKP-amus1y46ynEUaiUMb8EE');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-r from-background-dark via-background-dark/80 to-transparent"></div>
+</section>
+<!-- Newsletter -->
+<section class="mt-16 bg-white dark:bg-gray-800 rounded-xl p-10 text-center border border-gray-100 dark:border-gray-700">
+<span class="material-symbols-outlined text-5xl text-primary mb-4">mail</span>
+<h3 class="text-3xl font-bold mb-2">Fique por dentro das novidades</h3>
+<p class="text-gray-500 dark:text-gray-400 mb-8 max-w-lg mx-auto">Cadastre seu e-mail para receber cupons exclusivos e alertas de promoções em primeira mão.</p>
+<div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+<input class="flex-1 px-6 py-3 rounded-full bg-gray-100 dark:bg-gray-900 border-none focus:ring-2 focus:ring-primary/50 text-sm" placeholder="Seu melhor e-mail" type="email"/>
+<button class="bg-primary text-white px-8 py-3 rounded-full font-bold hover:bg-primary/90 transition-all">Assinar</button>
+</div>
+</section>
+</main>
+<footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 py-16">
+<div class="max-w-[1280px] mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-12">
+<div class="col-span-2 md:col-span-1">
+<div class="flex items-center gap-2 mb-6">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-lg">auto_awesome</span>
+</div>
+<span class="text-lg font-extrabold tracking-tight">UNIQ Market</span>
+</div>
+<p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6">
+                    O ecossistema completo para sua jornada de compras online. Segurança, rapidez e as melhores marcas.
+                </p>
+<div class="flex gap-4">
+<a class="size-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all" href="#"><span class="material-symbols-outlined text-xl">share</span></a>
+<a class="size-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all" href="#"><span class="material-symbols-outlined text-xl">public</span></a>
+<a class="size-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all" href="#"><span class="material-symbols-outlined text-xl">camera</span></a>
+</div>
+</div>
+<div>
+<h5 class="font-bold mb-6">Categorias</h5>
+<ul class="space-y-4 text-sm text-gray-500 dark:text-gray-400">
+<li><a class="hover:text-primary transition-colors" href="#">Moda</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Eletrônicos</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Casa e Jardim</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Beleza</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold mb-6">Institucional</h5>
+<ul class="space-y-4 text-sm text-gray-500 dark:text-gray-400">
+<li><a class="hover:text-primary transition-colors" href="#">Sobre a UNIQ</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Trabalhe Conosco</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Venda Conosco</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Termos de Uso</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold mb-6">Ajuda &amp; Suporte</h5>
+<ul class="space-y-4 text-sm text-gray-500 dark:text-gray-400">
+<li><a class="hover:text-primary transition-colors" href="#">Central de Ajuda</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Rastreio de Pedido</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Devoluções</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contato</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-[1280px] mx-auto px-6 mt-16 pt-8 border-t border-gray-100 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-400">
+<p>© 2024 UNIQ Ecosystem. Todos os direitos reservados.</p>
+<div class="flex gap-6">
+<a class="hover:text-primary transition-colors" href="#">Política de Privacidade</a>
+<a class="hover:text-primary transition-colors" href="#">Cookies</a>
+</div>
+</div>
+</footer>
+</body></html>

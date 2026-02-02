@@ -150,4 +150,4 @@ export const mockCategories = [
 ]
 
 // Flag para ativar/desativar mock data
-export const USE_MOCK_DATA = true
+export const USE_MOCK_DATA = false

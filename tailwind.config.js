@@ -8,25 +8,24 @@ export default {
     theme: {
         extend: {
             colors: {
-                "primary": "#10B981",
-                "primary-hover": "#059669", // Renamed from primary-dark to match HTML request if needed, but keeping primary-dark as alias or just adding primary-hover
-                "primary-dark": "#059669", // Keeping existing
+                "primary": "#10b77f", // Updated from #10B981
+                "primary-hover": "#0a8a5f",
                 "secondary": "#244E5F",
-                "background-light": "#F3F4F6",
-                "background-dark": "#0f2313", // Updated to match HTML
+                "background-light": "#f6f8f7", // Updated from #F3F4F6
+                "background-dark": "#10221c", // Updated from #0f2313
                 "surface-light": "#FFFFFF",
                 "surface-dark": "#1F2937",
                 "sidebar-dark": "#1F2937",
                 "mint-soft": "#D1FAE5",
             },
             fontFamily: {
-                "display": ["Poppins", "sans-serif"],
-                "sans": ["Poppins", "sans-serif"]
+                "display": ["Plus Jakarta Sans", "Poppins", "sans-serif"],
+                "sans": ["Plus Jakarta Sans", "Poppins", "sans-serif"]
             },
             borderRadius: {
-                "DEFAULT": "0.5rem",
-                "lg": "0.75rem",
-                "xl": "1rem",
+                "DEFAULT": "1rem", // Updated
+                "lg": "2rem", // Updated
+                "xl": "3rem", // Updated
                 "2xl": "1.5rem",
                 "full": "9999px"
             },

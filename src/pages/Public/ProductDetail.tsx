@@ -1,15 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Pagination } from 'swiper/modules'
-import toast from 'react-hot-toast'
 import { publicService, type PublicProduct, type PublicCompany } from '../../services/publicService'
 import { useCart } from '../../contexts/CartContext'
-import { motion } from 'framer-motion'
-
-// Import Swiper styles
-import 'swiper/css'
-import 'swiper/css/pagination'
 
 export default function ProductDetail() {
     const { slug, produtoId } = useParams<{ slug: string; produtoId: string }>()
@@ -51,15 +43,8 @@ export default function ProductDetail() {
         if (!product) return
         addItem(product, selectedVariation)
 
-        toast.success('Produto adicionado!', {
-            icon: '🛒',
-            style: {
-                background: 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%)',
-                color: '#fff',
-                borderRadius: '12px',
-            },
-            duration: 2000,
-        })
+        // Simple alert as fallback for missing toast library
+        alert('Produto adicionado ao carrinho!')
     }
 
     const handleWhatsApp = () => {
@@ -92,8 +77,6 @@ export default function ProductDetail() {
         </div>
     )
 
-    const hasImages = product.imagens && product.imagens.length > 0
-    const hasVariations = product.variacoes && product.variacoes.length > 0
     const finalPrice = selectedVariation?.preco_varejo || selectedVariation?.preco || product.preco_varejo || product.preco
     const originalPrice = selectedVariation?.preco || product.preco
     const hasDiscount = finalPrice < originalPrice
@@ -112,26 +95,23 @@ export default function ProductDetail() {
             </div>
 
             {/* Image Gallery */}
-            {hasImages ? (
-                <div className="relative bg-white">
-                    <Swiper
-                        modules={[Pagination]}
-                        pagination={{ clickable: true }}
-                        className="aspect-square"
-                    >
+            {product.imagens && product.imagens.length > 0 ? (
+                <div className="relative bg-white group">
+                    <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide aspect-square">
                         {product.imagens.map((img, idx) => (
-                            <SwiperSlide key={idx}>
-                                <div className="w-full h-full bg-gray-100">
-                                    <img
-                                        src={img.imagem_url}
-                                        alt={`${product.nome_produto} - ${idx + 1}`}
-                                        className="w-full h-full object-cover"
-                                        loading={idx === 0 ? 'eager' : 'lazy'}
-                                    />
+                            <div key={idx} className="min-w-full h-full snap-center bg-gray-100 relative">
+                                <img
+                                    src={img.imagem_url}
+                                    alt={`${product.nome_produto} - ${idx + 1}`}
+                                    className="w-full h-full object-cover"
+                                    loading={idx === 0 ? 'eager' : 'lazy'}
+                                />
+                                <div className="absolute bottom-4 right-4 bg-black/50 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
+                                    {idx + 1} / {product.imagens?.length}
                                 </div>
-                            </SwiperSlide>
+                            </div>
                         ))}
-                    </Swiper>
+                    </div>
 
                     {/* Badge de Oferta */}
                     {hasDiscount && (
@@ -168,39 +148,26 @@ export default function ProductDetail() {
                 </div>
 
                 {/* Variations */}
-                {hasVariations && (
+                {product.variacoes && product.variacoes.length > 0 && (
                     <div>
                         <h3 className="text-sm font-semibold text-gray-700 mb-3">Selecione:</h3>
                         <div className="flex flex-wrap gap-2">
                             {product.variacoes.map((variacao: any) => {
                                 const isSelected = selectedVariation?.id === variacao.id
                                 return (
-                                    <motion.button
+                                    <button
                                         key={variacao.id}
                                         onClick={() => setSelectedVariation(variacao)}
                                         className={`
                                             relative px-4 py-2.5 rounded-xl font-medium text-sm transition-all
                                             ${isSelected
-                                                ? 'text-white shadow-lg shadow-primary/30'
+                                                ? 'bg-gradient-to-r from-primary to-accent text-white shadow-lg shadow-primary/30'
                                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                             }
                                         `}
-                                        whileTap={{ scale: 0.95 }}
                                     >
-                                        {isSelected && (
-                                            <motion.div
-                                                layoutId="selectedVariation"
-                                                className="absolute inset-0 bg-gradient-to-r from-primary to-accent rounded-xl"
-                                                initial={false}
-                                                transition={{
-                                                    type: 'spring',
-                                                    stiffness: 500,
-                                                    damping: 30
-                                                }}
-                                            />
-                                        )}
                                         <span className="relative z-10">{variacao.nome_variacao}</span>
-                                    </motion.button>
+                                    </button>
                                 )
                             })}
                         </div>

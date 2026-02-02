@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react'
 import type { PublicProduct } from '../services/publicService'
 
 // Tipos para o carrinho
@@ -14,14 +14,34 @@ interface CartContextType {
     removeItem: (productId: string, variacaoId?: string) => void
     updateQuantity: (productId: string, quantidade: number, variacaoId?: string) => void
     clearCart: () => void
+    getCartMessage: () => string
     total: number
     itemCount: number
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
 
+const CART_STORAGE_KEY = 'uniq_cart_items'
+
 export function CartProvider({ children }: { children: ReactNode }) {
-    const [items, setItems] = useState<CartItem[]>([])
+    const [items, setItems] = useState<CartItem[]>(() => {
+        try {
+            const saved = localStorage.getItem(CART_STORAGE_KEY)
+            return saved ? JSON.parse(saved) : []
+        } catch (error) {
+            console.error('Erro ao carregar carrinho:', error)
+            return []
+        }
+    })
+
+    // Persistir carrinho
+    useEffect(() => {
+        try {
+            localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items))
+        } catch (error) {
+            console.error('Erro ao salvar carrinho:', error)
+        }
+    }, [items])
 
     // Adicionar item ao carrinho
     const addItem = useCallback((product: PublicProduct, variacao?: any) => {
@@ -84,6 +104,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     // Limpar carrinho
     const clearCart = useCallback(() => {
         setItems([])
+        localStorage.removeItem(CART_STORAGE_KEY)
     }, [])
 
     // Calcular total
@@ -95,6 +116,26 @@ export function CartProvider({ children }: { children: ReactNode }) {
     // Contar itens
     const itemCount = items.reduce((sum, item) => sum + item.quantidade, 0)
 
+    // Gerar mensagem para WhatsApp
+    const getCartMessage = useCallback(() => {
+        if (items.length === 0) return ''
+
+        let text = `*🛒 Novo Pedido*\n\n`
+
+        items.forEach((item) => {
+            const variacaoDecl = item.variacao ? ` [${item.variacao.nome_variacao}]` : ''
+            const precoUnitario = item.variacao?.preco_varejo || item.variacao?.preco || item.produto.preco_varejo || item.produto.preco
+            const totalItem = precoUnitario * item.quantidade
+
+            text += `${item.quantidade}x *${item.produto.nome_produto}*${variacaoDecl}\n`
+            text += `   R$ ${totalItem.toFixed(2).replace('.', ',')}\n`
+        })
+
+        text += `\n*💰 Total: R$ ${total.toFixed(2).replace('.', ',')}*`
+
+        return text
+    }, [items, total])
+
     return (
         <CartContext.Provider value={{
             items,
@@ -102,6 +143,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             removeItem,
             updateQuantity,
             clearCart,
+            getCartMessage,
             total,
             itemCount
         }}>

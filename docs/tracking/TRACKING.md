@@ -75,6 +75,33 @@ Separação concluída! Minha Empresa permanece como módulo default (Produtos, 
 
 ---
 
+### [TRACK-004] Storefront - Catálogo Público & Redesign Premium ✅
+- **Responsável:** Dev (Antigravity)
+- **Máquina:** UNIQ + Ultra
+- **Status:** ✅ Concluído
+- **Início:** 02/02/2026 13:00
+- **Conclusão:** 02/02/2026 14:15
+- **Prioridade:** 🟡 ALTA
+
+**Descrição:**
+Desenvolvimento da loja virtual pública, incluindo correção de dependências, implementação funcional (Carrinho, Checkout WhatsApp) e Redesign completo (Interface Premium).
+
+**Sub-tarefas:**
+- [x] Corrigir dependências de build (swiper/framer removidos)
+- [x] Implementar Contexto de Carrinho com persistência
+- [x] Criar rotas públicas e integração com Supabase (sem Mocks)
+- [x] Desenvolver fluxo de Checkout via WhatsApp
+- [x] **Redesign**: Novo StoreLayout (Header/Footer expandidos)
+- [x] **Redesign**: Seções da Home (Hero, Promo, Newsletter)
+- [x] **Redesign**: Novos componentes visuais (CategoryChips, ProductCard com hover)
+- [x] Validar responsividade e UX
+
+**Dependências:**
+Nenhuma
+
+**Observações:**
+Funcionalidade entregue completa. O storefront agora possui visual premium ("Glassmorphism") e todas as funcionalidades de comércio baseadas em catálogo + WhatsApp.
+
 ## �📋 AGUARDANDO INÍCIO
 
 ### [TRACK-009] Rollback Completo de Cadastro com Edge Function
@@ -118,33 +145,7 @@ Solução ideal para produção. Para MVP, limitação atual é aceitável pois 
 
 ---
 
-### [TRACK-004] Storefront - Catálogo Público Funcional
-- **Responsável:** TBD
-- **Máquina:** TBD
-- **Status:** ⏸️ Aguardando
-- **Prioridade:** 🟡 ALTA
 
-**Descrição:**
-Desenvolver loja virtual pública com catálogo de produtos, carrinho e checkout via WhatsApp.
-
-**Sub-tarefas:**
-- [ ] Planejar arquitetura de página pública
-- [ ] Criar página home do catálogo
-- [ ] Implementar separação por categorias
-- [ ] Criar página de detalhes do produto
-- [ ] Implementar carrinho de compras
-- [ ] Desenvolver fluxo de checkout
-- [ ] Integrar botão "Finalizar no WhatsApp"
-- [ ] Testar responsividade mobile
-- [ ] Validar UX completo
-
-**Dependências:**
-Nenhuma
-
-**Observações:**
-3 dos 4 clientes MVP precisam desta feature. Sem método de pagamento - redireciona para WhatsApp com pedido formatado.
-
----
 
 ### [TRACK-005] Cadastro de Serviços - Conexão com Supabase
 - **Responsável:** TBD
@@ -326,18 +327,19 @@ Sistema implementado com sucesso. Base sólida para sincronização multi-máqui
 ## 📊 Estatísticas
 
 **Total de Tarefas:** 9 (TRACK-001 a TRACK-009)  
-**Concluídas:** 3 (TRACK-001, TRACK-002, TRACK-003)  
-**Aguardando:** 6 (TRACK-004 a TRACK-009)  
+**Concluídas:** 4 (TRACK-001 a TRACK-004)  
+**Aguardando:** 5 (TRACK-005 a TRACK-009)  
 **Em Progresso:** 0  
 **Bloqueadas:** 0
 
-**Progresso Geral:** 33.3% (3/9 concluídas)
+**Progresso Geral:** 44.4% (4/9 concluídas)
 
 **Destaques:**
 - ✅ Sistema de Tracking implementado (TRACK-001)
-- ✅ Cadastro de usuários funcional com RPC e dados iniciais (TRACK-002)
-- ✅ CRM separado de Minha Empresa como módulo independente (TRACK-003)
-- 📅 Próximo foco: Storefront (TRACK-004) ou Cadastro de Serviços (TRACK-005)
+- ✅ Cadastro de usuários funcional (TRACK-002)
+- ✅ CRM separado (TRACK-003)
+- ✅ Storefront com Redesign Premium (TRACK-004)
+- 📅 Próximo foco: Cadastro de Serviços (TRACK-005)
 
 ---
 
