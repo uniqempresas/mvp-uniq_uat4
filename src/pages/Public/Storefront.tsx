@@ -1,14 +1,19 @@
-import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import { publicService, type PublicCompany, type PublicProduct } from '../../services/publicService'
+import { useState, useEffect, useMemo } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import toast, { Toaster } from 'react-hot-toast'
+import { publicService, type PublicCompany, type PublicProduct, type Category } from '../../services/publicService'
 import { useCart } from '../../contexts/CartContext'
 import CartButton from '../../components/Storefront/CartButton'
 import CartDrawer from '../../components/Storefront/CartDrawer'
+import CategoryTabs from '../../components/Storefront/CategoryTabs'
 
 export default function Storefront() {
     const { slug } = useParams<{ slug: string }>()
+    const navigate = useNavigate()
     const [company, setCompany] = useState<PublicCompany | null>(null)
     const [products, setProducts] = useState<PublicProduct[]>([])
+    const [categories, setCategories] = useState<Category[]>([])
+    const [activeCategory, setActiveCategory] = useState<string | null>(null)
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
     const [isCartOpen, setIsCartOpen] = useState(false)
@@ -23,8 +28,12 @@ export default function Storefront() {
             const companyData = await publicService.getCompanyBySlug(slug)
             if (companyData) {
                 setCompany(companyData)
-                const productsData = await publicService.getPublicProducts(companyData.id)
+                const [productsData, categoriesData] = await Promise.all([
+                    publicService.getPublicProducts(companyData.id),
+                    publicService.getCategories(companyData.id)
+                ])
                 setProducts(productsData)
+                setCategories(categoriesData)
             }
         } catch (error) {
             console.error(error)
@@ -33,9 +42,26 @@ export default function Storefront() {
         }
     }
 
-    const filteredProducts = products.filter(p =>
-        p.nome_produto.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    // Product counts por categoria
+    const productCounts = useMemo(() => {
+        const counts: Record<string, number> = {}
+        products.forEach(p => {
+            if (p.categoria_id) {
+                const catId = String(p.categoria_id)
+                counts[catId] = (counts[catId] || 0) + 1
+            }
+        })
+        return counts
+    }, [products])
+
+
+    const filteredProducts = products.filter(p => {
+        const matchesSearch = p.nome_produto.toLowerCase().includes(searchTerm.toLowerCase())
+        const matchesCategory = !activeCategory || String(p.categoria_id) === activeCategory
+        return matchesSearch && matchesCategory
+    })
+
+
 
     const handleWhatsAppOrder = (product: PublicProduct) => {
         if (!company?.telefone) return
@@ -48,8 +74,16 @@ export default function Storefront() {
         const variacao = product.variacoes?.[0]
         addItem(product, variacao)
 
-        // Feedback visual (opcional)
-        console.log('Adicionado ao carrinho:', product.nome_produto)
+        // Toast feedback
+        toast.success('Produto adicionado!', {
+            icon: '🛒',
+            style: {
+                background: 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%)',
+                color: '#fff',
+                borderRadius: '12px',
+            },
+            duration: 2000,
+        })
     }
 
     if (loading) return <div className="min-h-screen bg-gray-50 flex items-center justify-center text-gray-500">Carregando loja...</div>
@@ -57,6 +91,9 @@ export default function Storefront() {
 
     return (
         <div className="min-h-screen bg-gray-50 font-display text-slate-900 pb-20">
+            {/* Toast Notifications */}
+            <Toaster position="top-center" />
+
             {/* Header */}
             <header className="bg-white shadow-sm sticky top-0 z-10 px-4 py-3 pb-4">
                 <div className="max-w-md mx-auto flex flex-col items-center gap-2">
@@ -74,10 +111,24 @@ export default function Storefront() {
                 </div>
             </header>
 
+            {/* Category Tabs */}
+            {categories.length > 0 && (
+                <CategoryTabs
+                    categories={categories}
+                    activeCategory={activeCategory}
+                    onSelectCategory={setActiveCategory}
+                    productCounts={productCounts}
+                />
+            )}
+
             {/* Product Grid */}
             <div className="p-4 max-w-md mx-auto grid grid-cols-2 gap-3">
                 {filteredProducts.map(product => (
-                    <div key={product.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
+                    <div
+                        key={product.id}
+                        onClick={() => navigate(`/c/${slug}/p/${product.id}`)}
+                        className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col cursor-pointer hover:shadow-md transition-shadow"
+                    >
                         <div className="aspect-square bg-gray-100 relative overflow-hidden">
                             {product.imagens && product.imagens.length > 0 ? (
                                 <img src={product.imagens[0].imagem_url} alt={product.nome_produto} className="w-full h-full object-cover" />

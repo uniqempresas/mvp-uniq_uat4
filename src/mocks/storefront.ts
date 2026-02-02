@@ -142,5 +142,12 @@ export const mockProducts = [
     }
 ] as PublicProduct[]
 
+// Categorias mockadas
+export const mockCategories = [
+    { id: '1', nome_categoria: 'Roupas' },
+    { id: '2', nome_categoria: 'Calçados' },
+    { id: '3', nome_categoria: 'Acessórios' }
+]
+
 // Flag para ativar/desativar mock data
 export const USE_MOCK_DATA = true

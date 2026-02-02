@@ -1,6 +1,6 @@
 import { supabase } from '../lib/supabase'
 import type { Product } from './productService'
-import { USE_MOCK_DATA, mockCompany, mockProducts } from '../mocks/storefront'
+import { USE_MOCK_DATA, mockCompany, mockProducts, mockCategories } from '../mocks/storefront'
 
 export interface PublicCompany {
     id: string
@@ -12,6 +12,11 @@ export interface PublicCompany {
 
 export interface PublicProduct extends Product {
     // Basic product info, images, and variations
+}
+
+export interface Category {
+    id: string
+    nome_categoria: string
 }
 
 export const publicService = {
@@ -69,6 +74,28 @@ export const publicService = {
             })),
             imagens: (p.imagens || []).sort((a: any, b: any) => a.ordem_exibicao - b.ordem_exibicao)
         })) as PublicProduct[]
+    },
+
+    async getCategories(empresaId: string): Promise<Category[]> {
+        // Usar mock data se configurado
+        if (USE_MOCK_DATA) {
+            console.log('🎭 Usando MOCK DATA para categorias')
+            return mockCategories
+        }
+
+        const { data, error } = await supabase
+            .from('me_categoria')
+            .select('id, nome_categoria')
+            .eq('empresa_id', empresaId)
+            .eq('ativo', true)
+            .order('nome_categoria')
+
+        if (error) {
+            console.error('Error fetching categories:', error)
+            return []
+        }
+
+        return data || []
     },
 
     getWhatsAppLink(phone: string, text: string) {
