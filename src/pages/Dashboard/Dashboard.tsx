@@ -7,6 +7,8 @@ import ModuleStore from './components/ModuleStore'
 import ProductList from '../../components/Catalog/ProductList'
 import ProductForm from '../Catalog/ProductForm'
 import ServiceList from '../Services/ServiceList'
+import ClientList from '../../components/Registers/ClientList'
+import SupplierList from '../../components/Registers/SupplierList'
 
 export default function Dashboard() {
     const [activeContext, setActiveContext] = useState('dashboard')
@@ -27,6 +29,11 @@ export default function Dashboard() {
                 return <ProductForm onNavigate={(view) => { setActiveView(view); setEditingProductId(undefined) }} productId={editingProductId} />
             case 'services':
                 return <ServiceList onNavigate={setActiveView} />
+            case 'clients':
+                // @ts-ignore
+                return <ClientList onNavigate={setActiveView} />
+            case 'suppliers':
+                return <SupplierList />
             case 'home':
             default:
                 return <DashboardHome />

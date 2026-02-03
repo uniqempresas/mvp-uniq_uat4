@@ -161,8 +161,8 @@ export default function ServiceList({ onNavigate }: ServiceListProps) {
                                 onChange={(e) => setFilterCategory(e.target.value)}
                             >
                                 <option value="Todas Categorias">Todas Categorias</option>
-                                {categories.map(cat => (
-                                    <option key={cat.id_categoria} value={cat.id_categoria}>{cat.nome_categoria}</option>
+                                {categories.map((cat, index) => (
+                                    <option key={`${cat.id_categoria}-${index}`} value={cat.id_categoria}>{cat.nome_categoria}</option>
                                 ))}
                                 {/* Opção para itens legados se necessário */}
                                 <option value="Consultoria">Consultoria (Legado)</option>

@@ -27,7 +27,14 @@ export const categoryService = {
             .order('nome_categoria')
 
         if (error) throw error
-        return data as Category[]
+
+        // Map DB (id_categoria) -> Frontend (id_categoria)
+        // Note: DB returns 'id_categoria' directly, not 'id'
+        return (data || []).map((cat: any) => ({
+            id_categoria: Number(cat.id_categoria),
+            nome_categoria: cat.nome_categoria,
+            empresa_id: cat.empresa_id
+        })) as Category[]
     },
 
     async createCategory(nome_categoria: string) {
@@ -41,7 +48,12 @@ export const categoryService = {
             .single()
 
         if (error) throw error
-        return data as Category
+
+        return {
+            id_categoria: Number(data.id_categoria),
+            nome_categoria: data.nome_categoria,
+            empresa_id: data.empresa_id
+        } as Category
     },
 
     async updateCategory(id: number, nome_categoria: string) {
@@ -71,7 +83,14 @@ export const categoryService = {
             .order('nome_subcategoria')
 
         if (error) throw error
-        return data as Subcategory[]
+
+        // Map DB (id_subcategoria) -> Frontend (id_subcategoria)
+        return (data || []).map((sub: any) => ({
+            id_subcategoria: Number(sub.id_subcategoria),
+            nome_subcategoria: sub.nome_subcategoria,
+            id_categoria: Number(sub.id_categoria),
+            empresa_id: sub.empresa_id
+        })) as Subcategory[]
     },
 
     async createSubcategory(categoryId: number, nome_subcategoria: string) {
@@ -80,19 +99,25 @@ export const categoryService = {
 
         const { data, error } = await supabase
             .from('me_subcategoria')
-            .insert([{ nome_subcategoria, id_categoria: categoryId, empresa_id: empresaId }])
+            .insert([{ nome_subcategoria, categoria_id: categoryId, empresa_id: empresaId }])
             .select()
             .single()
 
         if (error) throw error
-        return data as Subcategory
+
+        return {
+            id_subcategoria: data.id,
+            nome_subcategoria: data.nome_subcategoria,
+            id_categoria: data.categoria_id,
+            empresa_id: data.empresa_id
+        } as Subcategory
     },
 
     async updateSubcategory(id: number, nome_subcategoria: string) {
         const { error } = await supabase
             .from('me_subcategoria')
             .update({ nome_subcategoria })
-            .eq('id_subcategoria', id)
+            .eq('id', id) // Use 'id' column
 
         if (error) throw error
     },
@@ -101,7 +126,7 @@ export const categoryService = {
         const { error } = await supabase
             .from('me_subcategoria')
             .delete()
-            .eq('id_subcategoria', id)
+            .eq('id', id) // Use 'id' column
 
         if (error) throw error
     }

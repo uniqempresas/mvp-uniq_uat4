@@ -224,13 +224,13 @@ export default function ServiceForm({ isOpen, onClose, initialData, onSuccess }:
                                             <label className="block text-sm font-semibold text-slate-700 mb-2">Categoria</label>
                                             <div className="flex gap-2">
                                                 <select
-                                                    value={formData.categoria_id || ''}
+                                                    value={formData.categoria_id?.toString() || ''}
                                                     onChange={(e) => handleChange('categoria_id', e.target.value)}
                                                     className="flex-1 h-11 rounded-lg border-gray-300 bg-gray-50 focus:bg-white focus:border-primary focus:ring-primary/20 text-sm px-3 outline-none cursor-pointer"
                                                 >
                                                     <option value="">Selecione...</option>
-                                                    {categories.map(cat => (
-                                                        <option key={cat.id_categoria} value={cat.id_categoria}>{cat.nome_categoria}</option>
+                                                    {categories.map((cat, index) => (
+                                                        <option key={`${cat.id_categoria}-${index}`} value={String(cat.id_categoria)}>{cat.nome_categoria}</option>
                                                     ))}
                                                 </select>
                                                 <button
@@ -248,14 +248,14 @@ export default function ServiceForm({ isOpen, onClose, initialData, onSuccess }:
                                             <label className="block text-sm font-semibold text-slate-700 mb-2">Subcategoria</label>
                                             <div className="flex gap-2">
                                                 <select
-                                                    value={formData.subcategoria_id || ''}
+                                                    value={formData.subcategoria_id?.toString() || ''}
                                                     onChange={(e) => handleChange('subcategoria_id', e.target.value)}
                                                     disabled={!formData.categoria_id}
                                                     className="flex-1 h-11 rounded-lg border-gray-300 bg-gray-50 focus:bg-white focus:border-primary focus:ring-primary/20 text-sm px-3 outline-none cursor-pointer disabled:opacity-50"
                                                 >
                                                     <option value="">Selecione...</option>
-                                                    {subcategories.map(sub => (
-                                                        <option key={sub.id_subcategoria} value={sub.id_subcategoria}>{sub.nome_subcategoria}</option>
+                                                    {subcategories.map((sub, index) => (
+                                                        <option key={`${sub.id_subcategoria}-${index}`} value={String(sub.id_subcategoria)}>{sub.nome_subcategoria}</option>
                                                     ))}
                                                 </select>
                                                 <button
@@ -288,13 +288,15 @@ export default function ServiceForm({ isOpen, onClose, initialData, onSuccess }:
                                         <div className="relative">
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-medium">R$</span>
                                             <input
-                                                type="number"
-                                                min="0"
-                                                step="0.01"
-                                                value={formData.preco}
-                                                onChange={(e) => handleChange('preco', parseFloat(e.target.value) || 0)}
+                                                type="text"
+                                                value={formData.preco ? formData.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''}
+                                                onChange={(e) => {
+                                                    const value = e.target.value.replace(/\D/g, '')
+                                                    const numberValue = Number(value) / 100
+                                                    handleChange('preco', numberValue)
+                                                }}
                                                 className="w-full h-11 pl-10 rounded-lg border-gray-300 bg-gray-50 focus:bg-white focus:border-primary focus:ring-primary/20 text-sm font-medium outline-none transition-all"
-                                                placeholder="0.00"
+                                                placeholder="0,00"
                                             />
                                         </div>
                                     </div>

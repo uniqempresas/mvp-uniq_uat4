@@ -2,19 +2,17 @@ import { supabase } from '../lib/supabase'
 import { authService } from './authService'
 
 export interface Client {
-    id: string
+    id: number
     empresa_id: string
     nome: string
     email?: string
     telefone?: string
-    status: 'Ativo' | 'Inativo' | 'Negociação' | 'Churn' | 'Novo'
-    origem?: string
-    cargo?: string
-    empresa_nome?: string
-    foto_url?: string
-    ltv?: number
-    ultima_interacao?: string
+    origem_id?: number
+    status?: string
+    score?: number
+    observacoes?: string
     created_at?: string
+    // Legacy mapping support if needed by other components, but focusing on CRM leads structure
 }
 
 export const clientService = {
@@ -26,10 +24,21 @@ export const clientService = {
             .from('crm_leads')
             .select('*')
             .eq('empresa_id', empresaId)
-            .order('created_at', { ascending: false })
+            .order('nome')
 
         if (error) throw error
         return data as Client[]
+    },
+
+    async getClientById(id: number) {
+        const { data, error } = await supabase
+            .from('crm_leads')
+            .select('*')
+            .eq('id', id)
+            .single()
+
+        if (error) throw error
+        return data as Client
     },
 
     async createClient(client: Omit<Client, 'id' | 'created_at' | 'empresa_id'>) {
@@ -46,7 +55,7 @@ export const clientService = {
         return data as Client
     },
 
-    async updateClient(id: string, updates: Partial<Client>) {
+    async updateClient(id: number, updates: Partial<Client>) {
         const { data, error } = await supabase
             .from('crm_leads')
             .update(updates)
@@ -58,37 +67,12 @@ export const clientService = {
         return data as Client
     },
 
-    async deleteClient(id: string) {
+    async deleteClient(id: number) {
         const { error } = await supabase
             .from('crm_leads')
             .delete()
             .eq('id', id)
 
         if (error) throw error
-    },
-
-    // Customers (me_cliente)
-    async getCustomers() {
-        const empresaId = await authService.getEmpresaId()
-        if (!empresaId) return []
-
-        const { data, error } = await supabase
-            .from('me_cliente')
-            .select('*')
-            .eq('empresa_id', empresaId)
-            .order('nome_cliente')
-
-        if (error) throw error
-        return data as Customer[]
     }
-}
-
-export interface Customer {
-    id: string
-    empresa_id: string
-    nome_cliente: string
-    email?: string
-    telefone?: string
-    documento?: string
-    created_at?: string
 }

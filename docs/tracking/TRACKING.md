@@ -1,261 +1,13 @@
 # 📊 Tracking de Desenvolvimento - UNIQ Empresas
 
-**Última atualização:** 31/01/2026 21:43 BRT  
-**Máquina:** UNIQ + Ultra
+**Última atualização:** 03/02/2026 20:39 BRT  
+**Máquina:** UNIQ
 
 ---
 
 ## ✅ CONCLUÍDOS
 
-### [TRACK-002] Cadastro de Usuários - Correção e Testes ✅
-- **Responsável:** Dev
-- **Máquina:** UNIQ + Ultra
-- **Status:** ✅ Concluído
-- **Início:** 31/01/2026 10:07
-- **Conclusão:** 31/01/2026 12:51
-- **Progresso:** 100%
-- **Prioridade:** 🔴 CRÍTICA
-
-**Descrição:**
-Corrigir problemas no fluxo de cadastro de novos usuários e implementar RPC com dados iniciais.
-
-**Sub-tarefas:**
-- [x] Identificar problemas no fluxo atual (falta validações frontend)
-- [x] Criar utils de validação (validators.ts, errorMessages.ts)
-- [x] Implementar validações em Step1Personal (CPF, email, senha)
-- [x] Implementar validações em Step2Company (CNPJ, CEP)
-- [x] Melhorar tratamento de erros no Onboarding
-- [x] Corrigir RPC criar_empresa_e_configuracoes_iniciais (schema correto)
-- [x] Adicionar criação de dados iniciais (2 categorias + 3 produtos exemplo)
-- [x] Adicionar CASCADE DELETE para me_empresa
-- [x] Testar cadastro end-to-end (funcional!)
-
-**Dependências:**
-Nenhuma
-
-**Observações:**
-Cadastro funcional com validações robustas, RPC corrigida, dados iniciais automáticos (app não nasce vazio!), CASCADE delete implementado. 
-**Limitação conhecida:** Email pode ficar bloqueado se cadastro falhar após auth.signUp (ver TRACK-009).
-
-**Migrations aplicadas:**
-- 20260131_fix_criar_empresa_rpc.sql
-- 20260131_fix_criar_empresa_rpc_v2.sql (correção de schema)
-- 20260131_add_cascade_delete_empresa.sql
-
----
-
-### [TRACK-003] Separar CRM de "Minha Empresa" ✅
-- **Responsável:** Dev
-- **Máquina:** UNIQ + Ultra
-- **Status:** ✅ Concluído
-- **Início:** 31/01/2026 13:08
-- **Conclusão:** 31/01/2026 13:30
-- **Progresso:** 100%
-- **Prioridade:** � ALTA
-
-**Descrição:**
-Separar CRM de dentro de "Minha Empresa", transformando-o em módulo independente.
-
-**Sub-tarefas:**
-- [x] Analisar estrutura atual (Minha Empresa continha CRM dentro)
-- [x] Restaurar "Minha Empresa" como módulo default
-- [x] Remover submenu CRM de dentro de "Minha Empresa"
-- [x] Manter CRM como módulo separado no MainSidebar
-- [x] Testar navegação completa
-
-**Dependências:**
-Nenhuma
-
-**Observações:**
-Separação concluída! Minha Empresa permanece como módulo default (Produtos, Serviços, Funcionários), CRM agora é módulo independente com rota própria `/crm` e sidebar dedicado.
-
-**Arquivos modificados:**
-- MainSidebar.tsx ("Minha Empresa" restaurado)
-- SubSidebar.tsx (CRM removido de dentro, context dashboard restaurado)
-
----
-
-### [TRACK-004] Storefront - Catálogo Público & Redesign Premium ✅
-- **Responsável:** Dev (Antigravity)
-- **Máquina:** UNIQ + Ultra
-- **Status:** ✅ Concluído
-- **Início:** 02/02/2026 13:00
-- **Conclusão:** 02/02/2026 14:15
-- **Prioridade:** 🟡 ALTA
-
-**Descrição:**
-Desenvolvimento da loja virtual pública, incluindo correção de dependências, implementação funcional (Carrinho, Checkout WhatsApp) e Redesign completo (Interface Premium).
-
-**Sub-tarefas:**
-- [x] Corrigir dependências de build (swiper/framer removidos)
-- [x] Implementar Contexto de Carrinho com persistência
-- [x] Criar rotas públicas e integração com Supabase (sem Mocks)
-- [x] Desenvolver fluxo de Checkout via WhatsApp
-- [x] **Redesign**: Novo StoreLayout (Header/Footer expandidos)
-- [x] **Redesign**: Seções da Home (Hero, Promo, Newsletter)
-- [x] **Redesign**: Novos componentes visuais (CategoryChips, ProductCard com hover)
-- [x] Validar responsividade e UX
-
-**Dependências:**
-Nenhuma
-
-**Observações:**
-Funcionalidade entregue completa. O storefront agora possui visual premium ("Glassmorphism") e todas as funcionalidades de comércio baseadas em catálogo + WhatsApp.
-
-## �📋 AGUARDANDO INÍCIO
-
-### [TRACK-009] Rollback Completo de Cadastro com Edge Function
-- **Responsável:** TBD
-- **Máquina:** TBD
-- **Status:** ⏸️ Aguardando
-- **Prioridade:** � ALTA (Pós-MVP)
-
-**Descrição:**
-Implementar Edge Function para garantir rollback 100% em caso de falha no cadastro, incluindo deleção de auth user.
-
-**Problema Atual:**
-Quando `auth.signUp()` funciona mas a RPC `criar_empresa_e_configuracoes_iniciais` falha, o email fica bloqueado permanentemente pois o frontend não pode deletar auth users (requer service role key).
-
-**Solução Proposta:**
-Criar Edge Function que:
-1. Recebe dados do cadastro
-2. Cria auth user (com service role key)
-3. Chama RPC criar_empresa_e_configuracoes_iniciais
-4. Se RPC falhar: **deleta auth user** automaticamente
-5. Retorna sucesso/erro ao frontend
-
-**Sub-tarefas:**
-- [ ] Criar Edge Function `register-user-complete`
-- [ ] Implementar lógica de criação de auth user
-- [ ] Implementar chamada à RPC
-- [ ] Implementar rollback completo (auth + RPC)
-- [ ] Atualizar Onboarding.tsx para chamar Edge Function
-- [ ] Testar cenários de falha
-- [ ] Validar rollback 100%
-
-**Dependências:**
-Nenhuma (melhoria do TRACK-002)
-
-**Observações:**
-Solução ideal para produção. Para MVP, limitação atual é aceitável pois validações impedem maioria dos erros. Suporte pode intervir manualmente em casos raros.
-
-**Referência:**
-- Supabase Edge Functions: https://supabase.com/docs/guides/functions
-- Service Role Key: Ambiente seguro para operações admin
-
----
-
-
-
-### [TRACK-005] Cadastro de Serviços - Conexão com Supabase
-- **Responsável:** TBD
-- **Máquina:** TBD
-- **Status:** ⏸️ Aguardando
-- **Prioridade:** 🟡 ALTA
-
-**Descrição:**
-Conectar tela de cadastro de serviços (mockup pronto) ao Supabase.
-
-**Sub-tarefas:**
-- [ ] Revisar mockup existente
-- [ ] Criar schema no Supabase (se não existir)
-- [ ] Desenvolver service layer (servicesService.ts)
-- [ ] Conectar tela ao Supabase
-- [ ] Implementar CRUD completo
-- [ ] Validar campos obrigatórios
-- [ ] Testar integração
-
-**Dependências:**
-Nenhuma
-
-**Observações:**
-Layout já existe e está OK. Falta apenas conectar com backend.
-
----
-
-### [TRACK-006] Cadastro de Clientes - Implementação Completa
-- **Responsável:** TBD
-- **Máquina:** TBD
-- **Status:** ⏸️ Aguardando
-- **Prioridade:** 🟡 ALTA
-
-**Descrição:**
-Implementar cadastro completo de clientes com CPF/CNPJ, endereços e contatos.
-
-**Sub-tarefas:**
-- [ ] Planejar schema de banco de dados
-- [ ] Criar tabela `clientes` no Supabase
-- [ ] Desenvolver interface de cadastro
-- [ ] Implementar campos: CPF/CNPJ, Endereços, Contatos
-- [ ] Criar service layer (clientsService.ts)
-- [ ] Implementar CRUD completo
-- [ ] Testar validações
-
-**Dependências:**
-Nenhuma
-
-**Observações:**
-Feature ainda não iniciada. Base fundamental para CRM e vendas.
-
----
-
-### [TRACK-007] Cadastro de Fornecedores - Implementação Completa
-- **Responsável:** TBD
-- **Máquina:** TBD
-- **Status:** ⏸️ Aguardando
-- **Prioridade:** 🟢 MÉDIA
-
-**Descrição:**
-Implementar cadastro de fornecedores para gestão de compras e estoque.
-
-**Sub-tarefas:**
-- [ ] Planejar schema de banco de dados
-- [ ] Criar tabela `fornecedores` no Supabase
-- [ ] Desenvolver interface de cadastro
-- [ ] Implementar campos: CNPJ, Razão Social, Contatos
-- [ ] Criar service layer (suppliersService.ts)
-- [ ] Implementar CRUD completo
-- [ ] Testar validações
-
-**Dependências:**
-Nenhuma
-
-**Observações:**
-Feature ainda não iniciada. Necessário para gestão de compras.
-
----
-
-### [TRACK-008] Cadastro de Colaboradores - Implementação com Auth
-- **Responsável:** TBD
-- **Máquina:** TBD
-- **Status:** ⏸️ Aguardando
-- **Prioridade:** 🟢 MÉDIA
-
-**Descrição:**
-Implementar cadastro de colaboradores com sistema de permissões e acesso diferenciado.
-
-**Sub-tarefas:**
-- [ ] Analisar schema existente no Supabase
-- [ ] Planejar sistema de permissões
-- [ ] Criar/validar tabela `colaboradores`
-- [ ] Desenvolver interface de cadastro
-- [ ] Implementar campos e permissões
-- [ ] Criar sistema de convite/acesso
-- [ ] Implementar níveis de permissão
-- [ ] Criar service layer (employeesService.ts)
-- [ ] Testar fluxo de criação e acesso
-
-**Dependências:**
-Nenhuma
-
-**Observações:**
-Colaborador também acessa o sistema - precisa auth diferenciado. Pode ter schema parcial no Supabase.
-
----
-
-## ✅ CONCLUÍDO
-
-### [TRACK-001] Sistema de Tracking de Desenvolvimento
+### [TRACK-001] Sistema de Tracking de Desenvolvimento ✅
 - **Responsável:** Dev
 - **Máquina:** UNIQ
 - **Status:** ✅ Concluído
@@ -276,77 +28,177 @@ Criar sistema robusto de tracking para coordenação de desenvolvimento entre m�
 - [x] Documentar workflow de uso (TRACKING_GUIDE.md)
 - [x] Testar sincronização Git
 
-**Entregáveis:**
-- `docs/TRACKING.md` - Status detalhado de 8 tarefas
-- `docs/CHANGELOG.md` - Histórico de mudanças
-- `docs/TRACKING_GUIDE.md` - Guia de uso completo
-- `docs/ROADMAP.md` - Atualizado com links
-- 8 tarefas mapeadas (TRACK-001 a TRACK-008)
-
-**Observações:**
-Sistema implementado com sucesso. Base sólida para sincronização multi-máquina via Git.
-
 ---
 
-## 🚫 BLOQUEADO
-
-*(Vazio - nenhuma tarefa bloqueada)*
-
----
-
-## 📝 Template de Nova Tarefa
-
-```markdown
-### [TRACK-XXX] Nome da Tarefa
-- **Responsável:** [Nome/Máquina]
-- **Máquina:** [Ultra/UNIQ/Ambas]
-- **Status:** [🔴 Bloqueado / ⏸️ Aguardando / 🔧 Em Progresso / ✅ Concluído]
-- **Início:** DD/MM/YYYY
-- **Previsão:** DD/MM/YYYY
-- **Progresso:** XX%
-- **Prioridade:** [🔴 CRÍTICA / 🟡 ALTA / 🟢 MÉDIA / ⚪ BAIXA]
+### [TRACK-002] Cadastro de Usuários - Correção e Testes ✅
+- **Responsável:** Dev
+- **Máquina:** UNIQ + Ultra
+- **Status:** ✅ Concluído
+- **Início:** 31/01/2026 10:07
+- **Conclusão:** 31/01/2026 12:51
+- **Prioridade:** 🔴 CRÍTICA
 
 **Descrição:**
-[Descrição breve da tarefa]
+Corrigir problemas no fluxo de cadastro de novos usuários e implementar RPC com dados iniciais.
 
 **Sub-tarefas:**
-- [ ] Sub-tarefa 1
-- [ ] Sub-tarefa 2
+- [x] Identificar problemas no fluxo atual
+- [x] Criar utils de validação (validators.ts)
+- [x] Implementar validações (Step1, Step2)
+- [x] Corrigir RPC criar_empresa_e_configuracoes_iniciais
+- [x] Adicionar criação de dados iniciais
+- [x] Adicionar CASCADE DELETE para me_empresa
+- [x] Testar cadastro end-to-end
 
-**Dependências:**
-[TRACK-XXX ou "Nenhuma"]
+---
+
+### [TRACK-003] Separar CRM de "Minha Empresa" ✅
+- **Responsável:** Dev
+- **Máquina:** UNIQ + Ultra
+- **Status:** ✅ Concluído
+- **Início:** 31/01/2026 13:08
+- **Conclusão:** 31/01/2026 13:30
+- **Prioridade:** 🟡 ALTA
+
+**Descrição:**
+Separar CRM de dentro de "Minha Empresa", transformando-o em módulo independente.
+
+**Sub-tarefas:**
+- [x] Restaurar "Minha Empresa" como módulo default
+- [x] Remover submenu CRM de dentro de "Minha Empresa"
+- [x] Manter CRM como módulo separado no MainSidebar
+- [x] Testar navegação completa
+
+---
+
+### [TRACK-004] Storefront - Catálogo Público & Redesign Premium ✅
+- **Responsável:** Dev (Antigravity)
+- **Máquina:** UNIQ + Ultra
+- **Status:** ✅ Concluído
+- **Início:** 02/02/2026 13:00
+- **Conclusão:** 02/02/2026 14:15
+- **Prioridade:** 🟡 ALTA
+
+**Descrição:**
+Desenvolvimento da loja virtual pública, carrinho e redesign completo.
+
+**Sub-tarefas:**
+- [x] Implementar Contexto de Carrinho
+- [x] Criar rotas públicas e integração com Supabase
+- [x] Desenvolver fluxo de Checkout via WhatsApp
+- [x] **Redesign**: Novo StoreLayout
+- [x] **Redesign**: Seções da Home (Hero, Promo)
+- [x] Validar responsividade e UX
+
+---
+
+### [TRACK-005] Cadastro de Serviços - Conexão com Supabase ✅
+- **Responsável:** Dev (Antigravity)
+- **Máquina:** UNIQ + Ultra
+- **Status:** ✅ Concluído
+- **Início:** 03/02/2026 13:40
+- **Conclusão:** 03/02/2026 13:58
+- **Prioridade:** 🟡 ALTA
+
+**Descrição:**
+Conectar tela de cadastro de serviços ao Supabase com persistência real.
+
+**Sub-tarefas:**
+- [x] Criar schema (`me_servico_imagem`)
+- [x] Desenvolver service layer (serviceService.ts)
+- [x] Conectar tela ao Supabase
+- [x] Implementar CRUD completo
+- [x] Validar campos e Upload
+
+---
+
+### [TRACK-006] Cadastro de Clientes - Implementação Completa ✅
+- **Responsável:** Dev (Antigravity)
+- **Máquina:** UNIQ
+- **Status:** ✅ Concluído
+- **Início:** 03/02/2026
+- **Conclusão:** 03/02/2026
+- **Prioridade:** 🟡 ALTA
+
+**Descrição:**
+Implementar cadastro completo de clientes com CPF/CNPJ, endereços e contatos, separado do CRM.
+
+**Sub-tarefas:**
+- [x] Reverter CRM para gestão de Leads
+- [x] Criar tabela `me_cliente` corrigida (colunas completas)
+- [x] Desenvolver `ClientForm` com máscaras (CNPJ/Telefone)
+- [x] Implementar Busca de CEP (ViaCEP)
+- [x] Criar service layer (`meClientService.ts`)
+- [x] Implementar rotas independentes (Minha Empresa vs CRM)
+- [x] Testar validações e fluxo completo
+
+---
+
+### [TRACK-007] Cadastro de Fornecedores - Implementação Completa ✅
+- **Responsável:** Dev (Antigravity)
+- **Máquina:** UNIQ
+- **Status:** ✅ Concluído
+- **Início:** 03/02/2026
+- **Conclusão:** 03/02/2026
+- **Prioridade:** 🟡 ALTA
+
+**Descrição:**
+Implementar cadastro de fornecedores para gestão de compras e estoque.
+
+**Sub-tarefas:**
+- [x] Padronizar tabela `me_fornecedor` (Address + Docs)
+- [x] Criar service layer `meSupplierService.ts`
+- [x] Desenvolver `SupplierForm` com máscaras e CEP
+- [x] Implementar `SupplierList`
+- [x] Configurar rotas (Dashboard/Sidebar)
+- [x] Validar CRUD Completo
 
 **Observações:**
-[Notas importantes, blockers, decisões]
+Implementado seguindo rigorosamente o padrão de Clientes (UI/UX e Arquitetura). Schema corrigido via migration (`fix_me_fornecedor_active.sql` e `fix_me_fornecedor_full_cols.sql`).
 
-**Último commit:** [hash ou mensagem]
-```
+---
+
+## 📋 AGUARDANDO INÍCIO
+
+### [TRACK-009] Rollback Completo de Cadastro com Edge Function
+- **Responsável:** TBD
+- **Máquina:** TBD
+- **Status:** ⏸️ Aguardando
+- **Prioridade:** � ALTA
+
+**Descrição:**
+Implementar Edge Function para garantir rollback 100% em caso de falha no cadastro.
+
+**Sub-tarefas:**
+- [ ] Criar Edge Function `register-user-complete`
+- [ ] Implementar rollback completo (auth + RPC)
+
+---
+
+### [TRACK-008] Cadastro de Colaboradores - Implementação com Auth
+- **Responsável:** TBD
+- **Máquina:** TBD
+- **Status:** ⏸️ Aguardando
+- **Prioridade:** 🟢 MÉDIA
+
+**Descrição:**
+Implementar cadastro de colaboradores com sistema de permissões.
+
+**Sub-tarefas:**
+- [ ] Planejar sistema de permissões
+- [ ] Desenvolver interface
+- [ ] Sistema de convite
 
 ---
 
 ## 📊 Estatísticas
 
-**Total de Tarefas:** 9 (TRACK-001 a TRACK-009)  
-**Concluídas:** 4 (TRACK-001 a TRACK-004)  
-**Aguardando:** 5 (TRACK-005 a TRACK-009)  
-**Em Progresso:** 0  
-**Bloqueadas:** 0
+**Total de Tarefas:** 9
+**Concluídas:** 7 (TRACK-001 a TRACK-007)
+**Aguardando:** 2 (008, 009)
 
-**Progresso Geral:** 44.4% (4/9 concluídas)
+**Progresso Geral:** 77.7%
 
 **Destaques:**
-- ✅ Sistema de Tracking implementado (TRACK-001)
-- ✅ Cadastro de usuários funcional (TRACK-002)
-- ✅ CRM separado (TRACK-003)
-- ✅ Storefront com Redesign Premium (TRACK-004)
-- 📅 Próximo foco: Cadastro de Serviços (TRACK-005)
-
----
-
-**Workflow de Atualização:**
-1. Ao iniciar trabalho em uma tarefa → Atualizar data início + status
-2. Durante desenvolvimento → Marcar sub-tarefas concluídas com [x]
-3. Ao pausar/trocar de máquina → Atualizar "Observações"
-4. Ao concluir → Mover para seção "CONCLUÍDOS" + atualizar data conclusão
-5. Atualizar estatísticas ao concluir tarefas
-6. Sempre fazer `git commit` + `git push` após atualizar este arquivo
+- ✅ **TRACK-007 Entregue:** Fornecedores implementado e validado.
+- ✅ Módulo **Minha Empresa > Cadastros** quase completo (faltam Colaboradores).
