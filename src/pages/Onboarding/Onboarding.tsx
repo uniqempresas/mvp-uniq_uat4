@@ -139,9 +139,26 @@ export default function Onboarding() {
 
             if (rpcError) {
                 console.error('RPC error:', rpcError)
-                alert(getErrorMessage(rpcError))
-                // A RPC já faz rollback automático de empresa/usuário/endereço
-                // Mas o auth user ainda fica criado (limitação conhecida)
+
+                // Tentar rollback automático (TRACK-009)
+                try {
+                    console.log('Tentando rollback automático do usuário...')
+                    const { error: rollbackError } = await supabase.rpc('clean_up_failed_registration')
+
+                    if (rollbackError) {
+                        console.error('Falha no rollback:', rollbackError)
+                        alert(`Erro no cadastro: ${getErrorMessage(rpcError)}. \n\nATENÇÃO: Sua conta foi criada, mas houve erro ao configurar a empresa. Contate o suporte.`)
+                    } else {
+                        console.log('Rollback executado com sucesso.')
+                        // Forçar logout para limpar sessão
+                        await supabase.auth.signOut()
+                        alert(`Erro no processo de criação da empresa: ${getErrorMessage(rpcError)}. \n\nSua conta temporária foi removida. Tente novamente.`)
+                    }
+                } catch (e) {
+                    console.error('Erro desconhecido no rollback:', e)
+                    alert(`Erro no cadastro: ${getErrorMessage(rpcError)}`)
+                }
+
                 setLoading(false)
                 return
             }

@@ -1,204 +1,285 @@
 # 📊 Tracking de Desenvolvimento - UNIQ Empresas
 
-**Última atualização:** 03/02/2026 20:39 BRT  
-**Máquina:** UNIQ
+**Última atualização:** 06/02/2026 14:17 BRT  
+**Sprint Atual:** Sprint 02  
+**Máquina:** HQ/UAT4  
+**Status:** 📋 Planejamento concluído - Aguardando início TRACK-011 (07/02/2026)
+
+> 📁 **Arquivo de Sprints Anteriores:** Ver pasta `tracking_arq/`  
+> - [Sprint 01 (Concluída)](../tracking_arq/TRACKING_Sprint_01.md) - 9 TRACKs concluídas
 
 ---
 
-## ✅ CONCLUÍDOS
+## 🎯 Sprint 02 - Mobile-First MVP
 
-### [TRACK-001] Sistema de Tracking de Desenvolvimento ✅
-- **Responsável:** Dev
-- **Máquina:** UNIQ
-- **Status:** ✅ Concluído
-- **Início:** 31/01/2026
-- **Conclusão:** 31/01/2026
+**Status:** 📋 Planejada  
+**Período Estimado:** 06/02/2026 - 20/02/2026 (2 semanas)  
+**Foco:** 📱 Responsividade Mobile-First (4 clientes beta, 50% operam 100% mobile)
+
+**Objetivo:** Tornar 100% dos módulos responsivos e otimizados para mobile, viabilizando uso completo via smartphone.
+
+**Definition of Done:**
+- [ ] 100% módulos funcionam em viewport 375px-768px
+- [ ] 0 scroll horizontal em qualquer tela
+- [ ] Touch targets >= 44px (iOS HIG)
+- [ ] Performance mobile: FCP <1.8s, LCP <2.5s
+- [ ] Testado em dispositivos reais (iOS + Android)
+
+---
+
+### [TRACK-011] Infraestrutura Mobile Base
+- **Responsável:** TBD
+- **Máquina:** TBD
+- **Status:** ⏸️ Aguardando início
 - **Prioridade:** 🔴 CRÍTICA
+- **Estimativa:** 2-3 dias
 
 **Descrição:**
-Criar sistema robusto de tracking para coordenação de desenvolvimento entre máquinas Ultra e UNIQ.
+Implementar estrutura base responsiva: menu hamburger, breakpoints Tailwind, layout adaptativo.
 
 **Sub-tarefas:**
-- [x] Analisar sistema atual (Markdown)
-- [x] Planejar solução avançada
-- [x] Criar implementation_plan.md
-- [x] Criar TRACKING.md
-- [x] Criar CHANGELOG.md
-- [x] Atualizar ROADMAP.md
-- [x] Documentar workflow de uso (TRACKING_GUIDE.md)
-- [x] Testar sincronização Git
+- [ ] Configurar breakpoints Tailwind personalizados (sm:640, md:768, lg:1024)
+- [ ] Criar componente `MobileDrawer` (menu hamburger)
+- [ ] Adaptar `Sidebar` para desktop + drawer mobile
+- [ ] Implementar layout responsivo base (Header, Content Area)
+- [ ] Criar hook `useBreakpoint()` para detecção de viewport
+- [ ] Testar navegação mobile completa
+
+**Acceptance Criteria:**
+- Mobile (<768px): Menu hamburger funcional com drawer slide-in
+- Desktop (>=768px): Sidebar fixa tradicional
+- Transição suave entre breakpoints sem quebra de layout
 
 ---
 
-### [TRACK-002] Cadastro de Usuários - Correção e Testes ✅
-- **Responsável:** Dev
-- **Máquina:** UNIQ + Ultra
-- **Status:** ✅ Concluído
-- **Início:** 31/01/2026 10:07
-- **Conclusão:** 31/01/2026 12:51
+### [TRACK-012] Módulos Cadastros Responsivos
+- **Responsável:** TBD
+- **Máquina:** TBD
+- **Status:** ⏸️ Aguardando TRACK-011
 - **Prioridade:** 🔴 CRÍTICA
+- **Estimativa:** 4-5 dias
+- **Dependência:** TRACK-011
 
 **Descrição:**
-Corrigir problemas no fluxo de cadastro de novos usuários e implementar RPC com dados iniciais.
+Adaptar todos os módulos de cadastro (Clientes, Produtos, Serviços, Fornecedores, Colaboradores) para mobile.
 
 **Sub-tarefas:**
-- [x] Identificar problemas no fluxo atual
-- [x] Criar utils de validação (validators.ts)
-- [x] Implementar validações (Step1, Step2)
-- [x] Corrigir RPC criar_empresa_e_configuracoes_iniciais
-- [x] Adicionar criação de dados iniciais
-- [x] Adicionar CASCADE DELETE para me_empresa
-- [x] Testar cadastro end-to-end
+- [ ] **Clientes:** Transformar tabela em card layout mobile + form touch-friendly
+- [ ] **Produtos:** Grid responsivo + modal full-screen mobile
+- [ ] **Serviços:** Lista adaptativa com drawer de detalhes
+- [ ] **Fornecedores:** Card stack com busca mobile
+- [ ] **Colaboradores:** Lista simplificada mobile
+- [ ] Implementar component `ResponsiveTable` (Table desktop / Card mobile)
+- [ ] Adaptar todos os formulários para touch (inputs height 48px+)
+
+**Acceptance Criteria:**
+- Todas as listas renderizam como cards em mobile (<768px)
+- Formulários preenchíveis sem zoom necessário
+- Ações (editar/deletar) acessíveis via swipe ou botões grandes
+- Modals ocupam full-screen em mobile
 
 ---
 
-### [TRACK-003] Separar CRM de "Minha Empresa" ✅
-- **Responsável:** Dev
-- **Máquina:** UNIQ + Ultra
-- **Status:** ✅ Concluído
-- **Início:** 31/01/2026 13:08
-- **Conclusão:** 31/01/2026 13:30
+### [TRACK-013] Dashboard & Storefront Mobile
+- **Responsável:** TBD
+- **Máquina:** TBD
+- **Status:** ⏸️ Aguardando TRACK-012
 - **Prioridade:** 🟡 ALTA
+- **Estimativa:** 2-3 dias
+- **Dependência:** TRACK-012
 
 **Descrição:**
-Separar CRM de dentro de "Minha Empresa", transformando-o em módulo independente.
+Adaptar Dashboard (métricas, gráficos) e Storefront público para mobile.
 
 **Sub-tarefas:**
-- [x] Restaurar "Minha Empresa" como módulo default
-- [x] Remover submenu CRM de dentro de "Minha Empresa"
-- [x] Manter CRM como módulo separado no MainSidebar
-- [x] Testar navegação completa
+- [ ] **Dashboard:** Cards empilhados verticalmente (grid-cols-1 md:grid-cols-3)
+- [ ] **Dashboard:** Gráficos responsivos (Chart.js/Recharts com width 100%)
+- [ ] **Storefront:** Revisar catálogo mobile (já existe, precisa polish)
+- [ ] **Storefront:** Carrinho mobile otimizado
+- [ ] **Storefront:** Checkout mobile-friendly (WhatsApp button grande)
+
+**Acceptance Criteria:**
+- Dashboard legível e usável em 375px
+- Gráficos se adaptam sem overflow
+- Storefront público navegável 100% mobile
 
 ---
 
-### [TRACK-004] Storefront - Catálogo Público & Redesign Premium ✅
-- **Responsável:** Dev (Antigravity)
-- **Máquina:** UNIQ + Ultra
-- **Status:** ✅ Concluído
-- **Início:** 02/02/2026 13:00
-- **Conclusão:** 02/02/2026 14:15
-- **Prioridade:** 🟡 ALTA
+### [TRACK-014] Forms & UX Polish Mobile
+- **Responsável:** TBD
+- **Máquina:** TBD
+- **Status:** ⏸️ Aguardando TRACK-013
+- **Prioridade:** 🟢 MÉDIA
+- **Estimativa:** 2 dias
+- **Dependência:** TRACK-013
 
 **Descrição:**
-Desenvolvimento da loja virtual pública, carrinho e redesign completo.
+Refinamento de UX mobile: keyboards corretos, gestos, error states, loading polish.
 
 **Sub-tarefas:**
-- [x] Implementar Contexto de Carrinho
-- [x] Criar rotas públicas e integração com Supabase
-- [x] Desenvolver fluxo de Checkout via WhatsApp
-- [x] **Redesign**: Novo StoreLayout
-- [x] **Redesign**: Seções da Home (Hero, Promo)
-- [x] Validar responsividade e UX
+- [ ] Input keyboard types (tel, email, numeric, url)
+- [ ] Implementar `scrollIntoView` quando keyboard abre
+- [ ] Error messages mobile-friendly (toast em vez de inline)
+- [ ] Loading states touch-optimized (skeleton screens)
+- [ ] Swipe gestures básicos (swipe-to-delete em listas)
+- [ ] Adicionar `touch-action` CSS para evitar conflitos
+- [ ] Thumb-zone optimization (ações principais no bottom 1/3 da tela)
+
+**Acceptance Criteria:**
+- Keyboard mobile abre com tipo correto
+- Campos não ficam ocultos atrás do keyboard
+- Usuário consegue fazer swipe para deletar itens de lista
+- Touch feedback visual em todos os botões (<150ms)
 
 ---
 
-### [TRACK-005] Cadastro de Serviços - Conexão com Supabase ✅
-- **Responsável:** Dev (Antigravity)
-- **Máquina:** UNIQ + Ultra
-- **Status:** ✅ Concluído
-- **Início:** 03/02/2026 13:40
-- **Conclusão:** 03/02/2026 13:58
-- **Prioridade:** 🟡 ALTA
+### [TRACK-015] QA Mobile & Device Testing
+- **Responsável:** TBD
+- **Máquina:** TBD
+- **Status:** ⏸️ Aguardando TRACK-014
+- **Prioridade:** 🔴 CRÍTICA
+- **Estimativa:** 2 dias
+- **Dependência:** TRACK-014
 
 **Descrição:**
-Conectar tela de cadastro de serviços ao Supabase com persistência real.
+Testes em dispositivos reais, correção de bugs mobile-specific, performance audit.
 
 **Sub-tarefas:**
-- [x] Criar schema (`me_servico_imagem`)
-- [x] Desenvolver service layer (serviceService.ts)
-- [x] Conectar tela ao Supabase
-- [x] Implementar CRUD completo
-- [x] Validar campos e Upload
+- [ ] Criar checklist de testes mobile (matriz de devices)
+- [ ] Testar em iOS real (Safari)
+- [ ] Testar em Android real (Chrome)
+- [ ] Performance audit mobile (Lighthouse mobile mode)
+- [ ] Corrigir bugs específicos de browser mobile
+- [ ] Validar métricas: FCP <1.8s, LCP <2.5s, CLS <0.1
+- [ ] Teste de usabilidade com 2 usuários beta mobile
+
+**Acceptance Criteria:**
+- Testado em pelo menos 2 devices (1 iOS + 1 Android)
+- 0 bugs de usabilidade críticos
+- Performance mobile dentro das métricas
+- Aprovação de pelo menos 1 cliente beta mobile
 
 ---
 
-### [TRACK-006] Cadastro de Clientes - Implementação Completa ✅
-- **Responsável:** Dev (Antigravity)
-- **Máquina:** UNIQ
-- **Status:** ✅ Concluído
-- **Início:** 03/02/2026
-- **Conclusão:** 03/02/2026
+### [TRACK-016] Sistema de Módulos (Menu Dinâmico)
+- **Responsável:** TBD
+- **Máquina:** TBD
+- **Status:** ⏸️ Aguardando TRACK-011 a 015
 - **Prioridade:** 🟡 ALTA
+- **Estimativa:** 3-4 dias
+- **Dependência:** Nenhuma técnica (mas será feita após mobile por decisão estratégica)
 
 **Descrição:**
-Implementar cadastro completo de clientes com CPF/CNPJ, endereços e contatos, separado do CRM.
+Criar sistema de módulos ativáveis onde cliente escolhe quais funcionalidades quer no menu. Reduz poluição visual e prepara para futura monetização.
 
 **Sub-tarefas:**
-- [x] Reverter CRM para gestão de Leads
-- [x] Criar tabela `me_cliente` corrigida (colunas completas)
-- [x] Desenvolver `ClientForm` com máscaras (CNPJ/Telefone)
-- [x] Implementar Busca de CEP (ViaCEP)
-- [x] Criar service layer (`meClientService.ts`)
-- [x] Implementar rotas independentes (Minha Empresa vs CRM)
-- [x] Testar validações e fluxo completo
+- [ ] Criar tabela `me_modulo_ativo` (empresa_id + modulo_codigo + ativo)
+- [ ] Criar RLS permitindo apenas role='dono' gerenciar módulos
+- [ ] Criar função helper `is_dono()` para RLS
+- [ ] Desenvolver `moduleService.ts` (listar, ativar, desativar)
+- [ ] Criar `ModuleContext` para estado global de módulos ativos
+- [ ] Criar página "Módulos" com grid de cards (toggle on/off)
+- [ ] Adaptar `MainSidebar` para filtrar apenas módulos base + ativos
+- [ ] Implementar onboarding: módulos opcionais aparecem desabilitados/grisados
+- [ ] Testar: Dono ativa CRM → aparece no menu
+- [ ] Testar: Colaborador não consegue ativar módulos
 
----
+**Módulos Base (Sempre Ativos):**
+- Minha Empresa, Financeiro, Módulos, Configurações
 
-### [TRACK-007] Cadastro de Fornecedores - Implementação Completa ✅
-- **Responsável:** Dev (Antigravity)
-- **Máquina:** UNIQ
-- **Status:** ✅ Concluído
-- **Início:** 03/02/2026
-- **Conclusão:** 03/02/2026
-- **Prioridade:** 🟡 ALTA
+**Módulos Opcionais (Cliente Escolhe):**
+- CRM, Loja, Estoque, Equipe, Relatórios
 
-**Descrição:**
-Implementar cadastro de fornecedores para gestão de compras e estoque.
-
-**Sub-tarefas:**
-- [x] Padronizar tabela `me_fornecedor` (Address + Docs)
-- [x] Criar service layer `meSupplierService.ts`
-- [x] Desenvolver `SupplierForm` com máscaras e CEP
-- [x] Implementar `SupplierList`
-- [x] Configurar rotas (Dashboard/Sidebar)
-- [x] Validar CRUD Completo
+**Acceptance Criteria:**
+- Menu dinâmico reflete módulos ativos em tempo real
+- Apenas Dono vê toggles funcionais na página "Módulos"
+- Onboarding mostra opcionais desabilitados com tooltip "Ative em Módulos"
+- Ativar/desativar persiste no banco e atualiza sidebar sem reload
 
 **Observações:**
-Implementado seguindo rigorosamente o padrão de Clientes (UI/UX e Arquitetura). Schema corrigido via migration (`fix_me_fornecedor_active.sql` e `fix_me_fornecedor_full_cols.sql`).
+MVP sem monetização. Arquitetura preparada para futura cobrança por módulo (campo `preco_mensal` pode ser adicionado depois).
 
 ---
 
-## 📋 AGUARDANDO INÍCIO
+## 📋 BACKLOG / FUTURAS
 
-### [TRACK-009] Rollback Completo de Cadastro com Edge Function
+### [TRACK-010] Sistema de Convite e Login de Colaboradores
 - **Responsável:** TBD
 - **Máquina:** TBD
-- **Status:** ⏸️ Aguardando
-- **Prioridade:** � ALTA
+- **Status:** ⏸️ Planejado (Backlog)
+- **Prioridade:** 🟡 BAIXA
+- **Dependência:** TRACK-008 (concluído na Sprint 01)
 
 **Descrição:**
-Implementar Edge Function para garantir rollback 100% em caso de falha no cadastro.
+Implementar sistema completo de convite por email para colaboradores com criação de conta de login no Supabase Auth.
 
 **Sub-tarefas:**
-- [ ] Criar Edge Function `register-user-complete`
-- [ ] Implementar rollback completo (auth + RPC)
+- [ ] Configurar SMTP no Supabase para envio de emails
+- [ ] Criar Edge Function `invite-collaborator` que:
+  - Cria usuário em `auth.users`
+  - Vincula com registro de `me_usuario`
+  - Gera token de convite temporário
+  - Envia email com link de ativação
+- [ ] Criar página de ativação de conta (frontend)
+- [ ] Implementar fluxo de definição de senha
+- [ ] Adicionar botão "Reenviar Convite" na lista de colaboradores
+- [ ] Implementar sistema de expiração de convites (7 dias)
+- [ ] Adicionar indicador visual de "Convite Pendente" vs "Ativo"
+
+**Requisitos Técnicos:**
+- SMTP configurado (SendGrid, AWS SES, etc)
+- Edge Function com acesso ao `auth.admin` do Supabase
+- Template de email personalizado
+- Política RLS para permitir auth.admin criar usuários
+
+**Observações:**
+Este módulo completa a funcionalidade do TRACK-008, permitindo que colaboradores cadastrados possam efetivamente fazer login no sistema. Atualmente, o TRACK-008 funciona apenas como "cadastro de RH".
 
 ---
 
-### [TRACK-008] Cadastro de Colaboradores - Implementação com Auth
-- **Responsável:** TBD
-- **Máquina:** TBD
-- **Status:** ⏸️ Aguardando
-- **Prioridade:** 🟢 MÉDIA
+## 📊 Estatísticas Gerais do Projeto
 
-**Descrição:**
-Implementar cadastro de colaboradores com sistema de permissões.
+**Total de TRACKs (Todas as Sprints):** 16  
+**Concluídas:** 9 (Sprint 01)  
+**Sprint 02 (Planejada):** 6 (TRACK-011 a TRACK-016)  
+**Em Backlog:** 1 (TRACK-010)
 
-**Sub-tarefas:**
-- [ ] Planejar sistema de permissões
-- [ ] Desenvolver interface
-- [ ] Sistema de convite
+**Progresso Geral:** 56% (9/16 concluídas)
 
 ---
 
-## 📊 Estatísticas
+## 🎯 Módulos Implementados (Sprint 01)
 
-**Total de Tarefas:** 9
-**Concluídas:** 7 (TRACK-001 a TRACK-007)
-**Aguardando:** 2 (008, 009)
+- ✅ Sistema de Tracking
+- ✅ Cadastro de Usuários com Rollback
+- ✅ Separação CRM
+- ✅ Storefront Público
+- ✅ **Minha Empresa > Cadastros:**
+  - ✅ Clientes
+  - ✅ Produtos  
+  - ✅ Serviços
+  - ✅ Fornecedores
+  - ✅ Colaboradores (Gestão de RH)
 
-**Progresso Geral:** 77.7%
+---
 
-**Destaques:**
-- ✅ **TRACK-007 Entregue:** Fornecedores implementado e validado.
-- ✅ Módulo **Minha Empresa > Cadastros** quase completo (faltam Colaboradores).
+## 📝 Próximos Passos (Amanhã - 07/02/2026)
+
+**Sprint 02 - Ordem de Execução Definida:**
+1. ✅ Planejamento concluído (06/02/2026)
+2. 🚀 **TRACK-011** - Infraestrutura Mobile Base (início 07/02)
+3. 📱 TRACK-012 → 013 → 014 → 015 (Mobile-First sequencial)
+4. 📦 TRACK-016 - Sistema de Módulos (final da sprint)
+
+**Definition of Done Sprint 02:**
+- [ ] Mobile-First: 100% módulos responsivos, testados em devices reais
+- [ ] Sistema de Módulos: Menu dinâmico funcional, apenas Dono gerencia
+
+---
+
+## 📌 Notas Importantes
+
+- Todas as TRACKs concluídas foram movidas para `tracking_arq/TRACKING_Sprint_01.md`
+- Este arquivo agora contém apenas o planejamento da Sprint atual e backlog
+- Manter este arquivo enxuto e focado na sprint ativa
+- Atualizar estatísticas após cada TRACK concluída

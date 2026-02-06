@@ -7,6 +7,7 @@ import ModuleStore from './components/ModuleStore'
 import ProductList from '../../components/Catalog/ProductList'
 import ProductForm from '../Catalog/ProductForm'
 import ServiceList from '../Services/ServiceList'
+import CollaboratorList from '../../components/Registers/CollaboratorList'
 import ClientList from '../../components/Registers/ClientList'
 import SupplierList from '../../components/Registers/SupplierList'
 
@@ -34,6 +35,8 @@ export default function Dashboard() {
                 return <ClientList onNavigate={setActiveView} />
             case 'suppliers':
                 return <SupplierList />
+            case 'collaborators':
+                return <CollaboratorList />
             case 'home':
             default:
                 return <DashboardHome />
