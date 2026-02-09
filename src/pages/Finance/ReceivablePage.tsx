@@ -17,13 +17,13 @@ export default function ReceivablePage() {
             const [list, statistics, custs] = await Promise.all([
                 financeService.getTransactions({ tipo: 'receita', month: new Date() }),
                 financeService.getDashboardStats('receita'),
-                clientService.getCustomers()
+                clientService.getClients()
             ])
             setTransactions(list)
             setStats(statistics)
 
             const custMap: Record<string, string> = {}
-            custs.forEach(c => custMap[c.id] = c.nome_cliente)
+            custs.forEach(c => custMap[c.id] = c.nome)
             setCustomers(custMap)
 
         } catch (error) {

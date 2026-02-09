@@ -33,7 +33,7 @@ export const meCollaboratorService = {
         let cargosMap: Record<number, string> = {}
 
         if (cargoIds.length > 0) {
-            const { data: cargos, error: cargoError } = await supabase
+            const { data: cargos } = await supabase
                 .from('me_cargo')
                 .select('id, nome')
                 .in('id', cargoIds)

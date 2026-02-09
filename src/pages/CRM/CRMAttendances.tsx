@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import type { Attendance } from '../../services/crmService'
 import { crmService } from '../../services/crmService'
-import type { Customer } from '../../services/clientService'
+import type { Client } from '../../services/clientService'
 import { clientService } from '../../services/clientService'
 
 export default function CRMAttendances() {
     const [attendances, setAttendances] = useState<Attendance[]>([])
-    const [customers, setCustomers] = useState<Customer[]>([])
+    const [customers, setCustomers] = useState<Client[]>([])
     // const [loading, setLoading] = useState(true)
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [editingId, setEditingId] = useState<string | null>(null)
@@ -33,7 +33,7 @@ export default function CRMAttendances() {
         // setLoading(true)
         const [attData, customersData] = await Promise.all([
             crmService.getAttendances(),
-            clientService.getCustomers()
+            clientService.getClients()
         ])
         setAttendances(attData)
         setCustomers(customersData)
@@ -267,7 +267,7 @@ export default function CRMAttendances() {
                                 >
                                     <option value="">Selecione um cliente (opcional)</option>
                                     {customers.map(c => (
-                                        <option key={c.id} value={c.id}>{c.nome_cliente}</option>
+                                        <option key={c.id} value={c.id}>{c.nome}</option>
                                     ))}
                                 </select>
                             </div>

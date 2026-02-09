@@ -1,4 +1,4 @@
-import { useState, TouchEvent as ReactTouchEvent } from 'react'
+import { useState, type TouchEvent as ReactTouchEvent } from 'react'
 
 interface SwipeableListItemProps {
     children: React.ReactNode

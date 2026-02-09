@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { financeService, type Category, type Account, type Transaction } from '../../services/financeService'
-import { clientService, type Customer } from '../../services/clientService'
+import { clientService, type Client } from '../../services/clientService'
 
 interface TransactionModalProps {
     isOpen: boolean
@@ -14,7 +14,7 @@ export default function TransactionModal({ isOpen, onClose, onSuccess, type, tra
     const [loading, setLoading] = useState(false)
     const [categories, setCategories] = useState<Category[]>([])
     const [accounts, setAccounts] = useState<Account[]>([])
-    const [customers, setCustomers] = useState<Customer[]>([]) // For receivables mainly
+    const [customers, setCustomers] = useState<Client[]>([]) // For receivables mainly
     // Suppliers? We don't have table yet. Text input for now? Or use customers list as "Contacts"?
 
     const [form, setForm] = useState({
@@ -99,7 +99,7 @@ export default function TransactionModal({ isOpen, onClose, onSuccess, type, tra
             }
 
             if (type === 'receita') {
-                const custs = await clientService.getCustomers()
+                const custs = await clientService.getClients()
                 setCustomers(custs)
             }
         } catch (error) {
@@ -243,7 +243,7 @@ export default function TransactionModal({ isOpen, onClose, onSuccess, type, tra
                             >
                                 <option value="">Sem cliente</option>
                                 {customers.map(c => (
-                                    <option key={c.id} value={c.id}>{c.nome_cliente}</option>
+                                    <option key={c.id} value={c.id}>{c.nome}</option>
                                 ))}
                             </select>
                         </div>

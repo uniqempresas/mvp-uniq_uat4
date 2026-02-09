@@ -65,14 +65,14 @@ export default function CRMChat({ onNavigate }: { onNavigate?: (view: string, pa
             // Link new lead to current conversation
             if (selectedChat) {
                 await crmChatService.updateConversation(selectedChat.id, {
-                    lead_id: newClient.id,
+                    lead_id: String(newClient.id),
                 })
 
                 // Update local state immediately to reflect changes in UI
                 setSelectedChat(prev => prev ? ({
                     ...prev,
                     lead: {
-                        id: newClient.id,
+                        id: String(newClient.id),
                         nome: newClient.nome,
                         email: newClient.email || '',
                         telefone: newClient.telefone || ''
@@ -234,7 +234,7 @@ export default function CRMChat({ onNavigate }: { onNavigate?: (view: string, pa
         try {
             const [leadsData, customersData] = await Promise.all([
                 clientService.getClients(),
-                clientService.getCustomers()
+                clientService.getClients()
             ])
             setLeads(leadsData)
             setCustomers(customersData)
@@ -437,11 +437,9 @@ export default function CRMChat({ onNavigate }: { onNavigate?: (view: string, pa
                 const newLead = await clientService.createClient({
                     nome: selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome || selectedChat.nome || selectedChat.titulo || 'Novo Lead Chat',
                     telefone: phoneToUse,
-                    status: 'Novo',
-                    origem: 'Chat',
-                    foto_url: selectedChat.foto_contato
+                    status: 'Novo'
                 })
-                leadId = newLead.id
+                leadId = String(newLead.id)
             }
 
             // 2. Create Opportunity

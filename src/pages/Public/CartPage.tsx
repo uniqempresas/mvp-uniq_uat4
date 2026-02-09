@@ -66,9 +66,6 @@ export default function CartPage() {
                 ) : (
                     <div className="space-y-4">
                         {items.map((item, idx: number) => {
-                            const key = item.variacao
-                                ? `${item.produto.id}-${item.variacao.id}`
-                                : item.produto.id.toString()
                             const variacaoId = item.variacao?.id
 
                             const preco = item.variacao?.preco_varejo || item.variacao?.preco || item.produto.preco_varejo || item.produto.preco

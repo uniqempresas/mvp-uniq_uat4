@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { crmService, type Opportunity, type FunnelStage, type OpportunityProduct } from '../../services/crmService'
-import { type Client } from '../../services/clientService' // Leads
-import { type Customer } from '../../services/clientService' // Customers
+import { type Client } from '../../services/clientService'
 import { type Product } from '../../services/productService'
 
 interface OpportunityModalProps {
@@ -10,7 +9,7 @@ interface OpportunityModalProps {
     initialOpp: Partial<Opportunity> | null
     stages: FunnelStage[]
     leads: Client[]
-    customers: Customer[]
+    customers: Client[] // Changed from Customer to Client
     productsList: Product[]
     onSuccess: () => void
 }
@@ -271,7 +270,7 @@ export default function OpportunityModal({
                                         onChange={handleChange}
                                     >
                                         <option value="">Selecione um Cliente...</option>
-                                        {customers.map(c => <option key={c.id} value={c.id}>{c.nome_cliente}</option>)}
+                                        {customers.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
                                     </select>
                                 </label>
                             </div>
