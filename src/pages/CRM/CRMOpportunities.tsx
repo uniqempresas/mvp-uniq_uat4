@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { crmService, type FunnelStage, type Opportunity, type OpportunityProduct } from '../../services/crmService'
 import { productService, type Product } from '../../services/productService'
-import { clientService, type Client, type Customer } from '../../services/clientService'
+import { clientService, type Client } from '../../services/clientService'
 
 // Helper to extract color name from tailwind class string (e.g. "bg-blue-100" -> "blue")
 const getBaseColor = (colorClass: string) => {
@@ -20,7 +20,7 @@ export default function CRMOpportunities() {
 
     // New States
     const [leads, setLeads] = useState<Client[]>([]) // crm_leads
-    const [customers, setCustomers] = useState<Customer[]>([]) // me_cliente
+    const [customers, setCustomers] = useState<Client[]>([]) // me_cliente - also using Client type
     const [productsList, setProductsList] = useState<Product[]>([])
     const [oppProducts, setOppProducts] = useState<OpportunityProduct[]>([])
     const [productForm, setProductForm] = useState({
@@ -131,7 +131,7 @@ export default function CRMOpportunities() {
                 crmService.getStages(),
                 crmService.getOpportunities(),
                 clientService.getClients(), // Returns crm_leads
-                clientService.getCustomers(), // Returns me_cliente
+                clientService.getClients(), // Returns me_cliente - using getClients for both
                 productService.getProducts()
             ])
             setStages(stagesData)
@@ -405,8 +405,8 @@ export default function CRMOpportunities() {
                                             </div>
                                         ) : (
                                             stageOpps.map(opp => {
-                                                const clientName = customers.find(c => c.id === opp.cliente_id)?.nome_cliente
-                                                    || leads.find(l => l.id === opp.lead_id)?.nome
+                                                const clientName = customers.find(c => String(c.id) === opp.cliente_id)?.nome
+                                                    || leads.find(l => String(l.id) === opp.lead_id)?.nome
                                                     || 'Sem cliente'
 
                                                 return (
@@ -538,7 +538,7 @@ export default function CRMOpportunities() {
                                                     onChange={handleChange}
                                                 >
                                                     <option value="">Selecione um Cliente...</option>
-                                                    {customers.map(c => <option key={c.id} value={c.id}>{c.nome_cliente}</option>)}
+                                                    {customers.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
                                                 </select>
                                                 <button type="button" className="w-10 h-10 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-600 transition-colors">
                                                     <span className="material-symbols-outlined">add</span>
