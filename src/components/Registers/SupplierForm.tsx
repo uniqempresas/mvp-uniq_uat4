@@ -147,7 +147,7 @@ export default function SupplierForm({ isOpen, onClose, onSubmit, initialData }:
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-3xl mx-4 overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl mx-4 overflow-hidden flex flex-col max-h-[90vh]">
                 <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 flex-none">
                     <h3 className="font-semibold text-lg text-slate-900">{initialData ? 'Editar Fornecedor' : 'Novo Fornecedor'}</h3>
                     <button onClick={onClose} className="text-slate-400 hover:text-slate-600">

@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import MainSidebar from '../../components/Sidebar/MainSidebar'
 import SubSidebar from '../../components/Sidebar/SubSidebar'
+import MobileHeader from '../../components/Mobile/MobileHeader'
+import MobileDrawer from '../../components/Mobile/MobileDrawer'
+import { useBreakpoint } from '../../hooks/useBreakpoint'
 import DashboardHome from './components/DashboardHome'
 import FinanceLayout from '../Finance/FinanceLayout'
 import ModuleStore from './components/ModuleStore'
@@ -15,6 +18,8 @@ export default function Dashboard() {
     const [activeContext, setActiveContext] = useState('dashboard')
     const [activeView, setActiveView] = useState('home')
     const [editingProductId, setEditingProductId] = useState<number | undefined>(undefined)
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+    const { isMobile } = useBreakpoint()
 
     console.log('Dashboard activeView:', activeView)
 
@@ -46,11 +51,26 @@ export default function Dashboard() {
     return (
         <div className="flex h-screen w-full overflow-hidden bg-background-light text-slate-800 antialiased selection:bg-primary/20 selection:text-primary">
 
+            {/* Mobile Header (apenas mobile) */}
+            {isMobile && <MobileHeader onMenuClick={() => setIsDrawerOpen(true)} />}
+
+            {/* Mobile Drawer (apenas mobile) */}
+            {isMobile && (
+                <MobileDrawer
+                    isOpen={isDrawerOpen}
+                    onClose={() => setIsDrawerOpen(false)}
+                    activeContext={activeContext}
+                    onContextChange={setActiveContext}
+                    onNavigate={setActiveView}
+                />
+            )}
+
+            {/* Desktop Sidebars (apenas desktop) */}
             <MainSidebar
                 activeContext={activeContext}
                 onContextChange={(ctx) => {
                     setActiveContext(ctx)
-                    setActiveView('home') // Reset view on context switch
+                    setActiveView('home')
                 }}
             />
 
@@ -60,7 +80,9 @@ export default function Dashboard() {
             />
 
             {/* Main Content Area */}
-            {renderContent()}
+            <main className="flex-1 overflow-auto pt-16 md:pt-0">
+                {renderContent()}
+            </main>
         </div>
     )
 }

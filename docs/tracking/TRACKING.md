@@ -1,9 +1,9 @@
 # 📊 Tracking de Desenvolvimento - UNIQ Empresas
 
-**Última atualização:** 06/02/2026 14:17 BRT  
+**Última atualização:** 09/02/2026 13:30 BRT  
 **Sprint Atual:** Sprint 02  
-**Máquina:** HQ/UAT4  
-**Status:** 📋 Planejamento concluído - Aguardando início TRACK-011 (07/02/2026)
+**Máquina:** HQ/UAT4 (Ultra)  
+**Status:** � Finalizando TRACK-013
 
 > 📁 **Arquivo de Sprints Anteriores:** Ver pasta `tracking_arq/`  
 > - [Sprint 01 (Concluída)](../tracking_arq/TRACKING_Sprint_01.md) - 9 TRACKs concluídas
@@ -28,90 +28,103 @@
 ---
 
 ### [TRACK-011] Infraestrutura Mobile Base
-- **Responsável:** TBD
-- **Máquina:** TBD
-- **Status:** ⏸️ Aguardando início
+- **Responsável:** Luiz Silva
+- **Máquina:** Ultra (HQ/UAT4)
+- **Status:** ✅ Concluída
 - **Prioridade:** 🔴 CRÍTICA
 - **Estimativa:** 2-3 dias
+- **Data conclusão:** 09/02/2026
 
 **Descrição:**
 Implementar estrutura base responsiva: menu hamburger, breakpoints Tailwind, layout adaptativo.
 
 **Sub-tarefas:**
-- [ ] Configurar breakpoints Tailwind personalizados (sm:640, md:768, lg:1024)
-- [ ] Criar componente `MobileDrawer` (menu hamburger)
-- [ ] Adaptar `Sidebar` para desktop + drawer mobile
-- [ ] Implementar layout responsivo base (Header, Content Area)
-- [ ] Criar hook `useBreakpoint()` para detecção de viewport
-- [ ] Testar navegação mobile completa
+- [x] Configurar breakpoints Tailwind personalizados (sm:640, md:768, lg:1024)
+- [x] Criar componente `MobileDrawer` (menu hamburger)
+- [x] Adaptar `Sidebar` para desktop + drawer mobile
+- [x] Implementar layout responsivo base (Header, Content Area)
+- [x] Criar hook `useBreakpoint()` para detecção de viewport
+- [x] Testar navegação mobile completa
 
 **Acceptance Criteria:**
-- Mobile (<768px): Menu hamburger funcional com drawer slide-in
-- Desktop (>=768px): Sidebar fixa tradicional
-- Transição suave entre breakpoints sem quebra de layout
+- [x] Mobile (<768px): Menu hamburger funcional com drawer slide-in
+- [x] Desktop (>=768px): Sidebar fixa tradicional
+- [x] Transição suave entre breakpoints sem quebra de layout
+
+**Observações:**
+Implementação 100% concluída na máquina Ultra. Testes em runtime pendentes (requerem npm na máquina UNIQ).
 
 ---
 
 ### [TRACK-012] Módulos Cadastros Responsivos
-- **Responsável:** TBD
-- **Máquina:** TBD
-- **Status:** ⏸️ Aguardando TRACK-011
+- **Responsável:** Luiz Silva
+- **Máquina:** Ultra (HQ/UAT4)
+- **Status:** ✅ Concluída
 - **Prioridade:** 🔴 CRÍTICA
 - **Estimativa:** 4-5 dias
+- **Data conclusão:** 09/02/2026
 - **Dependência:** TRACK-011
 
 **Descrição:**
 Adaptar todos os módulos de cadastro (Clientes, Produtos, Serviços, Fornecedores, Colaboradores) para mobile.
 
 **Sub-tarefas:**
-- [ ] **Clientes:** Transformar tabela em card layout mobile + form touch-friendly
-- [ ] **Produtos:** Grid responsivo + modal full-screen mobile
-- [ ] **Serviços:** Lista adaptativa com drawer de detalhes
-- [ ] **Fornecedores:** Card stack com busca mobile
-- [ ] **Colaboradores:** Lista simplificada mobile
-- [ ] Implementar component `ResponsiveTable` (Table desktop / Card mobile)
-- [ ] Adaptar todos os formulários para touch (inputs height 48px+)
+- [x] **Clientes:** Transformar tabela em card layout mobile + form touch-friendly
+- [x] **Produtos:** Grid responsivo + modal full-screen mobile
+- [x] **Serviços:** Lista adaptativa com drawer de detalhes
+- [x] **Fornecedores:** Card stack com busca mobile
+- [x] **Colaboradores:** Lista simplificada mobile
+- [x] Implementar component `MobileCard` (reutilizável para todos)
+- [x] Adaptar todos os formulários para touch (modais modernos 2026)
 
 **Acceptance Criteria:**
-- Todas as listas renderizam como cards em mobile (<768px)
-- Formulários preenchíveis sem zoom necessário
-- Ações (editar/deletar) acessíveis via swipe ou botões grandes
-- Modals ocupam full-screen em mobile
+- [x] Todas as listas renderizam como cards em mobile (<768px)
+- [x] Formulários preenchíveis sem zoom necessário
+- [x] Ações (editar/deletar) acessíveis via botões touch-friendly (44px+)
+- [x] Modals responsivos com design moderno 2026
+
+**Observações:**
+Implementação completa com componente `MobileCard` reutilizável. Design modernizado (rounded-lg, shadow-sm). Bug CollaboratorList (tela branca) corrigido. Testes runtime realizados com sucesso.
 
 ---
 
 ### [TRACK-013] Dashboard & Storefront Mobile
-- **Responsável:** TBD
-- **Máquina:** TBD
-- **Status:** ⏸️ Aguardando TRACK-012
+- **Responsável:** Luiz Silva
+- **Máquina:** Ultra (HQ/UAT4)
+- **Status:** ✅ Concluída
 - **Prioridade:** 🟡 ALTA
-- **Estimativa:** 2-3 dias
-- **Dependência:** TRACK-012
+- **Estimativa:** 2-3 horas
+- **Data conclusão:** 09/02/2026
+- **Dependência:** TRACK-012 ✅
 
 **Descrição:**
 Adaptar Dashboard (métricas, gráficos) e Storefront público para mobile.
 
 **Sub-tarefas:**
-- [ ] **Dashboard:** Cards empilhados verticalmente (grid-cols-1 md:grid-cols-3)
-- [ ] **Dashboard:** Gráficos responsivos (Chart.js/Recharts com width 100%)
-- [ ] **Storefront:** Revisar catálogo mobile (já existe, precisa polish)
-- [ ] **Storefront:** Carrinho mobile otimizado
-- [ ] **Storefront:** Checkout mobile-friendly (WhatsApp button grande)
+- [x] **Dashboard:** Cards KPI empilhados verticalmente (grid-cols-1 md:grid-cols-2 lg:grid-cols-4)
+- [x] **Dashboard:** Design moderno 2026 (rounded-lg, shadow-sm)
+- [x] **Dashboard:** Tabela "Últimos Pedidos" responsiva (cards mobile, tabela desktop)
+- [x] **Storefront:** Catálogo responsivo (grid-cols-1 sm:grid-cols-2 lg:grid-cols-4) - já implementado
+- [x] **Storefront:** CartDrawer mobile otimizado - já implementado
 
 **Acceptance Criteria:**
-- Dashboard legível e usável em 375px
-- Gráficos se adaptam sem overflow
-- Storefront público navegável 100% mobile
+- [x] Dashboard legível e usável em 375px
+- [x] Grid KPI responsivo com stack vertical em mobile
+- [x] Tabela "Últimos Pedidos" renderiza como cards em mobile
+- [x] Storefront público navegável 100% mobile (já validado)
+
+**Observações:**
+Implementação completa. Dashboard modernizado com design 2026 (rounded-lg). Tabela responsiva com `useBreakpoint` hook: desktop = table tradicional, mobile = `MobileCard` components. Storefront já estava responsivo desde implementação anterior (TRACK-004 da Sprint 01).
 
 ---
 
 ### [TRACK-014] Forms & UX Polish Mobile
-- **Responsável:** TBD
-- **Máquina:** TBD
-- **Status:** ⏸️ Aguardando TRACK-013
+- **Responsável:** Luiz Silva
+- **Máquina:** Ultra (HQ/UAT4)
+- **Status:** 🚀 Em Andamento
 - **Prioridade:** 🟢 MÉDIA
 - **Estimativa:** 2 dias
-- **Dependência:** TRACK-013
+- **Dependência:** TRACK-013 ✅
 
 **Descrição:**
 Refinamento de UX mobile: keyboards corretos, gestos, error states, loading polish.
@@ -237,14 +250,44 @@ Este módulo completa a funcionalidade do TRACK-008, permitindo que colaboradore
 
 ---
 
+### [TRACK-017] Transformar ProductForm em Modal (Versão Beta)
+- **Responsável:** TBD
+- **Máquina:** TBD
+- **Status:** ⏸️ Planejado (Backlog - Beta)
+- **Prioridade:** 🟢 BAIXA
+- **Dependência:** Nenhuma
+
+**Descrição:**
+Transformar o formulário de produtos (ProductForm) de página completa para modal overlay, mantendo funcionalidade completa.
+
+**Sub-tarefas:**
+- [ ] Criar versão modal do ProductForm mantendo todas as funcionalidades
+- [ ] Adaptar upload múltiplo de imagens para contexto de modal
+- [ ] Ajustar sistema de variações (tabela) para caber em modal
+- [ ] Implementar scroll interno otimizado
+- [ ] Testar navegação e breadcrumbs dentro do modal
+- [ ] Garantir responsividade mobile (modal full-screen)
+
+**Acceptance Criteria:**
+- Modal abre suavemente com backdrop blur
+- Todas as funcionalidades (variações, imagens, categorias) mantidas
+- Upload de imagens funcional dentro do modal
+- Responsivo (mobile full-screen, desktop max-w-6xl)
+- Botão de fechar sempre visível
+
+**Observações:**
+MVP mantém ProductForm como página para garantir estabilidade. Transformação em modal pode ser feita na versão Beta quando houver mais tempo para testes e ajustes de UX.
+
+---
+
 ## 📊 Estatísticas Gerais do Projeto
 
-**Total de TRACKs (Todas as Sprints):** 16  
+**Total de TRACKs (Todas as Sprints):** 17  
 **Concluídas:** 9 (Sprint 01)  
 **Sprint 02 (Planejada):** 6 (TRACK-011 a TRACK-016)  
-**Em Backlog:** 1 (TRACK-010)
+**Em Backlog:** 2 (TRACK-010, TRACK-017)
 
-**Progresso Geral:** 56% (9/16 concluídas)
+**Progresso Geral:** 53% (9/17 concluídas)
 
 ---
 

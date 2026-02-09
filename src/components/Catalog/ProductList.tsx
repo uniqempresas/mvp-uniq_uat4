@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { productService, type Product } from '../../services/productService'
+import { useBreakpoint } from '../../hooks/useBreakpoint'
+import MobileCard from '../Mobile/MobileCard'
 
 interface Props {
     onNavigate: (view: string) => void
@@ -36,6 +38,70 @@ export default function ProductList({ onNavigate, onEdit }: Props) {
         // matchesStatus logic would go here based on stock
         return matchesSearch
     })
+
+    const { isMobile } = useBreakpoint()
+
+    const formatCurrency = (value: number) => {
+        return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        }).format(value)
+    }
+
+    const handleDelete = async (id: number) => {
+        if (confirm('Tem certeza que deseja excluir este produto?')) {
+            await productService.deleteProduct(id)
+            fetchProducts()
+        }
+    }
+
+    const renderMobileCard = (product: Product) => (
+        <MobileCard
+            key={product.id}
+            avatar={
+                product.foto_url || (
+                    <span className="material-symbols-outlined text-gray-300">package_2</span>
+                )
+            }
+            title={product.nome_produto}
+            subtitle={`SKU: ${product.sku || 'N/A'}`}
+            badge={
+                product.estoque_atual > 0
+                    ? { label: `${product.estoque_atual} unid.`, color: 'green' }
+                    : { label: 'Sem estoque', color: 'red' }
+            }
+            fields={[
+                { label: 'Categoria', value: 'Geral' },
+                {
+                    label: 'Preço',
+                    value:
+                        product.tipo === 'variavel' && product.variacoes && product.variacoes.length > 0
+                            ? `A partir de ${formatCurrency(Math.min(...product.variacoes.map(v => v.preco_varejo || 0)))}`
+                            : formatCurrency(product.preco)
+                }
+            ]}
+            actions={[
+                {
+                    icon: 'edit',
+                    onClick: (e) => {
+                        e.stopPropagation()
+                        onEdit?.(product.id)
+                    },
+                    color: 'blue',
+                    title: 'Editar'
+                },
+                {
+                    icon: 'delete',
+                    onClick: (e) => {
+                        e.stopPropagation()
+                        handleDelete(product.id)
+                    },
+                    color: 'red',
+                    title: 'Excluir'
+                }
+            ]}
+        />
+    )
 
     return (
         <div className="flex-1 overflow-y-auto p-4 lg:p-8 scroll-smooth animate-fadeIn">
@@ -105,116 +171,136 @@ export default function ProductList({ onNavigate, onEdit }: Props) {
                     </div>
                 </div>
 
-                {/* Table */}
+                {/* Table / Mobile Cards */}
                 <div className="bg-white dark:bg-[#1a2e1f] border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
-                            <thead>
-                                <tr className="bg-gray-50/50 dark:bg-white/5 border-b border-gray-100 dark:border-gray-700 text-xs uppercase tracking-wider text-gray-500 font-semibold">
-                                    <th className="px-6 py-4 w-12 text-center">
-                                        <input className="rounded border-gray-300 text-primary focus:ring-primary/20 size-4 bg-transparent" type="checkbox" />
-                                    </th>
-                                    <th className="px-6 py-4 dark:text-gray-300">Produto</th>
-                                    <th className="px-6 py-4 dark:text-gray-300">Categoria</th>
-                                    <th className="px-6 py-4 dark:text-gray-300">Estoque</th>
-                                    <th className="px-6 py-4 dark:text-gray-300">Preço</th>
-                                    <th className="px-6 py-4 text-right dark:text-gray-300">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-100 dark:divide-gray-700 text-sm">
-                                {loading ? (
-                                    <tr>
-                                        <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
-                                            <span className="animate-spin inline-block w-6 h-6 border-2 border-primary border-t-transparent rounded-full mb-2"></span>
-                                            <p>Carregando produtos...</p>
-                                        </td>
+                    {isMobile ? (
+                        // Mobile Card Layout
+                        <div className="p-4 grid gap-4">
+                            {loading ? (
+                                <div className="py-12 text-center text-gray-500">
+                                    <span className="animate-spin inline-block w-6 h-6 border-2 border-primary border-t-transparent rounded-full mb-2" />
+                                    <p>Carregando produtos...</p>
+                                </div>
+                            ) : filteredProducts.length === 0 ? (
+                                <div className="py-12 text-center text-gray-500">
+                                    Nenhum produto encontrado.
+                                </div>
+                            ) : (
+                                filteredProducts.map(renderMobileCard)
+                            )}
+                        </div>
+                    ) : (
+                        // Desktop Table Layout
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="bg-gray-50/50 dark:bg-white/5 border-b border-gray-100 dark:border-gray-700 text-xs uppercase tracking-wider text-gray-500 font-semibold">
+                                        <th className="px-6 py-4 w-12 text-center">
+                                            <input className="rounded border-gray-300 text-primary focus:ring-primary/20 size-4 bg-transparent" type="checkbox" />
+                                        </th>
+                                        <th className="px-6 py-4 dark:text-gray-300">Produto</th>
+                                        <th className="px-6 py-4 dark:text-gray-300">Categoria</th>
+                                        <th className="px-6 py-4 dark:text-gray-300">Estoque</th>
+                                        <th className="px-6 py-4 dark:text-gray-300">Preço</th>
+                                        <th className="px-6 py-4 text-right dark:text-gray-300">Ações</th>
                                     </tr>
-                                ) : filteredProducts.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
-                                            Nenhum produto encontrado.
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    filteredProducts.map(product => {
-                                        return (
-                                            <tr key={product.id} className="group hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                                <td className="px-6 py-4 text-center">
-                                                    <input className="rounded border-gray-300 text-primary focus:ring-primary/20 size-4 bg-transparent" type="checkbox" />
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center gap-4">
-                                                        <div className="size-12 rounded-lg bg-gray-100 shrink-0 bg-cover bg-center border border-gray-200 relative overflow-hidden">
-                                                            {product.foto_url ? (
-                                                                <img src={product.foto_url} alt="" className="w-full h-full object-cover" />
-                                                            ) : (
-                                                                <div className="w-full h-full flex items-center justify-center text-gray-300">
-                                                                    <span className="material-symbols-outlined text-[20px]">image</span>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                        <div>
-                                                            <div className="font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
-                                                                {product.nome_produto}
+                                </thead>
+                                <tbody className="divide-y divide-gray-100 dark:divide-gray-700 text-sm">
+                                    {loading ? (
+                                        <tr>
+                                            <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                                                <span className="animate-spin inline-block w-6 h-6 border-2 border-primary border-t-transparent rounded-full mb-2"></span>
+                                                <p>Carregando produtos...</p>
+                                            </td>
+                                        </tr>
+                                    ) : filteredProducts.length === 0 ? (
+                                        <tr>
+                                            <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                                                Nenhum produto encontrado.
+                                            </td>
+                                        </tr>
+                                    ) : (
+                                        filteredProducts.map(product => {
+                                            return (
+                                                <tr key={product.id} className="group hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                                    <td className="px-6 py-4 text-center">
+                                                        <input className="rounded border-gray-300 text-primary focus:ring-primary/20 size-4 bg-transparent" type="checkbox" />
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        <div className="flex items-center gap-4">
+                                                            <div className="size-12 rounded-lg bg-gray-100 shrink-0 bg-cover bg-center border border-gray-200 relative overflow-hidden">
+                                                                {product.foto_url ? (
+                                                                    <img src={product.foto_url} alt="" className="w-full h-full object-cover" />
+                                                                ) : (
+                                                                    <div className="w-full h-full flex items-center justify-center text-gray-300">
+                                                                        <span className="material-symbols-outlined text-[20px]">image</span>
+                                                                    </div>
+                                                                )}
                                                             </div>
-                                                            <div className="text-xs text-gray-500">SKU: {product.sku || 'N/A'}</div>
-                                                            {product.tipo === 'variavel' && (
-                                                                <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded ml-1">Variável</span>
-                                                            )}
+                                                            <div>
+                                                                <div className="font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
+                                                                    {product.nome_produto}
+                                                                </div>
+                                                                <div className="text-xs text-gray-500">SKU: {product.sku || 'N/A'}</div>
+                                                                {product.tipo === 'variavel' && (
+                                                                    <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded ml-1">Variável</span>
+                                                                )}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-white/10 text-gray-800 dark:text-gray-300">
-                                                        Geral
-                                                    </span>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center gap-2">
-                                                        <span className={`size-2 rounded-full ${product.estoque_atual > 0 ? 'bg-emerald-500' : 'bg-red-500'
-                                                            }`}></span>
-                                                        <span className="text-gray-700 dark:text-gray-300 font-medium">{product.estoque_atual} unid.</span>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-                                                    {product.tipo === 'variavel' && product.variacoes && product.variacoes.length > 0 ? (
-                                                        <span className="text-xs text-gray-600 dark:text-gray-400">
-                                                            A partir de <span className="text-gray-900 dark:text-white font-semibold text-sm">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Math.min(...product.variacoes.map(v => v.preco_varejo || 0)))}</span>
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-white/10 text-gray-800 dark:text-gray-300">
+                                                            Geral
                                                         </span>
-                                                    ) : (
-                                                        new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.preco)
-                                                    )}
-                                                </td>
-                                                <td className="px-6 py-4 text-right">
-                                                    <div className="flex items-center justify-end gap-2">
-                                                        <button
-                                                            onClick={() => onEdit?.(product.id)}
-                                                            className="p-2 rounded-lg text-action-edit hover:bg-action-edit/10 transition-colors"
-                                                            title="Editar"
-                                                        >
-                                                            <span className="material-symbols-outlined text-[20px]">edit</span>
-                                                        </button>
-                                                        <button
-                                                            className="p-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                                                            title="Excluir"
-                                                            onClick={async () => {
-                                                                if (confirm('Tem certeza?')) {
-                                                                    await productService.deleteProduct(product.id)
-                                                                    fetchProducts()
-                                                                }
-                                                            }}
-                                                        >
-                                                            <span className="material-symbols-outlined text-[20px]">delete</span>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        )
-                                    })
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        <div className="flex items-center gap-2">
+                                                            <span className={`size-2 rounded-full ${product.estoque_atual > 0 ? 'bg-emerald-500' : 'bg-red-500'
+                                                                }`}></span>
+                                                            <span className="text-gray-700 dark:text-gray-300 font-medium">{product.estoque_atual} unid.</span>
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+                                                        {product.tipo === 'variavel' && product.variacoes && product.variacoes.length > 0 ? (
+                                                            <span className="text-xs text-gray-600 dark:text-gray-400">
+                                                                A partir de <span className="text-gray-900 dark:text-white font-semibold text-sm">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Math.min(...product.variacoes.map(v => v.preco_varejo || 0)))}</span>
+                                                            </span>
+                                                        ) : (
+                                                            new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.preco)
+                                                        )}
+                                                    </td>
+                                                    <td className="px-6 py-4 text-right">
+                                                        <div className="flex items-center justify-end gap-2">
+                                                            <button
+                                                                onClick={() => onEdit?.(product.id)}
+                                                                className="p-2 rounded-lg text-action-edit hover:bg-action-edit/10 transition-colors"
+                                                                title="Editar"
+                                                            >
+                                                                <span className="material-symbols-outlined text-[20px]">edit</span>
+                                                            </button>
+                                                            <button
+                                                                className="p-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                                                                title="Excluir"
+                                                                onClick={async () => {
+                                                                    if (confirm('Tem certeza?')) {
+                                                                        await productService.deleteProduct(product.id)
+                                                                        fetchProducts()
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <span className="material-symbols-outlined text-[20px]">delete</span>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )
+                                        })
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+
                     {/* Pagination - Mocked for now */}
                     <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-white/5 flex items-center justify-between text-gray-500 dark:text-gray-400">
                         <span className="text-sm">Mostrando {filteredProducts.length} resultados</span>

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { dashboardService, type DashboardKPIs, type RecentSale } from '../../../services/dashboardService'
 import { modulesService } from '../../../services/modulesService'
+import { useBreakpoint } from '../../../hooks/useBreakpoint'
+import MobileCard from '../../../components/Mobile/MobileCard'
 
 export default function DashboardHome() {
     // State
@@ -71,6 +73,9 @@ export default function DashboardHome() {
 
     const formatCurrency = (val: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val)
 
+    // Breakpoint detection (must be at component level, not inside IIFE)
+    const { isMobile } = useBreakpoint()
+
     if (loading) {
         return (
             <div className="flex-1 flex items-center justify-center h-full bg-background-light">
@@ -109,15 +114,15 @@ export default function DashboardHome() {
 
                     {/* Insights Section */}
                     {/* Kept dynamic insights using kpis state */}
-                    <div className="w-full bg-slate-900 rounded-2xl p-6 md:p-8 relative overflow-hidden text-white shadow-lg shrink-0">
+                    <div className="w-full bg-slate-900 rounded-lg p-4 md:p-5 relative overflow-hidden text-white shadow-lg shrink-0">
                         {/* Background Effects */}
                         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-16 -mt-16 blur-3xl pointer-events-none"></div>
                         <div className="absolute bottom-0 left-0 w-40 h-40 bg-primary/10 rounded-full -ml-10 -mb-10 blur-2xl pointer-events-none"></div>
 
-                        <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6">
-                            <div className="flex items-start gap-5 max-w-3xl">
-                                <div className={`p-3.5 rounded-xl shrink-0 backdrop-blur-md border border-white/5 ${insights[currentInsight].type === 'warning' ? 'bg-amber-500/10 text-amber-500' : insights[currentInsight].type === 'alert' ? 'bg-red-500/10 text-red-500' : 'bg-primary/10 text-primary'}`}>
-                                    <span className="material-symbols-outlined text-3xl">{insights[currentInsight].icon}</span>
+                        <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                            <div className="flex items-start gap-3 max-w-3xl">
+                                <div className={`p-2 rounded-lg shrink-0 backdrop-blur-md border border-white/5 ${insights[currentInsight].type === 'warning' ? 'bg-amber-500/10 text-amber-500' : insights[currentInsight].type === 'alert' ? 'bg-red-500/10 text-red-500' : 'bg-primary/10 text-primary'}`}>
+                                    <span className="material-symbols-outlined text-xl">{insights[currentInsight].icon}</span>
                                 </div>
                                 <div className="flex flex-col gap-1">
                                     <div className="flex items-center gap-3">
@@ -128,12 +133,12 @@ export default function DashboardHome() {
                                             Atualizado agora
                                         </span>
                                     </div>
-                                    <h3 className="text-xl md:text-2xl font-bold leading-tight">{insights[currentInsight].title}</h3>
-                                    <p className="text-slate-300 text-sm md:text-base leading-relaxed">{insights[currentInsight].message}</p>
+                                    <h3 className="text-base md:text-lg font-bold leading-tight">{insights[currentInsight].title}</h3>
+                                    <p className="text-slate-300 text-xs md:text-sm leading-relaxed">{insights[currentInsight].message}</p>
                                 </div>
                             </div>
 
-                            <button className="self-start md:self-center px-5 py-2.5 bg-white/5 hover:bg-white/10 text-white text-sm font-semibold rounded-lg transition-all flex items-center gap-2 border border-white/10 backdrop-blur-sm whitespace-nowrap group hover:scale-105 active:scale-95 shadow-lg shadow-black/20">
+                            <button className="self-start md:self-center px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white text-xs font-semibold rounded-lg transition-all flex items-center gap-2 border border-white/10 backdrop-blur-sm whitespace-nowrap group hover:scale-105 active:scale-95 shadow-lg shadow-black/20">
                                 {insights[currentInsight].action}
                                 <span className="material-symbols-outlined text-lg group-hover:translate-x-0.5 transition-transform">bolt</span>
                             </button>
@@ -157,9 +162,9 @@ export default function DashboardHome() {
                         </div>
                     </div>
 
-                    {/* KPI Grid */}
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-                        <div className="group relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg border border-slate-100">
+                    {/* KPI Carousel Mobile / Grid Desktop */}
+                    <div className="flex md:grid overflow-x-auto md:overflow-visible gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 pb-4 md:pb-0">
+                        <div className="group relative overflow-hidden rounded-lg bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg border border-slate-100 min-w-[280px] md:min-w-0 snap-center">
                             <div className="flex items-start justify-between">
                                 <div>
                                     <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Vendas (Mês)</p>
@@ -175,7 +180,7 @@ export default function DashboardHome() {
                             </div>
                         </div>
 
-                        <div className="group relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg border border-slate-100">
+                        <div className="group relative overflow-hidden rounded-lg bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg border border-slate-100 min-w-[280px] md:min-w-0 snap-center">
                             <div className="flex items-start justify-between">
                                 <div>
                                     <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Financeiro (Mês)</p>
@@ -190,7 +195,7 @@ export default function DashboardHome() {
                             </div>
                         </div>
 
-                        <div className="group relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg border border-slate-100">
+                        <div className="group relative overflow-hidden rounded-lg bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg border border-slate-100 min-w-[280px] md:min-w-0 snap-center">
                             <div className="flex items-start justify-between">
                                 <div>
                                     <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Estoque Crítico</p>
@@ -206,7 +211,7 @@ export default function DashboardHome() {
                             </div>
                         </div>
 
-                        <div className="group relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg border border-slate-100">
+                        <div className="group relative overflow-hidden rounded-lg bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg border border-slate-100 min-w-[280px] md:min-w-0 snap-center">
                             <div className="flex items-start justify-between">
                                 <div>
                                     <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Ticket Médio</p>
@@ -225,7 +230,7 @@ export default function DashboardHome() {
                     {/* Charts Area */}
                     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                         {/* Evolution Chart */}
-                        <div className="lg:col-span-2 rounded-2xl bg-white p-6 shadow-sm border border-slate-100">
+                        <div className="lg:col-span-2 rounded-lg bg-white p-6 shadow-sm border border-slate-100">
                             <div className="flex items-center justify-between mb-6">
                                 <h3 className="font-bold text-slate-800">Evolução de Vendas</h3>
                                 <button className="text-sm font-medium text-primary hover:text-primary-dark">Ver Detalhes</button>
@@ -236,7 +241,7 @@ export default function DashboardHome() {
                         </div>
 
                         {/* Distribution Chart */}
-                        <div className="rounded-2xl bg-white p-6 shadow-sm border border-slate-100">
+                        <div className="rounded-lg bg-white p-6 shadow-sm border border-slate-100">
                             <h3 className="font-bold text-slate-800 mb-6">Status dos Pedidos</h3>
                             <div className="h-[300px] w-full flex items-center justify-center relative">
                                 <div className="h-48 w-48 rounded-full border-[12px] border-slate-100 border-t-primary border-r-blue-400 transform -rotate-45"></div>
@@ -249,53 +254,85 @@ export default function DashboardHome() {
                     </div>
 
                     {/* Recent Orders Table */}
-                    <div className="rounded-2xl bg-white shadow-sm border border-slate-100 overflow-hidden">
+                    <div className="rounded-lg bg-white shadow-sm border border-slate-100 overflow-hidden">
                         <div className="border-b border-slate-100 px-6 py-4 flex items-center justify-between">
                             <h3 className="font-bold text-slate-800">Últimos Pedidos</h3>
                             <button className="text-sm font-medium text-primary hover:text-primary-dark">Ver Todos</button>
                         </div>
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left text-sm text-slate-600">
-                                <thead className="bg-slate-50 text-xs uppercase text-slate-500">
-                                    <tr>
-                                        <th className="px-6 py-3 font-semibold">Nº Pedido</th>
-                                        <th className="px-6 py-3 font-semibold">Cliente</th>
-                                        <th className="px-6 py-3 font-semibold">Status</th>
-                                        <th className="px-6 py-3 font-semibold">Valor</th>
-                                        <th className="px-6 py-3 font-semibold text-right">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-100">
-                                    {recentSales.length === 0 ? (
-                                        <tr>
-                                            <td colSpan={5} className="px-6 py-8 text-center text-slate-400">
-                                                Nenhuma venda registrada recentemente.
-                                            </td>
-                                        </tr>
-                                    ) : (
-                                        recentSales.map((sale) => (
-                                            <tr key={sale.id} className="hover:bg-slate-50/50 transition-colors">
-                                                <td className="px-6 py-4 font-medium text-slate-900">#{sale.npedido || '---'}</td>
-                                                <td className="px-6 py-4">{sale.cliente_nome}</td>
-                                                <td className="px-6 py-4">
-                                                    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ring-1 ring-inset ${sale.status_venda === 'concluida' ? 'bg-green-50 text-green-700 ring-green-600/20' :
-                                                        'bg-yellow-50 text-yellow-700 ring-yellow-600/20'
-                                                        }`}>
-                                                        {sale.status_venda || 'Pendente'}
-                                                    </span>
-                                                </td>
-                                                <td className="px-6 py-4 font-medium text-slate-900">{formatCurrency(sale.valor_total)}</td>
-                                                <td className="px-6 py-4 text-right">
-                                                    <button className="text-slate-400 hover:text-primary transition-colors">
-                                                        <span className="material-symbols-outlined text-[20px]">more_vert</span>
-                                                    </button>
-                                                </td>
+
+                        {(() => {
+                            if (recentSales.length === 0) {
+                                return (
+                                    <div className="px-6 py-12 text-center text-slate-400">
+                                        <span className="material-symbols-outlined text-4xl mb-2 opacity-50">receipt_long</span>
+                                        <p>Nenhuma venda registrada recentemente.</p>
+                                    </div>
+                                )
+                            }
+
+                            return isMobile ? (
+                                // Mobile: Cards
+                                <div className="p-4 space-y-3">
+                                    {recentSales.map((sale) => (
+                                        <MobileCard
+                                            key={sale.id}
+                                            title={`Pedido #${sale.npedido || '---'}`}
+                                            subtitle={sale.cliente_nome}
+                                            fields={[
+                                                { label: 'Valor', value: formatCurrency(sale.valor_total) }
+                                            ]}
+                                            badge={{
+                                                label: sale.status_venda || 'Pendente',
+                                                color: sale.status_venda === 'concluida' ? 'green' : 'yellow'
+                                            }}
+                                            actions={[
+                                                {
+                                                    icon: 'visibility',
+                                                    title: 'Ver detalhes',
+                                                    onClick: () => console.log('Ver detalhes', sale.id)
+                                                }
+                                            ]}
+                                        />
+                                    ))}
+                                </div>
+                            ) : (
+                                // Desktop: Table
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-left text-sm text-slate-600">
+                                        <thead className="bg-slate-50 text-xs uppercase text-slate-500">
+                                            <tr>
+                                                <th className="px-6 py-3 font-semibold">Nº Pedido</th>
+                                                <th className="px-6 py-3 font-semibold">Cliente</th>
+                                                <th className="px-6 py-3 font-semibold">Status</th>
+                                                <th className="px-6 py-3 font-semibold">Valor</th>
+                                                <th className="px-6 py-3 font-semibold text-right">Ações</th>
                                             </tr>
-                                        ))
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
+                                        </thead>
+                                        <tbody className="divide-y divide-slate-100">
+                                            {recentSales.map((sale) => (
+                                                <tr key={sale.id} className="hover:bg-slate-50/50 transition-colors">
+                                                    <td className="px-6 py-4 font-medium text-slate-900">#{sale.npedido || '---'}</td>
+                                                    <td className="px-6 py-4">{sale.cliente_nome}</td>
+                                                    <td className="px-6 py-4">
+                                                        <span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ring-1 ring-inset ${sale.status_venda === 'concluida' ? 'bg-green-50 text-green-700 ring-green-600/20' :
+                                                            'bg-yellow-50 text-yellow-700 ring-yellow-600/20'
+                                                            }`}>
+                                                            {sale.status_venda || 'Pendente'}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-4 font-medium text-slate-900">{formatCurrency(sale.valor_total)}</td>
+                                                    <td className="px-6 py-4 text-right">
+                                                        <button className="text-slate-400 hover:text-primary transition-colors">
+                                                            <span className="material-symbols-outlined text-[20px]">more_vert</span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )
+                        })()}
                     </div>
                 </div>
             </div>

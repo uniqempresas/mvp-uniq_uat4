@@ -1,12 +1,39 @@
 import { Outlet, Link, useLocation } from 'react-router-dom'
+import { useState } from 'react'
+import MainSidebar from '../../components/Sidebar/MainSidebar'
+import MobileHeader from '../../components/Mobile/MobileHeader'
+import MobileDrawer from '../../components/Mobile/MobileDrawer'
+import { useBreakpoint } from '../../hooks/useBreakpoint'
 
 export default function FinanceLayout() {
     const location = useLocation()
     const isPayable = location.pathname.includes('payable')
     const isReceivable = location.pathname.includes('receivable')
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+    const { isMobile } = useBreakpoint()
+
+    const handleContextChange = (context: string) => {
+        // Handle navigation to other modules if needed
+        console.log('Context change:', context)
+    }
 
     return (
         <div className="flex h-screen bg-gray-50 overflow-hidden">
+            {/* Mobile Header (apenas mobile) */}
+            {isMobile && <MobileHeader onMenuClick={() => setIsDrawerOpen(true)} />}
+
+            {/* Mobile Drawer (apenas mobile) */}
+            {isMobile && (
+                <MobileDrawer
+                    isOpen={isDrawerOpen}
+                    onClose={() => setIsDrawerOpen(false)}
+                    activeContext="finance"
+                    onNavigate={undefined}
+                />
+            )}
+
+            {/* Desktop Main Sidebar */}
+            <MainSidebar activeContext="finance" onContextChange={handleContextChange} />
             {/* Context Sidebar */}
             <aside className="w-64 bg-white border-r border-gray-200 flex flex-col shrink-0 hidden md:flex z-10">
                 <div className="p-6 border-b border-gray-100">
@@ -83,7 +110,7 @@ export default function FinanceLayout() {
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 flex flex-col h-full overflow-hidden relative">
+            <main className="flex-1 flex flex-col h-full overflow-hidden relative pt-16 md:pt-0">
                 <Outlet />
             </main>
         </div>

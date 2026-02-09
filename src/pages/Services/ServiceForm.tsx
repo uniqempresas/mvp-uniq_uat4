@@ -160,7 +160,7 @@ export default function ServiceForm({ isOpen, onClose, initialData, onSuccess }:
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] flex flex-col overflow-hidden animate-fade-in-up">
+            <div className="bg-white rounded-lg shadow-lg w-full max-w-6xl max-h-[90vh] flex flex-col overflow-hidden">
 
                 {/* Header */}
                 <div className="px-8 py-5 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-10">
@@ -185,7 +185,7 @@ export default function ServiceForm({ isOpen, onClose, initialData, onSuccess }:
                         <div className="lg:col-span-2 space-y-6">
 
                             {/* Card: Info Básica */}
-                            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                            <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
                                 <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
                                     <span className="material-symbols-outlined text-primary">feed</span>
                                     Informações Básicas
@@ -277,7 +277,7 @@ export default function ServiceForm({ isOpen, onClose, initialData, onSuccess }:
                             </div>
 
                             {/* Card: Preços e Duração */}
-                            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                            <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
                                 <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
                                     <span className="material-symbols-outlined text-primary">payments</span>
                                     Valores e Tempo
@@ -326,13 +326,13 @@ export default function ServiceForm({ isOpen, onClose, initialData, onSuccess }:
                         <div className="lg:col-span-1 space-y-6">
 
                             {/* Card: Mídia */}
-                            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                            <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
                                 <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
                                     <span className="material-symbols-outlined text-primary">image</span>
                                     Fotos ({formData.imagens?.length || 0})
                                 </h3>
 
-                                <div className="w-full aspect-square bg-gray-50 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-all group relative overflow-hidden mb-4">
+                                <div className="w-full aspect-square bg-gray-50 rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-all group relative overflow-hidden mb-4">
                                     <input
                                         type="file"
                                         multiple
@@ -370,7 +370,7 @@ export default function ServiceForm({ isOpen, onClose, initialData, onSuccess }:
                             </div>
 
                             {/* Card: Status */}
-                            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                            <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
                                 <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
                                     <span className="material-symbols-outlined text-primary">toggle_on</span>
                                     Status
@@ -403,14 +403,14 @@ export default function ServiceForm({ isOpen, onClose, initialData, onSuccess }:
                 <div className="px-8 py-5 border-t border-gray-100 bg-white flex justify-end gap-4 z-10">
                     <button
                         onClick={onClose}
-                        className="px-6 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-gray-100 transition-colors"
+                        className="px-6 py-2.5 rounded-lg font-semibold text-slate-600 hover:bg-gray-100 transition-colors"
                     >
                         Cancelar
                     </button>
                     <button
                         onClick={handleSubmit}
                         disabled={loading}
-                        className="px-6 py-2.5 rounded-xl font-semibold bg-primary hover:bg-primary-dark text-white shadow-lg shadow-primary/30 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 flex items-center gap-2"
+                        className="px-6 py-2.5 rounded-lg font-semibold bg-primary hover:bg-primary-dark text-white shadow-sm transition-all disabled:opacity-50 flex items-center gap-2"
                     >
                         {loading && <span className="material-symbols-outlined animate-spin text-sm">progress_activity</span>}
                         {loading ? 'Salvando...' : 'Salvar Serviço'}

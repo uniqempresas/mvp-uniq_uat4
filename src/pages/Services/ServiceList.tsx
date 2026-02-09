@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { serviceService, type Service } from '../../services/serviceService'
 import { categoryService, type Category } from '../../services/categoryService'
+import { useBreakpoint } from '../../hooks/useBreakpoint'
+import MobileCard from '../../components/Mobile/MobileCard'
 import ServiceForm from './ServiceForm'
 
 interface ServiceListProps {
@@ -110,6 +112,45 @@ export default function ServiceList({ onNavigate }: ServiceListProps) {
         return service.categoria || '-'
     }
 
+    const { isMobile } = useBreakpoint()
+
+    const renderMobileCard = (service: Service) => (
+        <MobileCard
+            key={service.id}
+            avatar={
+                service.foto_url || (
+                    <span className="material-symbols-outlined text-gray-300">handyman</span>
+                )
+            }
+            title={service.nome}
+            subtitle={service.descricao}
+            badge={
+                service.ativo
+                    ? { label: 'Ativo', color: 'green' }
+                    : { label: 'Inativo', color: 'gray' }
+            }
+            fields={[
+                { label: 'Categoria', value: getCategoryName(service) },
+                { label: 'Preço', value: formatCurrency(service.preco) },
+                { label: 'Duração', value: formatDuration(service.duracao), icon: 'schedule' }
+            ]}
+            actions={[
+                {
+                    icon: 'edit',
+                    onClick: (e) => openEdit(service, e),
+                    color: 'blue',
+                    title: 'Editar'
+                },
+                {
+                    icon: 'delete',
+                    onClick: (e) => handleDelete(service.id, e),
+                    color: 'red',
+                    title: 'Excluir'
+                }
+            ]}
+        />
+    )
+
     return (
         <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#F3F4F6]">
             {/* Header */}
@@ -173,106 +214,130 @@ export default function ServiceList({ onNavigate }: ServiceListProps) {
                         </div>
                     </div>
 
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
-                            <thead>
-                                <tr className="bg-gray-50/50 border-b border-gray-100 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                    <th className="px-6 py-4">Serviço</th>
-                                    <th className="px-6 py-4">Categoria</th>
-                                    <th className="px-6 py-4">Preço</th>
-                                    <th className="px-6 py-4">Duração</th>
-                                    <th className="px-6 py-4">Status</th>
-                                    <th className="px-6 py-4 text-center">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-50">
-                                {isLoading ? (
-                                    <tr><td colSpan={6} className="p-12 text-center text-slate-500">
-                                        <div className="flex flex-col items-center gap-2">
-                                            <span className="material-symbols-outlined animate-spin text-3xl text-primary">progress_activity</span>
-                                            <p>Carregando serviços...</p>
-                                        </div>
-                                    </td></tr>
-                                ) : filteredServices.length === 0 ? (
-                                    <tr><td colSpan={6} className="p-12 text-center text-slate-500">
-                                        <div className="flex flex-col items-center gap-2">
-                                            <span className="material-symbols-outlined text-4xl text-slate-300">search_off</span>
-                                            <p>{searchTerm ? 'Nenhum serviço encontrado com essa busca.' : 'Nenhum serviço cadastrado ainda.'}</p>
-                                        </div>
-                                    </td></tr>
-                                ) : (
-                                    filteredServices.map(service => (
-                                        <tr
-                                            key={service.id}
-                                            className="hover:bg-gray-50/80 transition-colors group"
-                                        >
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-4">
-                                                    {/* Avatar / Foto */}
-                                                    <div className="size-12 rounded-lg bg-gray-100 shrink-0 bg-cover bg-center border border-gray-200 relative overflow-hidden flex items-center justify-center">
-                                                        {service.foto_url ? (
-                                                            <img src={service.foto_url} alt="" className="w-full h-full object-cover" />
-                                                        ) : (
-                                                            <span className="material-symbols-outlined text-gray-300">handyman</span>
-                                                        )}
+                    {isMobile ? (
+                        // Mobile Card Layout
+                        <div className="p-4 grid gap-4">
+                            {isLoading ? (
+                                <div className="py-12 text-center text-slate-500">
+                                    <div className="flex flex-col items-center gap-2">
+                                        <span className="material-symbols-outlined animate-spin text-3xl text-primary">progress_activity</span>
+                                        <p>Carregando serviços...</p>
+                                    </div>
+                                </div>
+                            ) : filteredServices.length === 0 ? (
+                                <div className="py-12 text-center text-slate-500">
+                                    <div className="flex flex-col items-center gap-2">
+                                        <span className="material-symbols-outlined text-4xl text-slate-300">search_off</span>
+                                        <p>{searchTerm ? 'Nenhum serviço encontrado com essa busca.' : 'Nenhum serviço cadastrado ainda.'}</p>
+                                    </div>
+                                </div>
+                            ) : (
+                                filteredServices.map(renderMobileCard)
+                            )}
+                        </div>
+                    ) : (
+                        // Desktop Table Layout
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="bg-gray-50/50 border-b border-gray-100 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                                        <th className="px-6 py-4">Serviço</th>
+                                        <th className="px-6 py-4">Categoria</th>
+                                        <th className="px-6 py-4">Preço</th>
+                                        <th className="px-6 py-4">Duração</th>
+                                        <th className="px-6 py-4">Status</th>
+                                        <th className="px-6 py-4 text-center">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-50">
+                                    {isLoading ? (
+                                        <tr><td colSpan={6} className="p-12 text-center text-slate-500">
+                                            <div className="flex flex-col items-center gap-2">
+                                                <span className="material-symbols-outlined animate-spin text-3xl text-primary">progress_activity</span>
+                                                <p>Carregando serviços...</p>
+                                            </div>
+                                        </td></tr>
+                                    ) : filteredServices.length === 0 ? (
+                                        <tr><td colSpan={6} className="p-12 text-center text-slate-500">
+                                            <div className="flex flex-col items-center gap-2">
+                                                <span className="material-symbols-outlined text-4xl text-slate-300">search_off</span>
+                                                <p>{searchTerm ? 'Nenhum serviço encontrado com essa busca.' : 'Nenhum serviço cadastrado ainda.'}</p>
+                                            </div>
+                                        </td></tr>
+                                    ) : (
+                                        filteredServices.map(service => (
+                                            <tr
+                                                key={service.id}
+                                                className="hover:bg-gray-50/80 transition-colors group"
+                                            >
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center gap-4">
+                                                        {/* Avatar / Foto */}
+                                                        <div className="size-12 rounded-lg bg-gray-100 shrink-0 bg-cover bg-center border border-gray-200 relative overflow-hidden flex items-center justify-center">
+                                                            {service.foto_url ? (
+                                                                <img src={service.foto_url} alt="" className="w-full h-full object-cover" />
+                                                            ) : (
+                                                                <span className="material-symbols-outlined text-gray-300">handyman</span>
+                                                            )}
+                                                        </div>
+                                                        <div>
+                                                            <p className="font-semibold text-slate-900 text-sm">{service.nome}</p>
+                                                            {service.descricao && (
+                                                                <p className="text-xs text-slate-500 mt-0.5 line-clamp-1 max-w-[200px]">{service.descricao}</p>
+                                                            )}
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <p className="font-semibold text-slate-900 text-sm">{service.nome}</p>
-                                                        {service.descricao && (
-                                                            <p className="text-xs text-slate-500 mt-0.5 line-clamp-1 max-w-[200px]">{service.descricao}</p>
-                                                        )}
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
+                                                        {getCategoryName(service)}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <span className="text-sm font-semibold text-slate-900">
+                                                        {formatCurrency(service.preco)}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center gap-1.5 text-sm text-slate-600">
+                                                        <span className="material-symbols-outlined text-[16px] text-slate-400">schedule</span>
+                                                        {formatDuration(service.duracao)}
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
-                                                    {getCategoryName(service)}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <span className="text-sm font-semibold text-slate-900">
-                                                    {formatCurrency(service.preco)}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-1.5 text-sm text-slate-600">
-                                                    <span className="material-symbols-outlined text-[16px] text-slate-400">schedule</span>
-                                                    {formatDuration(service.duracao)}
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${service.ativo
-                                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                                                    : 'bg-gray-50 text-gray-600 border-gray-200'
-                                                    }`}>
-                                                    <span className={`size-1.5 rounded-full ${service.ativo ? 'bg-emerald-500' : 'bg-gray-400'}`}></span>
-                                                    {service.ativo ? 'Ativo' : 'Inativo'}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 text-center">
-                                                <div className="flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <button
-                                                        onClick={(e) => openEdit(service, e)}
-                                                        className="text-slate-400 hover:text-primary hover:bg-primary/5 transition-all p-2 rounded-lg"
-                                                        title="Editar"
-                                                    >
-                                                        <span className="material-symbols-outlined text-[20px]">edit</span>
-                                                    </button>
-                                                    <button
-                                                        onClick={(e) => handleDelete(service.id, e)}
-                                                        className="text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all p-2 rounded-lg"
-                                                        title="Excluir"
-                                                    >
-                                                        <span className="material-symbols-outlined text-[20px]">delete</span>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${service.ativo
+                                                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                                        : 'bg-gray-50 text-gray-600 border-gray-200'
+                                                        }`}>
+                                                        <span className={`size-1.5 rounded-full ${service.ativo ? 'bg-emerald-500' : 'bg-gray-400'}`}></span>
+                                                        {service.ativo ? 'Ativo' : 'Inativo'}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 text-center">
+                                                    <div className="flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <button
+                                                            onClick={(e) => openEdit(service, e)}
+                                                            className="text-slate-400 hover:text-primary hover:bg-primary/5 transition-all p-2 rounded-lg"
+                                                            title="Editar"
+                                                        >
+                                                            <span className="material-symbols-outlined text-[20px]">edit</span>
+                                                        </button>
+                                                        <button
+                                                            onClick={(e) => handleDelete(service.id, e)}
+                                                            className="text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all p-2 rounded-lg"
+                                                            title="Excluir"
+                                                        >
+                                                            <span className="material-symbols-outlined text-[20px]">delete</span>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
                 </div>
             </div>
 

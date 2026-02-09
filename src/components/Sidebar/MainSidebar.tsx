@@ -31,7 +31,7 @@ export default function MainSidebar({ activeContext, onContextChange }: MainSide
 
     return (
         <aside
-            className={`flex flex-col items-center justify-between bg-sidebar-dark py-6 z-30 shrink-0 h-full transition-all duration-300 ${isHovered ? 'w-48' : 'w-[70px]'
+            className={`hidden md:flex flex-col items-center justify-between bg-sidebar-dark py-6 z-30 shrink-0 h-full transition-all duration-300 ${isHovered ? 'w-48' : 'w-[70px]'
                 }`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
