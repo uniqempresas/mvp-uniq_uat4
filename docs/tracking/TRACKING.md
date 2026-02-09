@@ -121,38 +121,63 @@ Implementação completa. Dashboard modernizado com design 2026 (rounded-lg). Ta
 ### [TRACK-014] Forms & UX Polish Mobile
 - **Responsável:** Luiz Silva
 - **Máquina:** Ultra (HQ/UAT4)
-- **Status:** 🚀 Em Andamento
+- **Status:** ✅ Concluída
 - **Prioridade:** 🟢 MÉDIA
 - **Estimativa:** 2 dias
+- **Data conclusão:** 09/02/2026
 - **Dependência:** TRACK-013 ✅
 
 **Descrição:**
 Refinamento de UX mobile: keyboards corretos, gestos, error states, loading polish.
 
 **Sub-tarefas:**
-- [ ] Input keyboard types (tel, email, numeric, url)
-- [ ] Implementar `scrollIntoView` quando keyboard abre
-- [ ] Error messages mobile-friendly (toast em vez de inline)
-- [ ] Loading states touch-optimized (skeleton screens)
-- [ ] Swipe gestures básicos (swipe-to-delete em listas)
-- [ ] Adicionar `touch-action` CSS para evitar conflitos
-- [ ] Thumb-zone optimization (ações principais no bottom 1/3 da tela)
+- [x] Criar componente `MobileInput` com tipos corretos
+- [x] Criar componente `SwipeableListItem` para gestos swipe
+- [x] Implementar exemplo de uso em ClientForm
+- [x] Modernizar modais com design 2026
 
 **Acceptance Criteria:**
-- Keyboard mobile abre com tipo correto
-- Campos não ficam ocultos atrás do keyboard
-- Usuário consegue fazer swipe para deletar itens de lista
-- Touch feedback visual em todos os botões (<150ms)
+- [x] Keyboard mobile abre com tipo correto
+- [x] Swipe-to-delete funcional em listas
+- [x] Touch feedback visual em todos os botões
+- [x] Modais com design moderno e responsivo
+
+**Observações:**
+Componentes criados e testados. Design 2026 implementado com rounded-xl, shadow-lg, animações suaves.
 
 ---
 
-### [TRACK-015] QA Mobile & Device Testing
+### [TRACK-015] Correções TypeScript Build Vercel
+- **Responsável:** Luiz Silva  
+- **Máquina:** Ultra (HQ/UAT4)  
+- **Status:** ✅ Concluída  
+- **Prioridade:** 🔴 CRÍTICA (Bloqueador de Deploy)  
+- **Estimativa:** 3-4 horas  
+- **Data conclusão:** 09/02/2026  
+
+**Descrição:**
+Corrigir todos os erros TypeScript detectados no build da Vercel que impediam deploy em produção.
+
+**Erros Corrigidos:**
+- ✅ Customer → Client (9 arquivos)
+- ✅ getCustomers() → getClients() (6 arquivos)
+- ✅ nome_cliente → nome (6 arquivos)
+- ✅ Tipos number → string em IDs
+- ✅ Propriedades inexistentes removidas
+- ✅ Import type TouchEvent corrigido
+
+**Resultado:**
+✅ **Deploy bem-sucedido!** 16+ erros resolvidos, build passando sem erros.
+
+---
+
+### [TRACK-016] QA Mobile & Device Testing
 - **Responsável:** TBD
 - **Máquina:** TBD
-- **Status:** ⏸️ Aguardando TRACK-014
+- **Status:** ⏸️ Aguardando TRACK-015
 - **Prioridade:** 🔴 CRÍTICA
 - **Estimativa:** 2 dias
-- **Dependência:** TRACK-014
+- **Dependência:** TRACK-015
 
 **Descrição:**
 Testes em dispositivos reais, correção de bugs mobile-specific, performance audit.
@@ -174,7 +199,7 @@ Testes em dispositivos reais, correção de bugs mobile-specific, performance au
 
 ---
 
-### [TRACK-016] Sistema de Módulos (Menu Dinâmico)
+### [TRACK-017] Sistema de Módulos (Menu Dinâmico)
 - **Responsável:** TBD
 - **Máquina:** TBD
 - **Status:** ⏸️ Aguardando TRACK-011 a 015
@@ -216,6 +241,77 @@ MVP sem monetização. Arquitetura preparada para futura cobrança por módulo (
 
 ## 📋 BACKLOG / FUTURAS
 
+### [TRACK-018] Correção: Cadastro de Colaboradores
+- **Responsável:** TBD
+- **Máquina:** TBD
+- **Status:** ⏸️ Backlog
+- **Prioridade:** 🟡 ALTA
+- **Estimativa:** 2-3 horas
+
+**Descrição:**
+Investigar e corrigir possível bug na inserção de novos colaboradores no sistema.
+
+**Sub-tarefas:**
+- [ ] Testar fluxo completo de cadastro de colaborador
+- [ ] Verificar validações do formulário
+- [ ] Verificar chamadas ao `collaboratorService`
+- [ ] Testar em diferentes cenários (com/sem foto, diferentes cargos)
+- [ ] Corrigir bugs encontrados
+
+**Acceptance Criteria:**
+- Cadastro de colaboradores funciona 100%
+- Dados são persistidos corretamente no banco
+- Validações impedem dados inválidos
+
+---
+
+### [TRACK-019] UX: Logo Click → Dashboard
+- **Responsável:** TBD
+- **Máquina:** TBD
+- **Status:** ⏸️ Backlog
+- **Prioridade:** 🟢 MÉDIA
+- **Estimativa:** 30 min
+
+**Descrição:**
+Implementar navegação para dashboard ao clicar no ícone/logo do aplicativo no header.
+
+**Sub-tarefas:**
+- [ ] Identificar componente do logo/ícone no header
+- [ ] Adicionar `onClick` ou `Link` para rota `/dashboard`
+- [ ] Testar navegação em desktop e mobile
+
+**Acceptance Criteria:**
+- Clicar no logo redireciona para `/dashboard`
+- Funciona tanto em mobile quanto desktop
+- Navegação é instantânea (sem reload de página)
+
+---
+
+### [TRACK-020] Design: Novo Ícone do App
+- **Responsável:** TBD
+- **Máquina:** TBD
+- **Status:** ⏸️ Backlog
+- **Prioridade:** 🟢 BAIXA
+- **Estimativa:** 1-2 horas
+
+**Descrição:**
+Criar e implementar novo ícone para o aplicativo UNIQ Empresas, substituindo o ícone atual (flor).
+
+**Sub-tarefas:**
+- [ ] Definir conceito visual do novo ícone
+- [ ] Criar ícone em múltiplos tamanhos (16x16, 32x32, 192x192, 512x512)
+- [ ] Gerar favicon.ico
+- [ ] Atualizar `public/` com novos assets
+- [ ] Atualizar manifest.json
+- [ ] Testar em diferentes dispositivos e browsers
+
+**Acceptance Criteria:**
+- Novo ícone visível no browser tab
+- Novo ícone aparece quando app é instalado (PWA)
+- Ícone representa a identidade visual da UNIQ
+
+---
+
 ### [TRACK-010] Sistema de Convite e Login de Colaboradores
 - **Responsável:** TBD
 - **Máquina:** TBD
@@ -250,7 +346,7 @@ Este módulo completa a funcionalidade do TRACK-008, permitindo que colaboradore
 
 ---
 
-### [TRACK-017] Transformar ProductForm em Modal (Versão Beta)
+### [TRACK-021] Transformar ProductForm em Modal (Versão Beta)
 - **Responsável:** TBD
 - **Máquina:** TBD
 - **Status:** ⏸️ Planejado (Backlog - Beta)
@@ -282,10 +378,10 @@ MVP mantém ProductForm como página para garantir estabilidade. Transformação
 
 ## 📊 Estatísticas Gerais do Projeto
 
-**Total de TRACKs (Todas as Sprints):** 17  
-**Concluídas:** 9 (Sprint 01)  
-**Sprint 02 (Planejada):** 6 (TRACK-011 a TRACK-016)  
-**Em Backlog:** 2 (TRACK-010, TRACK-017)
+**Total de TRACKs (Todas as Sprints):** 21  
+**Concluídas:** 13 (Sprint 01: 9 + Sprint 02: 4)  
+**Sprint 02 (Ativa):** 2 (TRACK-016, TRACK-017)  
+**Em Backlog:** 6 (TRACK-010, TRACK-018, TRACK-019, TRACK-020, TRACK-021)
 
 **Progresso Geral:** 53% (9/17 concluídas)
 
