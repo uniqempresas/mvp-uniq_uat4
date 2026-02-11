@@ -13,36 +13,43 @@ import ReceivablePage from './pages/Finance/ReceivablePage'
 import AccountsPage from './pages/Finance/AccountsPage'
 import CategoriesPage from './pages/Finance/CategoriesPage'
 import CRMLayout from './pages/CRM/CRMLayout'
+import { ModuleProvider } from './contexts/ModuleContext'
+import ModulesPage from './pages/Private/Modules/ModulesPage'
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/onboarding" element={<Onboarding />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+    <ModuleProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/onboarding" element={<Onboarding />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
 
-          {/* CRM Routes */}
-          <Route path="/crm" element={<CRMLayout />} />
+            {/* CRM Routes */}
+            <Route path="/crm" element={<CRMLayout />} />
 
-          {/* Finance Routes */}
-          <Route path="/finance" element={<FinanceLayout />}>
-            <Route index element={<FinanceDashboard />} />
-            <Route path="payable" element={<PayablePage />} />
-            <Route path="receivable" element={<ReceivablePage />} />
-            <Route path="accounts" element={<AccountsPage />} />
-            <Route path="categories" element={<CategoriesPage />} />
+            {/* Finance Routes */}
+            <Route path="/finance" element={<FinanceLayout />}>
+              <Route index element={<FinanceDashboard />} />
+              <Route path="payable" element={<PayablePage />} />
+              <Route path="receivable" element={<ReceivablePage />} />
+              <Route path="accounts" element={<AccountsPage />} />
+              <Route path="categories" element={<CategoriesPage />} />
+            </Route>
+
+            {/* Modules Management */}
+            <Route path="/modules" element={<ModulesPage />} />
           </Route>
-        </Route>
 
-        {/* Public Storefront */}
-        <Route path="/c/:slug" element={<Storefront />} />
-        <Route path="/c/:slug/category/:categoryId" element={<Storefront />} />
-        <Route path="/c/:slug/p/:produtoId" element={<ProductDetail />} />
-        <Route path="/c/:slug/cart" element={<CartPage />} />
-      </Routes>
-    </BrowserRouter>
+          {/* Public Storefront */}
+          <Route path="/c/:slug" element={<Storefront />} />
+          <Route path="/c/:slug/category/:categoryId" element={<Storefront />} />
+          <Route path="/c/:slug/p/:produtoId" element={<ProductDetail />} />
+          <Route path="/c/:slug/cart" element={<CartPage />} />
+        </Routes>
+      </BrowserRouter>
+    </ModuleProvider>
   )
 }
 

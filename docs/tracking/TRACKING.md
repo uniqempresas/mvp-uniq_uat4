@@ -221,6 +221,7 @@ Criar sistema de módulos ativáveis onde cliente escolhe quais funcionalidades 
 - [ ] Implementar onboarding: módulos opcionais aparecem desabilitados/grisados
 - [ ] Testar: Dono ativa CRM → aparece no menu
 - [ ] Testar: Colaborador não consegue ativar módulos
+- [ ] Testar deploy e funcionalidades dependentes de rede (Adicionado: Internet instável 11/02)
 
 **Módulos Base (Sempre Ativos):**
 - Minha Empresa, Financeiro, Módulos, Configurações
