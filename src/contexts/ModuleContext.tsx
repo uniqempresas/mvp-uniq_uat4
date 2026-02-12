@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { supabase } from '../lib/supabase';
-import { moduleService, type ModuleCode } from '../services/moduleService';
+import { moduleService } from '../services/moduleService';
 
 // Define quais módulos sempre devem estar ativos (se houver)
 const CORE_MODULES: string[] = ['dashboard'];

@@ -9,7 +9,7 @@ interface ClientListProps {
     onNavigate?: (view: string) => void
 }
 
-export default function ClientList({ onNavigate }: ClientListProps) {
+export default function ClientList({ onNavigate: _onNavigate }: ClientListProps) {
     const [clients, setClients] = useState<MeClient[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [isFormOpen, setIsFormOpen] = useState(false)

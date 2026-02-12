@@ -21,7 +21,7 @@ export default function MobileDrawer({ isOpen, onClose, activeContext = 'dashboa
         !item.moduleCode || isModuleActive(item.moduleCode as any)
     )
 
-    const handleNavClick = (item: typeof navItems[0]) => {
+    const handleNavClick = (item: typeof MAIN_NAV_ITEMS[0]) => {
         // Se o item tem submenu, expande/colapsa
         if (item.submenu) {
             setExpandedItem(expandedItem === item.id ? null : item.id)
