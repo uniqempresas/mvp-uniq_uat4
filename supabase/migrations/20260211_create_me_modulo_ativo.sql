@@ -19,28 +19,22 @@ FOR SELECT
 USING (
     empresa_id IN (
         SELECT empresa_id 
-        FROM public.me_vinculo_usuario_empresa 
-        WHERE usuario_id = auth.uid()
+        FROM public.me_usuario 
+        WHERE id = auth.uid()
     )
 );
 
 -- Policy: Only owners (dono) can manage modules
--- Assuming 'dono' is a role or checking me_empresa.dono_id or similar.
--- Adapting to existing pattern: checking if user is linked and has role 'dono' or similar logic
--- For now, let's use a simpler check based on me_vinculo_usuario_empresa.cargo or similar if it exists,
--- OR check if the user is the owner of the company in me_empresa (if that column exists).
--- Based on context, let's stick to the pattern used in other tables.
-
+-- Checking if user is the owner of the company in me_empresa
 CREATE POLICY "Apenas Donos podem gerenciar modulos"
 ON public.me_modulo_ativo
 FOR ALL
 USING (
     EXISTS (
         SELECT 1 
-        FROM public.me_vinculo_usuario_empresa vue
-        WHERE vue.usuario_id = auth.uid()
-        AND vue.empresa_id = public.me_modulo_ativo.empresa_id
-        AND vue.cargo = 'dono' -- Adjust this value based on your actual roles
+        FROM public.me_empresa e
+        WHERE e.id = public.me_modulo_ativo.empresa_id
+        AND e.dono_id = auth.uid()
     )
 );
 

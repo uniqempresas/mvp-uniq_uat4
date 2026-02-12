@@ -174,7 +174,7 @@ Corrigir todos os erros TypeScript detectados no build da Vercel que impediam de
 ### [TRACK-016] QA Mobile & Device Testing
 - **Responsável:** TBD
 - **Máquina:** TBD
-- **Status:** ⏸️ Aguardando TRACK-015
+- **Status:** 🔧 Em Progresso (Checklist Pronto)
 - **Prioridade:** 🔴 CRÍTICA
 - **Estimativa:** 2 dias
 - **Dependência:** TRACK-015
@@ -183,7 +183,7 @@ Corrigir todos os erros TypeScript detectados no build da Vercel que impediam de
 Testes em dispositivos reais, correção de bugs mobile-specific, performance audit.
 
 **Sub-tarefas:**
-- [ ] Criar checklist de testes mobile (matriz de devices)
+- [x] Criar checklist de testes mobile (matriz de devices)
 - [ ] Testar em iOS real (Safari)
 - [ ] Testar em Android real (Chrome)
 - [ ] Performance audit mobile (Lighthouse mobile mode)
@@ -202,7 +202,7 @@ Testes em dispositivos reais, correção de bugs mobile-specific, performance au
 ### [TRACK-017] Sistema de Módulos (Menu Dinâmico)
 - **Responsável:** TBD
 - **Máquina:** TBD
-- **Status:** ⏸️ Aguardando TRACK-011 a 015
+- **Status:** 🔧 Em Progresso (Validação Pendente)
 - **Prioridade:** 🟡 ALTA
 - **Estimativa:** 3-4 dias
 - **Dependência:** Nenhuma técnica (mas será feita após mobile por decisão estratégica)
@@ -211,14 +211,15 @@ Testes em dispositivos reais, correção de bugs mobile-specific, performance au
 Criar sistema de módulos ativáveis onde cliente escolhe quais funcionalidades quer no menu. Reduz poluição visual e prepara para futura monetização.
 
 **Sub-tarefas:**
-- [ ] Criar tabela `me_modulo_ativo` (empresa_id + modulo_codigo + ativo)
-- [ ] Criar RLS permitindo apenas role='dono' gerenciar módulos
-- [ ] Criar função helper `is_dono()` para RLS
-- [ ] Desenvolver `moduleService.ts` (listar, ativar, desativar)
-- [ ] Criar `ModuleContext` para estado global de módulos ativos
-- [ ] Criar página "Módulos" com grid de cards (toggle on/off)
-- [ ] Adaptar `MainSidebar` para filtrar apenas módulos base + ativos
-- [ ] Implementar onboarding: módulos opcionais aparecem desabilitados/grisados
+- [x] Criar tabela `me_modulo_ativo` (empresa_id + modulo_codigo + ativo) (SQL criado)
+- [x] Criar `me_modulo_cargo` para permissões por cargo (RBAC)
+- [x] Criar RLS permitindo apenas role='dono' gerenciar módulos (SQL criado)
+- [x] Criar função helper `is_dono()` para RLS (Policy implementada)
+- [x] Desenvolver `moduleService.ts` (listar, ativar, desativar, gestão permissões)
+- [x] Criar `ModuleContext` para estado global de módulos ativos
+- [x] Criar página "Módulos" com grid de cards e seletor de Cargo
+- [x] Adaptar `MainSidebar` para filtrar apenas módulos base + ativos
+- [x] Implementar onboarding: módulos opcionais aparecem desabilitados/grisados
 - [ ] Testar: Dono ativa CRM → aparece no menu
 - [ ] Testar: Colaborador não consegue ativar módulos
 - [ ] Testar deploy e funcionalidades dependentes de rede (Adicionado: Internet instável 11/02)

@@ -35,12 +35,12 @@ export const meCollaboratorService = {
         if (cargoIds.length > 0) {
             const { data: cargos } = await supabase
                 .from('me_cargo')
-                .select('id, nome')
+                .select('id, nome_cargo')
                 .in('id', cargoIds)
 
             if (cargos) {
                 cargos.forEach((c: any) => {
-                    cargosMap[c.id] = c.nome
+                    cargosMap[c.id] = c.nome_cargo
                 })
             }
         }
