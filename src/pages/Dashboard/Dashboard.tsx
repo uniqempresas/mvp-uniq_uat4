@@ -5,7 +5,6 @@ import MobileHeader from '../../components/Mobile/MobileHeader'
 import MobileDrawer from '../../components/Mobile/MobileDrawer'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
 import DashboardHome from './components/DashboardHome'
-import FinanceLayout from '../Finance/FinanceLayout'
 import ModuleStore from './components/ModuleStore'
 import ProductList from '../../components/Catalog/ProductList'
 import ProductForm from '../Catalog/ProductForm'
@@ -25,7 +24,11 @@ export default function Dashboard() {
 
     const renderContent = () => {
         if (activeContext === 'store') return <ModuleStore />
-        if (activeContext === 'finance') return <FinanceLayout />
+        if (activeContext === 'finance') {
+            // Financeiro deve navegar para sua própria rota, não renderizar aqui
+            window.location.href = '/finance' // Force navigation or use useNavigate if available outside loop
+            return null
+        }
 
         // Dashboard Context Views
         switch (activeView) {
@@ -36,7 +39,6 @@ export default function Dashboard() {
             case 'services':
                 return <ServiceList onNavigate={setActiveView} />
             case 'clients':
-                // @ts-ignore
                 return <ClientList onNavigate={setActiveView} />
             case 'suppliers':
                 return <SupplierList />

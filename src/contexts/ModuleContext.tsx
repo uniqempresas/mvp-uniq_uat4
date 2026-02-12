@@ -1,46 +1,41 @@
 import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { supabase } from '../lib/supabase';
-import { modulesService } from '../services/modulesService';
 import { moduleService, type ModuleCode } from '../services/moduleService';
 
+// Define quais módulos sempre devem estar ativos (se houver)
+const CORE_MODULES: string[] = ['dashboard'];
+
 interface ModuleContextType {
-    activeModules: ModuleCode[];
+    activeModules: string[];
     isLoading: boolean;
-    isModuleActive: (code: ModuleCode) => boolean;
-    toggleModule: (code: ModuleCode, active: boolean) => Promise<void>;
+    isModuleActive: (code: string) => boolean;
+    toggleModule: (code: string, active: boolean) => Promise<void>;
 }
 
 const ModuleContext = createContext<ModuleContextType | undefined>(undefined);
 
 export const ModuleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [activeModules, setActiveModules] = useState<ModuleCode[]>([]);
-    const [companyId, setCompanyId] = useState<string | null>(null);
+    const [activeModules, setActiveModules] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    // Módulos que são sempre ativos por padrão ou core do sistema
-    const CORE_MODULES: ModuleCode[] = ['settings', 'finance'];
+    const loadModules = async () => {
+        try {
+            const modules = await moduleService.getActiveModules();
+            setActiveModules(modules);
+        } catch (error) {
+            console.error('Failed to load modules:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
+        // Inicialização
         const init = async () => {
-            try {
-                // Check auth first
-                const { data: { session } } = await supabase.auth.getSession();
-                if (!session) {
-                    setIsLoading(false);
-                    return;
-                }
-
-                const id = await modulesService.getCurrentCompanyId();
-                setCompanyId(id);
-
-                if (id) {
-                    await loadModules(id);
-                } else {
-                    // Se não tiver empresa, para o loading
-                    setIsLoading(false);
-                }
-            } catch (error) {
-                console.error('Error getting company ID:', error);
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                await loadModules();
+            } else {
                 setIsLoading(false);
             }
         };
@@ -50,20 +45,9 @@ export const ModuleProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         // Listen for auth changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
             if (event === 'SIGNED_IN' && session) {
-                try {
-                    const id = await modulesService.getCurrentCompanyId();
-                    setCompanyId(id);
-                    if (id) {
-                        await loadModules(id);
-                    } else {
-                        setIsLoading(false);
-                    }
-                } catch (error) {
-                    console.error('Error on auth change:', error);
-                    setIsLoading(false);
-                }
+                setIsLoading(true);
+                await loadModules();
             } else if (event === 'SIGNED_OUT') {
-                setCompanyId(null);
                 setActiveModules([]);
                 setIsLoading(false);
             }
@@ -72,42 +56,25 @@ export const ModuleProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         return () => subscription.unsubscribe();
     }, []);
 
-    const loadModules = async (empresaId: string) => {
-        try {
-            // Não setar true aqui se já estiver true, mas ok manter
-            // setIsLoading(true); // O init já seta como true inicial
-
-            const modules = await moduleService.getActiveModules(empresaId);
-            const activeCodes = modules
-                .filter(m => m.ativo)
-                .map(m => m.modulo_codigo as ModuleCode);
-
-            setActiveModules(activeCodes);
-        } catch (error) {
-            console.error('Failed to load modules:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const isModuleActive = (code: ModuleCode) => {
+    const isModuleActive = (code: string) => {
         if (CORE_MODULES.includes(code)) return true;
         return activeModules.includes(code);
     };
 
-    const toggleModule = async (code: ModuleCode, active: boolean) => {
-        if (!companyId) return;
-
+    const toggleModule = async (code: string, active: boolean) => {
         // Optimistic update
         setActiveModules(prev =>
             active ? [...prev, code] : prev.filter(c => c !== code)
         );
 
         try {
-            await moduleService.toggleModule(companyId, code, active);
+            await moduleService.toggleModule(code, active);
         } catch (error) {
             console.error('Failed to toggle module, reverting...', error);
-            loadModules(companyId);
+            // Revert on error
+            setActiveModules(prev =>
+                !active ? [...prev, code] : prev.filter(c => c !== code)
+            );
         }
     };
 

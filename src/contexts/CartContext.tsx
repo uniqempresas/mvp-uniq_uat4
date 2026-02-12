@@ -72,10 +72,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const removeItem = useCallback((productId: string, variacaoId?: string) => {
         setItems(prevItems =>
             prevItems.filter(item => {
-                if (variacaoId) {
-                    return !(item.produto.id.toString() === productId && item.variacao?.id === variacaoId)
-                }
-                return item.produto.id.toString() !== productId
+                const isTargetProduct = item.produto.id.toString() === productId
+                const itemVariacaoId = item.variacao?.id
+
+                // Se não for o produto alvo, mantém
+                if (!isTargetProduct) return true
+
+                // Se for o produto, remove APENAS se a variação coincidir (incluindo undefined)
+                return itemVariacaoId !== variacaoId
             })
         )
     }, [])

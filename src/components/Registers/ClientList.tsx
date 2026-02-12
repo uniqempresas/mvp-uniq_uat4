@@ -1,11 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, type MouseEvent } from 'react'
 import { meClientService, type MeClient } from '../../services/meClientService'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
 import MobileCard from '../Mobile/MobileCard'
 import ClientForm from './ClientForm'
 import ClientDetails from './ClientDetails'
 
-export default function ClientList() {
+interface ClientListProps {
+    onNavigate?: (view: string) => void
+}
+
+export default function ClientList({ onNavigate }: ClientListProps) {
     const [clients, setClients] = useState<MeClient[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [isFormOpen, setIsFormOpen] = useState(false)
@@ -40,7 +44,7 @@ export default function ClientList() {
         }
     }
 
-    const handleDelete = async (id: string, e: React.MouseEvent) => {
+    const handleDelete = async (id: string, e: MouseEvent) => {
         e.stopPropagation()
         if (confirm('Tem certeza que deseja excluir este cliente?')) {
             await meClientService.deleteClient(id)
@@ -48,7 +52,7 @@ export default function ClientList() {
         }
     }
 
-    const openEdit = (client: MeClient, e: React.MouseEvent) => {
+    const openEdit = (client: MeClient, e: MouseEvent) => {
         e.stopPropagation()
         setEditingClient(client)
         setIsFormOpen(true)

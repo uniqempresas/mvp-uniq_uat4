@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
+import { useModules } from '../../contexts/ModuleContext'
+import { MAIN_NAV_ITEMS } from '../../config/menu'
 
 interface MobileDrawerProps {
     isOpen: boolean
@@ -12,30 +14,12 @@ interface MobileDrawerProps {
 
 export default function MobileDrawer({ isOpen, onClose, activeContext = 'dashboard', onContextChange, onNavigate }: MobileDrawerProps) {
     const navigate = useNavigate()
+    const { isModuleActive } = useModules()
     const [expandedItem, setExpandedItem] = useState<string | null>(null)
 
-    const navItems = [
-        {
-            id: 'dashboard',
-            icon: 'fingerprint',
-            label: 'Minha Empresa',
-            route: '/dashboard',
-            submenu: [
-                { id: 'products', icon: 'package_2', label: 'Produtos', view: 'products' },
-                { id: 'services', icon: 'handyman', label: 'Serviços', view: 'services' },
-                { id: 'clients', icon: 'group', label: 'Clientes', view: 'clients' },
-                { id: 'suppliers', icon: 'warehouse', label: 'Fornecedores', view: 'suppliers' },
-                { id: 'collaborators', icon: 'badge', label: 'Colaboradores', view: 'collaborators' }
-            ]
-        },
-        { id: 'crm', icon: 'groups', label: 'CRM', route: '/crm' },
-        { id: 'storefront', icon: 'storefront', label: 'Loja' },
-        { id: 'finance', icon: 'attach_money', label: 'Financeiro', route: '/finance' },
-        { id: 'inventory', icon: 'inventory_2', label: 'Estoque' },
-        { id: 'store', icon: 'extension', label: 'Store' },
-        { id: 'team', icon: 'group', label: 'Equipe' },
-        { id: 'reports', icon: 'bar_chart', label: 'Relatórios' },
-    ]
+    const filteredNavItems = MAIN_NAV_ITEMS.filter(item =>
+        !item.moduleCode || isModuleActive(item.moduleCode as any)
+    )
 
     const handleNavClick = (item: typeof navItems[0]) => {
         // Se o item tem submenu, expande/colapsa
@@ -101,7 +85,7 @@ export default function MobileDrawer({ isOpen, onClose, activeContext = 'dashboa
 
                     {/* Navigation */}
                     <nav className="flex flex-col gap-2 flex-1 overflow-y-auto">
-                        {navItems.map((item) => (
+                        {filteredNavItems.map((item) => (
                             <div key={item.id}>
                                 {/* Main Item */}
                                 <button
@@ -141,6 +125,21 @@ export default function MobileDrawer({ isOpen, onClose, activeContext = 'dashboa
 
                     {/* Footer - Settings & Logout */}
                     <div className="flex flex-col gap-2 pt-6 border-t border-white/10">
+                        <button
+                            onClick={() => {
+                                navigate('/modules')
+                                if (onContextChange) onContextChange('modules')
+                                onClose()
+                            }}
+                            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeContext === 'modules'
+                                ? 'bg-primary/10 text-primary shadow-[inset_0_0_0_1px_rgba(16,185,129,0.2)]'
+                                : 'text-white/70 hover:bg-white/10 hover:text-white'
+                                }`}
+                        >
+                            <span className="material-symbols-outlined">extension</span>
+                            <span className="text-sm font-medium">Meus Módulos</span>
+                        </button>
+
                         <button
                             onClick={() => {
                                 if (onContextChange) onContextChange('settings')

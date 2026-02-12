@@ -14,7 +14,7 @@ import AccountsPage from './pages/Finance/AccountsPage'
 import CategoriesPage from './pages/Finance/CategoriesPage'
 import CRMLayout from './pages/CRM/CRMLayout'
 import { ModuleProvider } from './contexts/ModuleContext'
-import ModulesPage from './pages/Private/Modules/ModulesPage'
+import ModulesPage from './pages/Modules'
 
 function App() {
   return (

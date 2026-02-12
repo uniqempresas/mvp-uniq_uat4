@@ -1,4 +1,5 @@
 import { supabase } from '../../lib/supabase'
+import { MAIN_NAV_ITEMS } from '../../config/menu'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useModules } from '../../contexts/ModuleContext'
@@ -14,15 +15,7 @@ export default function MainSidebar({ activeContext, onContextChange }: MainSide
 
     const { isModuleActive } = useModules()
 
-    const navItems = [
-        { id: 'dashboard', icon: 'fingerprint', label: 'Minha Empresa' },
-        { id: 'crm', icon: 'groups', label: 'CRM', route: '/crm', moduleCode: 'crm' },
-        { id: 'storefront', icon: 'storefront', label: 'Loja', moduleCode: 'storefront' },
-        { id: 'finance', icon: 'attach_money', label: 'Financeiro', route: '/finance', moduleCode: 'finance' },
-        { id: 'inventory', icon: 'inventory_2', label: 'Estoque', moduleCode: 'inventory' },
-        { id: 'team', icon: 'group', label: 'Equipe', moduleCode: 'team' },
-        { id: 'reports', icon: 'bar_chart', label: 'Relatórios', moduleCode: 'reports' },
-    ]
+    const navItems = MAIN_NAV_ITEMS
 
     const filteredNavItems = navItems.filter(item =>
         !item.moduleCode || isModuleActive(item.moduleCode as any)
