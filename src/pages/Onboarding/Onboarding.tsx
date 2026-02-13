@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
+import { moduleService } from '../../services/moduleService'
 import Step1Personal from './Step1Personal'
 import Step2Company from './Step2Company'
 import Step3Config from './Step3Config'
@@ -165,6 +166,28 @@ export default function Onboarding() {
 
             // Success - auth.signUp já faz login automático!
             console.log('Empresa criada com dados iniciais:', rpcData)
+
+            // 3. Ativar módulos selecionados
+            const selectedModules = Object.entries(formData.modules)
+                .filter(([_, isActive]) => isActive)
+                .map(([code]) => code);
+
+            if (selectedModules.length > 0) {
+                try {
+                    // Executar em paralelo para performance
+                    await Promise.all(
+                        selectedModules.map(moduleCode =>
+                            moduleService.toggleModule(moduleCode, true)
+                        )
+                    );
+                    console.log('Módulos ativados:', selectedModules);
+                } catch (moduleError) {
+                    console.error('Erro ao ativar módulos:', moduleError);
+                    // Não bloquear o fluxo, pois a empresa foi criada.
+                    // O usuário pode ativar depois em Configurações.
+                }
+            }
+
             navigate('/dashboard')
 
         } catch (error: any) {

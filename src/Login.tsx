@@ -116,6 +116,15 @@ export default function Login() {
                                         <span className="material-symbols-outlined text-xl">lock</span>
                                     </div>
                                 </div>
+                                <div className="flex justify-end mt-1">
+                                    <button
+                                        type="button"
+                                        onClick={() => navigate('/forgot-password')}
+                                        className="text-xs text-primary hover:underline font-medium"
+                                    >
+                                        Esqueci minha senha
+                                    </button>
+                                </div>
                             </div>
 
                             {error && (

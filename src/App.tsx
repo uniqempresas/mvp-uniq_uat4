@@ -15,6 +15,8 @@ import CategoriesPage from './pages/Finance/CategoriesPage'
 import CRMLayout from './pages/CRM/CRMLayout'
 import { ModuleProvider } from './contexts/ModuleContext'
 import ModulesPage from './pages/Modules'
+import ForgotPassword from './pages/Auth/ForgotPassword'
+import UpdatePassword from './pages/Auth/UpdatePassword'
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/onboarding" element={<Onboarding />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
