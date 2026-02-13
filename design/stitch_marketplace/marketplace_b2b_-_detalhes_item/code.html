@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UNIQ ERP - Marketplace B2B</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#10b77f",
+              "primary-dark": "#0e9f6e",
+              "secondary-dark": "#244E5F",
+              "sidebar-dark": "#1F2937",
+              "background-light": "#f3f4f6", // Updated to match user request #F3F4F6
+              "background-dark": "#10221c",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"],
+              "body": ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              "DEFAULT": "0.75rem", // 12px
+              "lg": "0.75rem",
+              "xl": "1rem",
+              "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom Scrollbar for sidebar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #e5e7eb;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark overflow-hidden h-screen flex text-slate-800">
+<!-- Primary Sidebar (Dark) -->
+<aside class="w-16 bg-sidebar-dark flex flex-col items-center py-6 gap-6 shrink-0 z-20">
+<div class="size-8 text-primary flex items-center justify-center">
+<svg class="size-8" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<nav class="flex flex-col gap-4 w-full items-center flex-1">
+<button class="size-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+<span class="material-symbols-outlined">dashboard</span>
+</button>
+<button class="size-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+<span class="material-symbols-outlined">inventory_2</span>
+</button>
+<button class="size-10 flex items-center justify-center text-white bg-primary rounded-lg shadow-lg shadow-primary/20 transition-colors">
+<span class="material-symbols-outlined">analytics</span>
+</button>
+<button class="size-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+<span class="material-symbols-outlined">group</span>
+</button>
+<button class="size-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</nav>
+<button class="size-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+<span class="material-symbols-outlined">logout</span>
+</button>
+</aside>
+<!-- Context Sidebar (Light) -->
+<aside class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 hidden md:flex z-10">
+<div class="p-6 border-b border-slate-100">
+<h1 class="text-slate-900 text-lg font-bold leading-tight">Inteligência &amp;<br/>Estratégia</h1>
+</div>
+<div class="p-4 flex flex-col gap-2 flex-1 overflow-y-auto custom-scrollbar">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">pie_chart</span>
+<span class="text-sm font-medium">Visão Geral</span>
+</a>
+<div class="px-3 py-1">
+<p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Comercial</p>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary mb-1" href="#">
+<span class="material-symbols-outlined text-[20px] fill-1">storefront</span>
+<span class="text-sm font-semibold">Marketplace B2B</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+<span class="text-sm font-medium">Meus Pedidos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+<span class="text-sm font-medium">Favoritos</span>
+</a>
+</div>
+<div class="px-3 py-1 mt-2">
+<p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Análise</p>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">lightbulb</span>
+<span class="text-sm font-medium">Insights</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">trending_up</span>
+<span class="text-sm font-medium">Tendências</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-full relative overflow-hidden bg-[#F3F4F6]">
+<!-- Top Navigation -->
+<header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between shrink-0">
+<!-- Breadcrumbs -->
+<div class="flex items-center gap-2 text-sm">
+<a class="text-slate-500 hover:text-primary font-medium" href="#">Marketplace</a>
+<span class="material-symbols-outlined text-slate-400 text-[16px]">chevron_right</span>
+<a class="text-slate-500 hover:text-primary font-medium" href="#">Hardware</a>
+<span class="material-symbols-outlined text-slate-400 text-[16px]">chevron_right</span>
+<span class="text-slate-800 font-semibold">Servidores</span>
+</div>
+<!-- Header Actions -->
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-[20px]">search</span>
+<input class="pl-10 pr-4 py-2 bg-slate-100 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/50 w-64 placeholder:text-slate-400" placeholder="Buscar produtos..." type="text"/>
+</div>
+<button class="relative p-2 text-slate-500 hover:bg-slate-100 rounded-lg">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white"></span>
+</button>
+<div class="size-9 rounded-full bg-slate-200 bg-cover bg-center border border-slate-200" data-alt="User profile avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBqzZwgx2Epkn4cVEOeJ9oqt6aeNkW4rrGgLTUsGkw0xSYAADYSbdKq3gTIECckFjhZCK_2eWxoixW3yRBVFI2vVeD3p6IgFqeohc7vxOD5FJcLva2t0spheqHDrK-uw8tl11IBzp2XwTGaeRaEo7Ccf0LVmmLQ3S-mbNYO1Qd-vhgyfDJD8nFoyptD_14bu2nw_quONOZm1IoPxgQ7BZpy6bQgrGCxOpY9U3JhYt2AkXT_elu090zD3EDzpQQUSviUvRWu_wmqHSKm");'></div>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Images & Details (8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-6">
+<!-- Image Gallery -->
+<div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+<div class="aspect-video w-full bg-slate-50 rounded-lg mb-4 bg-cover bg-center relative group" data-alt="Server rack hardware closeup" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDvpJHAi7nGfiX3HjAKPBnf5_Ksjpvu8fxgZIEVmuI3gZp1lzGZr6wRxj-RXiJN6HCeYPbMuPIWEUwtgpwvuVtUALkBtsSr2UBhNAylHbE7XlMfJDezwBuxL-7CBSK7oYqAwIV4eAWAgBS12u0SU0Q1_LvHgL5yQ1YG1TVrDA9pb4rJyMrvmFAtXFp8UZIN8tzsvFPZyZH6VD8yA3-kCrVRuBiQjQ4XPALkLpmhSCxHQtpDhwIq0X6bkE70SxHo7d8nqa4RB4znPSA-");'>
+<button class="absolute right-4 top-4 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="flex gap-3 overflow-x-auto pb-1 custom-scrollbar">
+<button class="shrink-0 w-24 h-24 rounded-lg bg-slate-50 border-2 border-primary overflow-hidden relative">
+<div class="w-full h-full bg-cover bg-center" data-alt="Thumbnail 1: Server rack front view" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDgVe8nPPsDEC-cxPUOf-kYiprB4k5wVMp6PKJ2HMEoY0vnB0v7utu5trlfDOy8HYJEk2A85uHg0ycPQFlPpp4EKnfDPzfZtDqgvCCfUd5scr0EI9fIruCiwD56s13HHTCaBSCsZCplwPNQ0dKC12_8UHYV-D2pwjsZjPFoI2V5_upxUhlrKpwAX97LTJKgKTqBN0gqJoODZUsmqEJIEnJoAQJBfp21FBzE8qTTvQsJhMcl8B90_1JKMdPk-EDbAUIfGAUxblZQSJKd");'></div>
+</button>
+<button class="shrink-0 w-24 h-24 rounded-lg bg-slate-50 border border-slate-200 hover:border-slate-300 overflow-hidden relative">
+<div class="w-full h-full bg-cover bg-center" data-alt="Thumbnail 2: Server internal components" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDiPby9Th4WOcpAW3GeBQFJx83-9tzBtJDHTfcVllrgJT3IzR1wqrhHVcS3jOYgEkFc9Pz5ciMA6vgaCjaz1uWoWcSdtDU7sZJ2dwyEMOJiMTKFMWY8wN8dvMdXXOZ3COz2I-xOSTSkbtQpH_9dcpzbvzVyAdB0Yl286eCcSqY-MYnJiRi2N0kvP2rxoGVFanrz8uhEbVJ-5-Uh_0W5vhlPjHM2FPJcHkvO81m8iYPlyy1Ni_2IZj5kriy7sl-TJ0CI5DKJxrXbXP0M");'></div>
+</button>
+<button class="shrink-0 w-24 h-24 rounded-lg bg-slate-50 border border-slate-200 hover:border-slate-300 overflow-hidden relative">
+<div class="w-full h-full bg-cover bg-center" data-alt="Thumbnail 3: Data center perspective" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAJqkqx_Tn6cMrTaKY2Re8aMvI-VeNpJsZoOe6L3uITD55io9CLzK1Tgrrn3w698qwsG5-UPTlhE_0gCdH1x2jJ0N9hNgJwwypqWJsh_e0IvhaEcx-5MsvBv1Au46HgjHpMjZ_QjaRRVtMmroBGrlbCFkr42H8x-5dH92poCh0ABTbnV_yCPp2HvwQ1meBY8j9CNru_oywtsNfOLKYbMbGRAu7F6K0JwHlTPsPuxqO19rZQi0gJLY-yXt-ORtinAQoZ4aA16wQj46i9");'></div>
+</button>
+<button class="shrink-0 w-24 h-24 rounded-lg bg-slate-50 border border-slate-200 hover:border-slate-300 overflow-hidden relative">
+<div class="w-full h-full bg-cover bg-center" data-alt="Thumbnail 4: Network cables" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCyyySebZsSn15u72AYO3FyeNF61FXrPo7FFNU1AYjHKXhJasyTPB-oHv8XCTn0HasziSgZ5Eg998d2EHvKutj_i61iixJqMN_qzspZY-xbQrgRFko5Ud_1MMLAsAQvts9hcina_b_FCA_Vosm-uJWIDR05jZmUX85RZn9v7w-9eEVmIpchLca0LI3Fh3-wtDCA7O3GAOiznos1zoKd95XJXr8euoglhl9_5UUQ1b4mIOj6ClXJLQjrH6M1W63OuStF8kBlxqxrcsnZ");'></div>
+</button>
+</div>
+</div>
+<!-- Product Description -->
+<div class="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-slate-100">
+<div class="flex items-center gap-4 border-b border-slate-100 mb-6">
+<button class="pb-3 border-b-2 border-primary text-primary font-semibold text-sm">Detalhes do Produto</button>
+<button class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-medium text-sm transition-colors">Especificações Técnicas</button>
+<button class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-medium text-sm transition-colors">Avaliações (12)</button>
+</div>
+<div class="prose prose-slate max-w-none">
+<h3 class="text-lg font-semibold text-slate-900 mb-3">Descrição Geral</h3>
+<p class="text-slate-600 mb-4 leading-relaxed">
+                                O Dell PowerEdge R740 foi projetado para acelerar o desempenho dos aplicativos, alavancando placas aceleradoras e escalabilidade de armazenamento. A plataforma de 2 soquetes e 2U oferece o equilíbrio ideal de recursos para alimentar os ambientes mais exigentes.
+                            </p>
+<ul class="list-disc pl-5 space-y-2 text-slate-600 mb-6">
+<li>Processador Intel® Xeon® Scalable com até 28 núcleos</li>
+<li>Memória DDR4 de alta velocidade com suporte a até 3TB</li>
+<li>Até 16 drives de 2.5" ou 8 drives de 3.5"</li>
+<li>Ideal para VDI, nuvem privada e inteligência artificial</li>
+</ul>
+<h3 class="text-lg font-semibold text-slate-900 mb-3">Condição do Item</h3>
+<p class="text-slate-600 leading-relaxed">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 mr-2">Seminovo</span>
+                                Este produto foi inspecionado profissionalmente, testado e limpo por fornecedores qualificados da UNIQ. O produto pode ter algumas marcas de uso estéticas, mas é totalmente funcional.
+                            </p>
+</div>
+</div>
+</div>
+<!-- Right Column: Action & Info (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<!-- Main Action Card -->
+<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 sticky top-0">
+<div class="mb-4">
+<h2 class="text-2xl font-bold text-slate-900 leading-tight mb-2">Servidor Dell PowerEdge R740 - Seminovo</h2>
+<div class="flex items-center gap-2 text-sm text-slate-500 mb-4">
+<span class="bg-slate-100 px-2 py-1 rounded text-xs font-mono text-slate-600">SKU: DLL-R740-001</span>
+<span>|</span>
+<div class="flex items-center text-amber-400">
+<span class="material-symbols-outlined text-[16px] fill-1">star</span>
+<span class="material-symbols-outlined text-[16px] fill-1">star</span>
+<span class="material-symbols-outlined text-[16px] fill-1">star</span>
+<span class="material-symbols-outlined text-[16px] fill-1">star</span>
+<span class="material-symbols-outlined text-[16px] fill-1">star_half</span>
+</div>
+<span class="text-slate-400">(4.8)</span>
+</div>
+</div>
+<div class="flex items-end gap-2 mb-6">
+<span class="text-3xl font-bold text-slate-900">R$ 14.500,00</span>
+<span class="text-sm text-slate-400 mb-1 line-through">R$ 18.000,00</span>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-3 mb-2">
+<label class="text-sm font-medium text-slate-700">Quantidade:</label>
+<div class="flex items-center border border-slate-200 rounded-lg">
+<button class="px-3 py-1 hover:bg-slate-50 text-slate-600">-</button>
+<input class="w-10 text-center border-none p-0 text-sm focus:ring-0" type="text" value="1"/>
+<button class="px-3 py-1 hover:bg-slate-50 text-slate-600">+</button>
+</div>
+<span class="text-xs text-slate-500">3 disponíveis</span>
+</div>
+<button class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 px-4 rounded-lg shadow-md shadow-primary/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">shopping_cart</span>
+                                Comprar Agora
+                            </button>
+<button class="w-full bg-secondary-dark hover:bg-[#1a3a47] text-white font-semibold py-3 px-4 rounded-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">chat</span>
+                                Entrar em Contato
+                            </button>
+</div>
+<div class="mt-6 pt-6 border-t border-slate-100 flex flex-col gap-3">
+<div class="flex items-center gap-3 text-sm text-slate-600">
+<span class="material-symbols-outlined text-green-600">verified_user</span>
+<span>Garantia de 90 dias inclusa</span>
+</div>
+<div class="flex items-center gap-3 text-sm text-slate-600">
+<span class="material-symbols-outlined text-slate-400">local_shipping</span>
+<span>Frete grátis para região Sul/Sudeste</span>
+</div>
+</div>
+</div>
+<!-- Seller Card -->
+<div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100">
+<h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Vendido por</h4>
+<div class="flex items-center gap-4 mb-4">
+<div class="size-12 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-secondary-dark font-bold text-lg">
+                                TS
+                            </div>
+<div>
+<h3 class="font-bold text-slate-900">TechSolutions Ltda</h3>
+<div class="flex items-center gap-1 text-xs text-slate-500">
+<span class="material-symbols-outlined text-[14px] text-primary">verified</span>
+<span>Vendedor Verificado</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 mb-4">
+<div class="bg-slate-50 p-2 rounded text-center">
+<span class="block text-lg font-bold text-slate-900">98%</span>
+<span class="text-[10px] text-slate-500 uppercase">Aprovações</span>
+</div>
+<div class="bg-slate-50 p-2 rounded text-center">
+<span class="block text-lg font-bold text-slate-900">2h</span>
+<span class="text-[10px] text-slate-500 uppercase">Tempo Resp.</span>
+</div>
+</div>
+<div class="flex items-center gap-2 text-xs text-slate-500 pt-2 border-t border-slate-100">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>São Paulo, SP - Membro desde 2021</span>
+</div>
+</div>
+<!-- Payment Methods -->
+<div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100">
+<h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Meios de Pagamento</h4>
+<div class="flex gap-2 opacity-70 grayscale hover:grayscale-0 transition-all">
+<div class="h-8 w-12 bg-slate-100 rounded border border-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-600">PIX</div>
+<div class="h-8 w-12 bg-slate-100 rounded border border-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-600">Boleto</div>
+<div class="h-8 w-12 bg-slate-100 rounded border border-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-600">Card</div>
+</div>
+<p class="text-xs text-slate-400 mt-3">Parcelamento em até 12x via cartão corporativo.</p>
+</div>
+</div>
+</div>
+<!-- Footer Section inside scrollable area -->
+<div class="max-w-7xl mx-auto mt-12 py-8 border-t border-slate-200">
+<p class="text-center text-slate-400 text-sm">© 2024 UNIQ ERP Marketplace. Todos os direitos reservados.</p>
+</div>
+</div>
+</main>
+</body></html>

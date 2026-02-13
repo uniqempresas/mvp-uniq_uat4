@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Marketplace B2B - Gestão de Pedidos</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b77f",
+                        "primary-dark": "#0e9f6e",
+                        "secondary": "#244E5F",
+                        "background-light": "#F3F4F6", 
+                        "background-dark": "#10221c",
+                        "sidebar-dark": "#1F2937",
+                        "card-white": "#FFFFFF",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.75rem", // 12px
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for table if needed */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white flex h-screen overflow-hidden">
+<!-- Primary Sidebar (Dark #1F2937) -->
+<aside class="w-20 bg-sidebar-dark flex flex-col items-center py-6 gap-8 z-20 flex-shrink-0">
+<!-- Logo Icon -->
+<div class="size-10 bg-primary rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/30">
+            U
+        </div>
+<!-- Global Nav Icons -->
+<nav class="flex flex-col gap-6 w-full px-2">
+<button class="flex items-center justify-center p-3 rounded-xl text-gray-400 hover:bg-gray-700/50 hover:text-white transition-colors group relative">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">Dashboard</span>
+</button>
+<button class="flex items-center justify-center p-3 rounded-xl text-gray-400 hover:bg-gray-700/50 hover:text-white transition-colors group relative">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">ERP Core</span>
+</button>
+<button class="flex items-center justify-center p-3 rounded-xl text-white bg-gray-700 shadow-md group relative">
+<span class="material-symbols-outlined">lightbulb</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">Inteligência</span>
+</button>
+<button class="flex items-center justify-center p-3 rounded-xl text-gray-400 hover:bg-gray-700/50 hover:text-white transition-colors group relative">
+<span class="material-symbols-outlined">group</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">CRM</span>
+</button>
+<button class="flex items-center justify-center p-3 rounded-xl text-gray-400 hover:bg-gray-700/50 hover:text-white transition-colors group relative">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">Financeiro</span>
+</button>
+</nav>
+<div class="mt-auto flex flex-col gap-4 w-full px-2">
+<button class="flex items-center justify-center p-3 rounded-xl text-gray-400 hover:bg-gray-700/50 hover:text-white transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-cover bg-center border-2 border-gray-600" data-alt="User profile photo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA1PXescHggTed5wHlRIKl3DQzFnY4pxb6bn_sE0r5BtBHr79w6-WvxbS3N-S6E9rnGXGPce6OAtH2YGKuRT77cvn3dE1UAq_o8o4qQqaukLC24WeGy-w7V1Kl8y4RmjRQRYSNQ6AWcvZYFB3884FboesUBEcBkMOmhwWkoOL-8Q7lFTRugfkuIj3zbTqLCTe78b04BEhy0ofZBiWWW7iO6yZ45_0ZeOTN-_vTX-AatjRDXd1IAbO32I_uQFUtlbRcowpX6Nwd8CLF3');"></div>
+</div>
+</aside>
+<!-- Secondary Sidebar (Context) -->
+<aside class="w-64 bg-white dark:bg-[#152a23] border-r border-gray-200 dark:border-gray-800 flex flex-col z-10 hidden md:flex flex-shrink-0">
+<div class="p-6 border-b border-gray-100 dark:border-gray-800">
+<h2 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Módulo</h2>
+<h1 class="text-xl font-bold text-slate-800 dark:text-white leading-tight">Inteligência &amp;<br/>Estratégia</h1>
+</div>
+<div class="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-6">
+<!-- Section 1 -->
+<div>
+<div class="flex items-center gap-2 mb-3 px-2">
+<span class="material-symbols-outlined text-primary" style="font-size: 20px;">storefront</span>
+<span class="text-sm font-semibold text-primary">Marketplace B2B</span>
+</div>
+<div class="flex flex-col gap-1 ml-2 pl-3 border-l-2 border-primary/20">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group" href="#">
+<span class="text-sm font-medium">Visão Geral</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group" href="#">
+<span class="text-sm font-medium">Meus Anúncios</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary dark:text-primary transition-colors group" href="#">
+<span class="text-sm font-medium">Gestão de Pedidos</span>
+<span class="ml-auto bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md">12</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group" href="#">
+<span class="text-sm font-medium">Promoções</span>
+</a>
+</div>
+</div>
+<!-- Section 2 -->
+<div>
+<div class="flex items-center gap-2 mb-3 px-2">
+<span class="material-symbols-outlined text-slate-400" style="font-size: 20px;">analytics</span>
+<span class="text-sm font-semibold text-slate-500 dark:text-gray-400">Analytics</span>
+</div>
+<div class="flex flex-col gap-1 ml-2 pl-3 border-l-2 border-gray-100 dark:border-gray-700">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group" href="#">
+<span class="text-sm font-medium">Relatórios de Vendas</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group" href="#">
+<span class="text-sm font-medium">Performance de Produtos</span>
+</a>
+</div>
+</div>
+</div>
+<div class="p-4 border-t border-gray-100 dark:border-gray-800">
+<div class="bg-gray-50 dark:bg-white/5 rounded-xl p-4 flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-amber-500">warning</span>
+<span class="text-xs font-semibold text-slate-700 dark:text-gray-200">Atenção</span>
+</div>
+<p class="text-xs text-slate-500 dark:text-gray-400 leading-relaxed">
+                    Você tem 3 pedidos aguardando envio há mais de 24h.
+                </p>
+<button class="text-xs text-primary font-medium hover:underline text-left mt-1">Verificar agora</button>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col overflow-hidden bg-background-light dark:bg-background-dark relative w-full">
+<!-- Header -->
+<header class="flex flex-col md:flex-row md:items-center justify-between gap-4 px-8 py-6 bg-background-light dark:bg-background-dark flex-shrink-0">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 text-sm text-slate-500 dark:text-gray-400 mb-1">
+<span>Marketplace B2B</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-primary font-medium">Pedidos</span>
+</div>
+<h1 class="text-3xl font-bold text-slate-800 dark:text-white tracking-tight">Gestão de Pedidos</h1>
+<p class="text-sm text-slate-500 dark:text-gray-400 max-w-2xl">Gerencie seus pedidos recebidos, atualize status de entrega e mantenha comunicação direta com seus compradores.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-white/5 border border-gray-200 dark:border-gray-700 rounded-lg text-slate-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/10 transition-colors shadow-sm text-sm font-medium">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+                    Exportar
+                </button>
+<button class="flex items-center gap-2 px-4 py-2.5 bg-secondary text-white rounded-lg hover:bg-secondary/90 transition-colors shadow-sm shadow-secondary/20 text-sm font-medium">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                    Novo Pedido Manual
+                </button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto px-8 pb-8">
+<!-- KPI Stats -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+<!-- Stat Card 1 -->
+<div class="bg-card-white dark:bg-white/5 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col gap-1">
+<div class="flex justify-between items-start">
+<p class="text-sm font-medium text-slate-500 dark:text-gray-400">Novos Pedidos</p>
+<div class="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 p-1.5 rounded-lg">
+<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
+</div>
+</div>
+<div class="flex items-end gap-2 mt-2">
+<h3 class="text-2xl font-bold text-slate-800 dark:text-white">12</h3>
+<span class="text-xs font-medium text-green-600 bg-green-50 dark:bg-green-900/20 px-1.5 py-0.5 rounded flex items-center mb-1">
+<span class="material-symbols-outlined text-[14px] mr-0.5">trending_up</span> +20%
+                        </span>
+</div>
+</div>
+<!-- Stat Card 2 -->
+<div class="bg-card-white dark:bg-white/5 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col gap-1">
+<div class="flex justify-between items-start">
+<p class="text-sm font-medium text-slate-500 dark:text-gray-400">Aguardando Envio</p>
+<div class="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 p-1.5 rounded-lg">
+<span class="material-symbols-outlined text-[20px]">local_shipping</span>
+</div>
+</div>
+<div class="flex items-end gap-2 mt-2">
+<h3 class="text-2xl font-bold text-slate-800 dark:text-white">5</h3>
+<span class="text-xs font-medium text-slate-400 mb-1">Pedidos urgentes</span>
+</div>
+</div>
+<!-- Stat Card 3 -->
+<div class="bg-card-white dark:bg-white/5 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col gap-1">
+<div class="flex justify-between items-start">
+<p class="text-sm font-medium text-slate-500 dark:text-gray-400">Faturamento Hoje</p>
+<div class="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 p-1.5 rounded-lg">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+</div>
+</div>
+<div class="flex items-end gap-2 mt-2">
+<h3 class="text-2xl font-bold text-slate-800 dark:text-white">R$ 12.450</h3>
+<span class="text-xs font-medium text-green-600 bg-green-50 dark:bg-green-900/20 px-1.5 py-0.5 rounded flex items-center mb-1">
+<span class="material-symbols-outlined text-[14px] mr-0.5">trending_up</span> +12%
+                        </span>
+</div>
+</div>
+<!-- Stat Card 4 -->
+<div class="bg-card-white dark:bg-white/5 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col gap-1">
+<div class="flex justify-between items-start">
+<p class="text-sm font-medium text-slate-500 dark:text-gray-400">Ticket Médio</p>
+<div class="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 p-1.5 rounded-lg">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+</div>
+</div>
+<div class="flex items-end gap-2 mt-2">
+<h3 class="text-2xl font-bold text-slate-800 dark:text-white">R$ 985</h3>
+<span class="text-xs font-medium text-slate-400 mb-1">Últimos 30 dias</span>
+</div>
+</div>
+</div>
+<!-- Filters & Search -->
+<div class="flex flex-col lg:flex-row justify-between items-center gap-4 mb-6">
+<!-- Search -->
+<div class="relative w-full lg:w-96">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2.5 border-none rounded-xl bg-white dark:bg-white/5 text-slate-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary shadow-sm" placeholder="Buscar por ID, Cliente ou Produto..." type="text"/>
+</div>
+<!-- Filters -->
+<div class="flex items-center gap-3 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0">
+<select class="form-select bg-white dark:bg-white/5 border-none rounded-xl text-sm font-medium text-slate-700 dark:text-gray-200 py-2.5 pl-3 pr-8 focus:ring-primary shadow-sm min-w-[140px]">
+<option>Todos Status</option>
+<option>Em Aberto</option>
+<option>Pago</option>
+<option>Enviado</option>
+<option>Entregue</option>
+</select>
+<select class="form-select bg-white dark:bg-white/5 border-none rounded-xl text-sm font-medium text-slate-700 dark:text-gray-200 py-2.5 pl-3 pr-8 focus:ring-primary shadow-sm min-w-[140px]">
+<option>Últimos 7 dias</option>
+<option>Hoje</option>
+<option>Este Mês</option>
+</select>
+<button class="bg-white dark:bg-white/5 text-slate-600 dark:text-gray-300 p-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-white/10 transition shadow-sm flex-shrink-0">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Table Container -->
+<div class="bg-card-white dark:bg-white/5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-gray-50/50 dark:bg-white/5 border-b border-gray-100 dark:border-gray-800">
+<th class="p-4 text-xs font-semibold text-slate-500 dark:text-gray-400 uppercase tracking-wider w-16 text-center">
+<input class="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+</th>
+<th class="p-4 text-xs font-semibold text-slate-500 dark:text-gray-400 uppercase tracking-wider">Pedido</th>
+<th class="p-4 text-xs font-semibold text-slate-500 dark:text-gray-400 uppercase tracking-wider">Cliente / Empresa</th>
+<th class="p-4 text-xs font-semibold text-slate-500 dark:text-gray-400 uppercase tracking-wider">Data</th>
+<th class="p-4 text-xs font-semibold text-slate-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+<th class="p-4 text-xs font-semibold text-slate-500 dark:text-gray-400 uppercase tracking-wider">Total</th>
+<th class="p-4 text-xs font-semibold text-slate-500 dark:text-gray-400 uppercase tracking-wider text-right">Ações</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+<!-- Row 1 -->
+<tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group">
+<td class="p-4 text-center">
+<input class="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="flex flex-col">
+<span class="font-semibold text-slate-800 dark:text-white">#10234</span>
+<span class="text-xs text-slate-500 dark:text-gray-400">2 Itens</span>
+</div>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-700 dark:text-blue-300 text-xs font-bold">TS</div>
+<div class="flex flex-col">
+<span class="font-medium text-slate-700 dark:text-gray-200">Tech Solutions Ltda</span>
+<span class="text-xs text-slate-500 dark:text-gray-400">CNPJ: 12.345.678/0001-90</span>
+</div>
+</div>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-gray-300">
+                                    12/10/2023 <br/> <span class="text-xs text-slate-400">14:30</span>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                        Em Preparação
+                                    </span>
+</td>
+<td class="p-4 text-sm font-semibold text-slate-800 dark:text-white">
+                                    R$ 4.500,00
+                                </td>
+<td class="p-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-slate-400 hover:text-secondary hover:bg-secondary/10 rounded-lg transition" title="Chat com comprador">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition" title="Atualizar Status">
+<span class="material-symbols-outlined text-[20px]">edit_note</span>
+</button>
+<button class="px-3 py-1.5 bg-primary text-white text-xs font-medium rounded-lg hover:bg-primary-dark transition shadow-sm shadow-primary/30">
+                                            Enviar
+                                        </button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group">
+<td class="p-4 text-center">
+<input class="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="flex flex-col">
+<span class="font-semibold text-slate-800 dark:text-white">#10235</span>
+<span class="text-xs text-slate-500 dark:text-gray-400">5 Itens</span>
+</div>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-green-100 dark:bg-green-900/50 flex items-center justify-center text-green-700 dark:text-green-300 text-xs font-bold">MS</div>
+<div class="flex flex-col">
+<span class="font-medium text-slate-700 dark:text-gray-200">Mercado Silva</span>
+<span class="text-xs text-slate-500 dark:text-gray-400">CNPJ: 98.765.432/0001-10</span>
+</div>
+</div>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-gray-300">
+                                    12/10/2023 <br/> <span class="text-xs text-slate-400">13:15</span>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                                        Novo Pedido
+                                    </span>
+</td>
+<td class="p-4 text-sm font-semibold text-slate-800 dark:text-white">
+                                    R$ 230,00
+                                </td>
+<td class="p-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-slate-400 hover:text-secondary hover:bg-secondary/10 rounded-lg transition">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="px-3 py-1.5 bg-primary text-white text-xs font-medium rounded-lg hover:bg-primary-dark transition shadow-sm shadow-primary/30">
+                                            Aceitar
+                                        </button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group">
+<td class="p-4 text-center">
+<input class="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="flex flex-col">
+<span class="font-semibold text-slate-800 dark:text-white">#10230</span>
+<span class="text-xs text-slate-500 dark:text-gray-400">1 Item</span>
+</div>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-700 dark:text-purple-300 text-xs font-bold">IN</div>
+<div class="flex flex-col">
+<span class="font-medium text-slate-700 dark:text-gray-200">Inova Varejo</span>
+<span class="text-xs text-slate-500 dark:text-gray-400">CNPJ: 45.678.901/0001-23</span>
+</div>
+</div>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-gray-300">
+                                    11/10/2023 <br/> <span class="text-xs text-slate-400">09:45</span>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 border border-green-200 dark:border-green-800">
+<span class="material-symbols-outlined text-[14px]">check</span>
+                                        Entregue
+                                    </span>
+</td>
+<td class="p-4 text-sm font-semibold text-slate-800 dark:text-white">
+                                    R$ 1.250,00
+                                </td>
+<td class="p-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-slate-400 hover:text-secondary hover:bg-secondary/10 rounded-lg transition">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+</button>
+<button class="px-3 py-1.5 border border-gray-300 text-slate-600 text-xs font-medium rounded-lg hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-white/10 transition">
+                                            Detalhes
+                                        </button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group">
+<td class="p-4 text-center">
+<input class="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="flex flex-col">
+<span class="font-semibold text-slate-800 dark:text-white">#10228</span>
+<span class="text-xs text-slate-500 dark:text-gray-400">12 Itens</span>
+</div>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-orange-100 dark:bg-orange-900/50 flex items-center justify-center text-orange-700 dark:text-orange-300 text-xs font-bold">CM</div>
+<div class="flex flex-col">
+<span class="font-medium text-slate-700 dark:text-gray-200">Casa &amp; Mais</span>
+<span class="text-xs text-slate-500 dark:text-gray-400">CNPJ: 55.444.333/0001-55</span>
+</div>
+</div>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-gray-300">
+                                    10/10/2023 <br/> <span class="text-xs text-slate-400">16:20</span>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+<span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+                                        Enviado
+                                    </span>
+</td>
+<td class="p-4 text-sm font-semibold text-slate-800 dark:text-white">
+                                    R$ 6.420,90
+                                </td>
+<td class="p-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-slate-400 hover:text-secondary hover:bg-secondary/10 rounded-lg transition">
+<span class="material-symbols-outlined text-[20px]">local_shipping</span>
+</button>
+<button class="px-3 py-1.5 border border-gray-300 text-slate-600 text-xs font-medium rounded-lg hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-white/10 transition">
+                                            Rastreio
+                                        </button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-between px-4 py-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-white/5">
+<div class="text-xs text-slate-500 dark:text-gray-400">
+                        Mostrando <span class="font-medium text-slate-700 dark:text-gray-200">1-4</span> de <span class="font-medium text-slate-700 dark:text-gray-200">28</span> pedidos
+                    </div>
+<div class="flex gap-1">
+<button class="p-1 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 text-slate-500 dark:text-gray-400 disabled:opacity-50">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="px-2.5 py-1 rounded-lg bg-white dark:bg-gray-700 text-slate-700 dark:text-gray-200 text-xs font-medium border border-gray-200 dark:border-gray-600 shadow-sm">1</button>
+<button class="px-2.5 py-1 rounded-lg hover:bg-white dark:hover:bg-gray-700 text-slate-500 dark:text-gray-400 text-xs font-medium transition-colors">2</button>
+<button class="px-2.5 py-1 rounded-lg hover:bg-white dark:hover:bg-gray-700 text-slate-500 dark:text-gray-400 text-xs font-medium transition-colors">3</button>
+<span class="px-1 py-1 text-slate-400 text-xs">...</span>
+<button class="p-1 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 text-slate-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

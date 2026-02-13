@@ -7,6 +7,7 @@ trigger: always_on
 > This file defines how the AI behaves in this workspace.
 
 ---
+## CRITICAL: FALE SEMPRE EM PORTUGUÊS DO BRASIL
 
 ## CRITICAL: AGENT & SKILL PROTOCOL (START HERE)
 

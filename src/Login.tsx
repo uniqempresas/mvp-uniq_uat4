@@ -24,25 +24,46 @@ export default function Login() {
         setError(null)
 
         try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email,
-                password
-            })
+            // Create a timeout promise
+            const timeoutPromise = new Promise((_, reject) =>
+                setTimeout(() => reject(new Error('Tempo limite excedido. Verifique sua conexão.')), 15000)
+            );
+
+            // Race against login
+            const { data, error } = await Promise.race([
+                supabase.auth.signInWithPassword({
+                    email,
+                    password
+                }),
+                timeoutPromise
+            ]) as any;
 
             if (error) throw error
 
             // Login successful
             console.log("Logged in:", data.user)
-            // alert('Login realizado com sucesso!') 
-            navigate('/dashboard')
+
+            // Force verify session before navigating
+            const { data: sessionData } = await supabase.auth.getSession();
+            if (sessionData.session) {
+                navigate('/dashboard', { replace: true })
+            } else {
+                throw new Error('Sessão não criada. Tente novamente.')
+            }
 
         } catch (err: any) {
             console.error("Login failed:", err)
             setError(err.message || 'Erro ao fazer login. Verifique suas credenciais.')
         } finally {
-            setLoading(false)
+            if (mounted) setLoading(false)
         }
     }
+
+    // Add mounted check to prevent setting state on unmounted component
+    const [mounted, setMounted] = useState(true);
+    useEffect(() => {
+        return () => setMounted(false);
+    }, []);
 
     return (
         <div className="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-gray-100 min-h-screen flex flex-col relative overflow-hidden transition-colors duration-300">

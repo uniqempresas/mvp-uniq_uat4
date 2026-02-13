@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UNIQ - Marketplace B2B</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b77f", // Green as requested (#10B981 equivalent)
+                        "primary-dark": "#059669",
+                        "secondary": "#244E5F", // Dark Teal/Blue
+                        "sidebar-dark": "#1F2937", // Primary sidebar
+                        "background-light": "#F3F4F6", // Main bg
+                        "background-white": "#FFFFFF",
+                        "text-main": "#111827",
+                        "text-muted": "#6B7280",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.75rem", // 12px
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        'sm': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                        'DEFAULT': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for clean look */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D1D5DB; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9CA3AF; 
+        }
+    </style>
+</head>
+<body class="bg-background-light text-text-main h-screen w-full flex overflow-hidden selection:bg-primary/30">
+<!-- 1. Primary Sidebar (Global Nav) -->
+<aside class="w-20 bg-sidebar-dark flex flex-col items-center py-6 gap-8 z-20 flex-shrink-0">
+<!-- Brand Logo Icon -->
+<div class="size-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-3xl">hexagon</span>
+</div>
+<!-- Global Navigation -->
+<nav class="flex flex-col gap-6 w-full items-center">
+<button class="text-gray-400 hover:text-white transition-colors group flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-[28px]">dashboard</span>
+<span class="text-[10px] font-medium hidden group-hover:block">Home</span>
+</button>
+<button class="text-gray-400 hover:text-white transition-colors group flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-[28px]">attach_money</span>
+<span class="text-[10px] font-medium hidden group-hover:block">Finanças</span>
+</button>
+<button class="text-primary bg-gray-800/50 p-2 rounded-xl w-14 h-14 flex items-center justify-center shadow-inner border border-gray-700">
+<span class="material-symbols-outlined text-[28px] fill-1">psychology</span>
+</button>
+<button class="text-gray-400 hover:text-white transition-colors group flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-[28px]">inventory_2</span>
+<span class="text-[10px] font-medium hidden group-hover:block">Estoque</span>
+</button>
+</nav>
+<div class="mt-auto flex flex-col gap-6">
+<button class="text-gray-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[28px]">settings</span>
+</button>
+<div class="size-8 rounded-full overflow-hidden border-2 border-gray-600">
+<img class="w-full h-full object-cover" data-alt="User profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2yLcWL9bLCfrGaHNB2xnTvAxMW9LvBePLwRYvJHVaWwu5rhZ5B4iV6O2Wf66y91B9JlYnQ5DBmqUoAqK3RPkLTrn99EDw8ulizBPof-xDXVl2E2itYO4G8f48_d3JtFqohtlcn-1EBNei4N8Vl_5BtHV7SxD_7JkLs2-Tv1HUGtrUkvxrVv1tfVdzRwSY06XdS5nFmPpGGr5rfhJDG9kIYwJI0uwwvcYh-M21sluv3w-8D1LZrIjmlCm_KLxB1Ua-2tk6lDaldzgL"/>
+</div>
+</div>
+</aside>
+<!-- 2. Secondary Sidebar (Context Nav) -->
+<aside class="w-72 bg-background-white border-r border-gray-200 flex flex-col flex-shrink-0 z-10 hidden md:flex">
+<div class="p-6 border-b border-gray-100">
+<div class="flex items-center gap-3 mb-1">
+<div class="size-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<div>
+<h2 class="text-sm font-semibold text-text-main leading-tight">Inteligência &amp;<br/>Estratégia</h2>
+</div>
+</div>
+<p class="text-xs text-text-muted mt-2">Módulo Comercial</p>
+</div>
+<nav class="flex-1 overflow-y-auto p-4 flex flex-col gap-1">
+<div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 px-3 mt-2">Navegação</div>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg bg-primary/10 text-primary border border-primary/10 shadow-sm" href="#">
+<span class="material-symbols-outlined fill-1">storefront</span>
+<span class="text-sm font-semibold">Marketplace B2B</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-text-muted hover:bg-gray-50 hover:text-text-main transition-colors" href="#">
+<span class="material-symbols-outlined">handshake</span>
+<span class="text-sm font-medium">Rede de Parceiros</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-text-muted hover:bg-gray-50 hover:text-text-main transition-colors" href="#">
+<span class="material-symbols-outlined">lightbulb</span>
+<span class="text-sm font-medium">Insights de Negócios</span>
+</a>
+<div class="my-2 border-t border-gray-100"></div>
+<div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 px-3 mt-2">Gestão</div>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-text-muted hover:bg-gray-50 hover:text-text-main transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-sm font-medium">Meus Pedidos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-text-muted hover:bg-gray-50 hover:text-text-main transition-colors" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="text-sm font-medium">Orçamentos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-text-muted hover:bg-gray-50 hover:text-text-main transition-colors" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="text-sm font-medium">Favoritos</span>
+</a>
+</nav>
+<div class="p-4 border-t border-gray-200 bg-gray-50">
+<div class="flex items-center justify-between">
+<span class="text-xs font-semibold text-gray-500">Saldo UNIQ Points</span>
+<span class="text-sm font-bold text-secondary">2.450 pts</span>
+</div>
+<div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+<div class="bg-primary h-1.5 rounded-full" style="width: 70%"></div>
+</div>
+</div>
+</aside>
+<!-- 3. Main Content Area -->
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-background-light relative">
+<!-- Header -->
+<header class="h-16 bg-white/80 backdrop-blur-md border-b border-gray-200 flex items-center justify-between px-8 sticky top-0 z-30">
+<!-- Breadcrumbs / Title Mobile -->
+<div class="flex items-center gap-2">
+<button class="md:hidden p-2 text-gray-600">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="hidden md:flex items-center gap-2 text-sm text-gray-500">
+<span>Inteligência</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="font-semibold text-text-main">Marketplace</span>
+</div>
+</div>
+<!-- Quick Actions -->
+<div class="flex items-center gap-3">
+<button class="relative p-2 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white"></span>
+</button>
+<button class="relative p-2 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors">
+<span class="material-symbols-outlined">shopping_cart</span>
+</button>
+<div class="h-8 w-px bg-gray-200 mx-1"></div>
+<button class="flex items-center gap-2 hover:bg-gray-50 pl-1 pr-3 py-1 rounded-lg transition-colors border border-transparent hover:border-gray-200">
+<div class="size-8 rounded-lg bg-secondary text-white flex items-center justify-center font-bold text-xs">AC</div>
+<div class="flex flex-col items-start">
+<span class="text-xs font-bold text-text-main">Acme Corp</span>
+<span class="text-[10px] text-gray-500">Plano Pro</span>
+</div>
+<span class="material-symbols-outlined text-gray-400 text-lg">expand_more</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-4 md:p-8 md:pb-20">
+<div class="max-w-7xl mx-auto flex flex-col gap-8">
+<!-- Hero Section & Search -->
+<div class="flex flex-col gap-6">
+<div class="flex flex-col md:flex-row justify-between items-end gap-4">
+<div class="flex flex-col gap-2 max-w-2xl">
+<h1 class="text-3xl md:text-4xl font-extrabold text-text-main tracking-tight">
+                                Encontre os melhores fornecedores para o seu negócio
+                            </h1>
+<p class="text-text-muted text-lg">
+                                Conecte-se com parceiros certificados e otimize sua cadeia de suprimentos.
+                            </p>
+</div>
+</div>
+<!-- Search Bar -->
+<div class="bg-white p-2 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row items-stretch gap-2">
+<div class="flex-1 flex items-center bg-gray-50 rounded-xl px-4 h-14 border border-transparent focus-within:border-primary focus-within:bg-white transition-all">
+<span class="material-symbols-outlined text-gray-400 text-2xl">search</span>
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-gray-800 placeholder-gray-400 ml-2 h-full text-base" placeholder="Buscar produtos, serviços ou fornecedores (ex: Cadeiras, Software ERP...)" type="text"/>
+</div>
+<div class="hidden md:flex items-center gap-2 px-2 border-l border-gray-100">
+<select class="form-select border-none bg-transparent focus:ring-0 text-sm font-medium text-gray-600 cursor-pointer">
+<option>Todas Categorias</option>
+<option>Produtos</option>
+<option>Serviços</option>
+</select>
+</div>
+<button class="bg-secondary hover:bg-[#1a3a48] text-white px-8 h-14 rounded-xl font-bold text-sm shadow-md shadow-secondary/20 transition-all flex items-center justify-center gap-2">
+<span>Buscar</span>
+</button>
+</div>
+</div>
+<!-- Categories -->
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<h3 class="text-lg font-bold text-text-main">Categorias Populares</h3>
+<a class="text-sm font-medium text-primary hover:text-primary-dark hover:underline" href="#">Ver todas</a>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+<!-- Category Item -->
+<a class="group flex flex-col items-center justify-center gap-3 bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-primary/30 transition-all" href="#">
+<div class="size-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">computer</span>
+</div>
+<span class="text-sm font-medium text-gray-700 group-hover:text-primary transition-colors">Tecnologia</span>
+</a>
+<a class="group flex flex-col items-center justify-center gap-3 bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-primary/30 transition-all" href="#">
+<div class="size-12 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">desk</span>
+</div>
+<span class="text-sm font-medium text-gray-700 group-hover:text-primary transition-colors">Escritório</span>
+</a>
+<a class="group flex flex-col items-center justify-center gap-3 bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-primary/30 transition-all" href="#">
+<div class="size-12 rounded-full bg-green-50 text-green-600 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">local_shipping</span>
+</div>
+<span class="text-sm font-medium text-gray-700 group-hover:text-primary transition-colors">Logística</span>
+</a>
+<a class="group flex flex-col items-center justify-center gap-3 bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-primary/30 transition-all" href="#">
+<div class="size-12 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">support_agent</span>
+</div>
+<span class="text-sm font-medium text-gray-700 group-hover:text-primary transition-colors">Serviços</span>
+</a>
+<a class="group flex flex-col items-center justify-center gap-3 bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-primary/30 transition-all" href="#">
+<div class="size-12 rounded-full bg-yellow-50 text-yellow-600 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">factory</span>
+</div>
+<span class="text-sm font-medium text-gray-700 group-hover:text-primary transition-colors">Industrial</span>
+</a>
+<a class="group flex flex-col items-center justify-center gap-3 bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-primary/30 transition-all" href="#">
+<div class="size-12 rounded-full bg-pink-50 text-pink-600 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">campaign</span>
+</div>
+<span class="text-sm font-medium text-gray-700 group-hover:text-primary transition-colors">Marketing</span>
+</a>
+</div>
+</div>
+<!-- Featured Banners (Carousel look-alike) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<!-- Banner 1 -->
+<div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm flex flex-col justify-between h-full relative overflow-hidden group">
+<div class="absolute right-0 top-0 w-32 h-32 bg-gradient-to-bl from-primary/20 to-transparent rounded-bl-full z-0"></div>
+<div class="z-10">
+<div class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded w-fit mb-3">EXCLUSIVO</div>
+<h4 class="text-lg font-bold text-text-main mb-1">Software de Gestão</h4>
+<p class="text-sm text-text-muted mb-4">30% de desconto na anuidade para parceiros UNIQ.</p>
+</div>
+<button class="z-10 w-full py-2 rounded-lg border border-primary text-primary font-bold text-sm hover:bg-primary hover:text-white transition-colors">
+                            Ver Oferta
+                        </button>
+</div>
+<!-- Banner 2 -->
+<div class="bg-secondary rounded-2xl p-5 shadow-md flex flex-col justify-between h-full relative overflow-hidden text-white">
+<div class="absolute right-0 bottom-0 w-40 h-40 bg-white/10 rounded-tl-full z-0"></div>
+<div class="z-10">
+<div class="bg-white/20 text-white text-xs font-bold px-2 py-1 rounded w-fit mb-3">NOVIDADE</div>
+<h4 class="text-lg font-bold mb-1">Frotas Corporativas</h4>
+<p class="text-sm text-gray-200 mb-4">Condições especiais para leasing de veículos utilitários.</p>
+</div>
+<button class="z-10 w-full py-2 rounded-lg bg-white text-secondary font-bold text-sm hover:bg-gray-100 transition-colors">
+                            Cotar Agora
+                        </button>
+</div>
+<!-- Banner 3 -->
+<div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm flex flex-col justify-between h-full relative overflow-hidden">
+<div class="absolute right-0 top-0 w-32 h-32 bg-gradient-to-bl from-orange-100 to-transparent rounded-bl-full z-0"></div>
+<div class="z-10">
+<div class="bg-orange-100 text-orange-600 text-xs font-bold px-2 py-1 rounded w-fit mb-3">DESTAQUE</div>
+<h4 class="text-lg font-bold text-text-main mb-1">Mobiliário Ergonômico</h4>
+<p class="text-sm text-text-muted mb-4">Renove seu escritório com fornecedores premium.</p>
+</div>
+<button class="z-10 w-full py-2 rounded-lg border border-gray-200 text-gray-600 font-bold text-sm hover:bg-gray-50 transition-colors">
+                            Explorar
+                        </button>
+</div>
+</div>
+<!-- Section: Destaques -->
+<section class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-yellow-500">star</span>
+<h3 class="text-xl font-bold text-text-main">Destaques da Semana</h3>
+</div>
+<div class="flex gap-2">
+<button class="size-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-white hover:shadow-sm">
+<span class="material-symbols-outlined text-sm">arrow_back</span>
+</button>
+<button class="size-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-white hover:shadow-sm">
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Product Card 1 -->
+<div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow border border-gray-100 overflow-hidden flex flex-col group">
+<div class="relative h-48 bg-gray-100 overflow-hidden">
+<div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wide text-gray-700 z-10">Fornecedor Ouro</div>
+<button class="absolute top-3 right-3 p-1.5 bg-white/50 backdrop-blur rounded-full text-gray-600 hover:bg-white hover:text-red-500 transition-colors z-10">
+<span class="material-symbols-outlined text-lg">favorite</span>
+</button>
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500" data-alt="Modern ergonomic office chair black" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCTh3m8SkwuzUD-TmMT_ssI2yFC6O24-yxIBXH8LNTThx6o8ROmDdhpmF58-SEZ7MIBLaX1uizhCRzfBkAXT4XKq-iw9N3mrDtpW9b3jlPfWbAGZmoIBduSPkZgVZugY9X0zWAG0lcxW2izDCZ--jnEZXKaANxQaxohI_AQDlzk9HgpmgD2gGJGZzxsHIRinu8Mkg1IlSeyDLMypk17m86s4WF7U-n-AZCXZ9yrs-RADk2bGdvQKGV0X0kz2dG5Snn3Tg0TPTJRYND9');"></div>
+</div>
+<div class="p-4 flex flex-col flex-1">
+<div class="flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-yellow-400 text-sm fill-1">star</span>
+<span class="text-xs font-semibold text-gray-600">4.8</span>
+<span class="text-xs text-gray-400">(120)</span>
+</div>
+<h4 class="font-bold text-text-main mb-1 line-clamp-2">Cadeira Ergonômica Herman Miller Aeron - Remanufaturada</h4>
+<p class="text-xs text-gray-500 mb-3">Office Solutions Ltda.</p>
+<div class="mt-auto pt-3 border-t border-gray-50 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-xs text-gray-400">A partir de</span>
+<span class="text-lg font-bold text-primary">R$ 2.499</span>
+</div>
+<button class="bg-primary/10 text-primary p-2 rounded-lg hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow border border-gray-100 overflow-hidden flex flex-col group">
+<div class="relative h-48 bg-gray-100 overflow-hidden">
+<div class="absolute top-3 left-3 bg-secondary/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wide text-white z-10">Atacado</div>
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500" data-alt="Stack of printing paper reams" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBMAgMvn7eY-rFuAl9ZTHVfPsKmDrkz43U4zzLKuHVc9auLmK-daLkzWegemtpmzW6zLQqJUm0iSuRUl1Sp8gLNJpIZguolV2Ls0MoKsGxm_0bbgNkolZYYZC2FVWtaU6nE3YY6SAjFSd2cOFB2oCN5bbr0IGTN3jjgr01CP9tS7Bh7VI-ZyISXR7W391L5xofdDW_CoLCihrZUVN6-qFDIyj5HU-X_9ZJDfdwXh6BiQeuct7blIMEBTo6d8Zs2vLGq2Jp9jAbi4S6s');"></div>
+</div>
+<div class="p-4 flex flex-col flex-1">
+<div class="flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-yellow-400 text-sm fill-1">star</span>
+<span class="text-xs font-semibold text-gray-600">4.9</span>
+<span class="text-xs text-gray-400">(540)</span>
+</div>
+<h4 class="font-bold text-text-main mb-1 line-clamp-2">Papel Sulfite A4 75g Caixa com 10 resmas - Pallet Misto</h4>
+<p class="text-xs text-gray-500 mb-3">Papelaria Corporativa S.A.</p>
+<div class="mt-auto pt-3 border-t border-gray-50 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-xs text-gray-400">Cx. 10 un.</span>
+<span class="text-lg font-bold text-primary">R$ 189,90</span>
+</div>
+<button class="bg-primary/10 text-primary p-2 rounded-lg hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow border border-gray-100 overflow-hidden flex flex-col group">
+<div class="relative h-48 bg-gray-100 overflow-hidden">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500" data-alt="Laptop computer on desk" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAQATyZkr2om0xH2f6y4EZSfzYjw69GwhE_ZghnSCEv13Pp6ZXG2Hk8WpQKln8pAQwSfOIrTU0a1k3MpMy-P5VqnUwnLY2TGKfKEphCJpQolx5AY9tyXCggZR9aAfeSKaSokStxcNkoA1EiS916YcFXQtMkEYxTtiFjK0E6aS1KJlBN2jigPZkmOMEV3N3ZebCDsU-DAgIgGNbVo9UGme0v36kZksSPgyaJSyscJNeByjj9aF0rZGIa1m6KWN9IaQl4uBOfPikSx6RG');"></div>
+</div>
+<div class="p-4 flex flex-col flex-1">
+<div class="flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-yellow-400 text-sm fill-1">star</span>
+<span class="text-xs font-semibold text-gray-600">4.5</span>
+<span class="text-xs text-gray-400">(42)</span>
+</div>
+<h4 class="font-bold text-text-main mb-1 line-clamp-2">Notebook Dell Latitude 3420 Core i5 8GB 256GB SSD</h4>
+<p class="text-xs text-gray-500 mb-3">TechDistro B2B</p>
+<div class="mt-auto pt-3 border-t border-gray-50 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-xs text-gray-400">Unitário</span>
+<span class="text-lg font-bold text-primary">R$ 3.890</span>
+</div>
+<button class="bg-primary/10 text-primary p-2 rounded-lg hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow border border-gray-100 overflow-hidden flex flex-col group">
+<div class="relative h-48 bg-gray-100 overflow-hidden">
+<div class="absolute top-3 left-3 bg-green-100 text-green-700 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wide z-10">Eco-Friendly</div>
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500" data-alt="Cardboard boxes stacked" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCKrNQJP5ImXfan7pbNoQVKWFdzyfHlgFGnCE_itRfx9fuqWMC3pRUraHku4ETSWC86W3xsihGZE47Rj5u9tFKMYedOtNGRw1YFTCaeGeKXL-YHj1hUByUxse4dfwz2ENrOs2KKOFF7R7J-Sb4i3hge_uByEpbxPvVbr5D1gUNPYURfN8GOR7LwC9gn9LTZGEUyVZCU6sA6iejQGa6cI6wgJrkCq9IVBEKnsgiUbn7XSdhWPsolq4drkXMpoQV0mS3dSZ6nRtaUO7j2');"></div>
+</div>
+<div class="p-4 flex flex-col flex-1">
+<div class="flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-yellow-400 text-sm fill-1">star</span>
+<span class="text-xs font-semibold text-gray-600">5.0</span>
+<span class="text-xs text-gray-400">(15)</span>
+</div>
+<h4 class="font-bold text-text-main mb-1 line-clamp-2">Embalagens Biodegradáveis para E-commerce - Kit P</h4>
+<p class="text-xs text-gray-500 mb-3">GreenPack Solutions</p>
+<div class="mt-auto pt-3 border-t border-gray-50 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-xs text-gray-400">Sob Consulta</span>
+<span class="text-sm font-bold text-secondary">Ver Preços</span>
+</div>
+<button class="bg-secondary/10 text-secondary p-2 rounded-lg hover:bg-secondary hover:text-white transition-colors">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Novos Anúncios (List View) -->
+<section class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">new_releases</span>
+<h3 class="text-xl font-bold text-text-main">Recém Chegados</h3>
+</div>
+<a class="text-sm font-medium text-primary hover:text-primary-dark hover:underline" href="#">Ver todos</a>
+</div>
+<div class="flex flex-col gap-3">
+<!-- List Item 1 -->
+<div class="bg-white rounded-xl border border-gray-100 p-3 flex gap-4 items-center hover:shadow-md transition-all group">
+<div class="size-20 bg-gray-100 rounded-lg bg-cover bg-center flex-shrink-0" data-alt="Industrial printer ink cartridges" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBLOFTC6DsEfUijgTtEjhhvQC9K_2qQqcHzEzbmiliqc7hQN-VsjlA81EvhwfaRcVZkNHcOqyURhqz2G0r-hXm4azrEu36PER34nyHUHKGt4vnn2Ke863lafPM9Z_pYpy4ZzEgWjaiGEdKfteOAZEeLRGk-Iu4EJHy6X5TpXGrnvV69LTaGwK24fZudmWmlPD1EWAE00al_I_2HmcgEyFya71e-IrQPFZd0BqJQXVuCWahLQVn31eKgqQhBsgHK7t7SI0S2fwy6zG_S');"></div>
+<div class="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<div class="flex gap-2 mb-1">
+<span class="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded font-medium">Insumos</span>
+<span class="text-[10px] text-gray-400">Há 2 horas</span>
+</div>
+<h4 class="font-bold text-text-main">Kit Tintas Industriais Série 500 - Cores CMYK</h4>
+<p class="text-sm text-gray-500">ColorTech Insumos Gráficos</p>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-right hidden md:block">
+<p class="text-xs text-gray-400">Preço por Litro</p>
+<p class="text-lg font-bold text-text-main">R$ 85,00</p>
+</div>
+<button class="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-semibold text-sm rounded-lg hover:bg-gray-50 whitespace-nowrap">
+                                        Detalhes
+                                    </button>
+</div>
+</div>
+</div>
+<!-- List Item 2 -->
+<div class="bg-white rounded-xl border border-gray-100 p-3 flex gap-4 items-center hover:shadow-md transition-all group">
+<div class="size-20 bg-gray-100 rounded-lg bg-cover bg-center flex-shrink-0" data-alt="Industrial cleaning supplies" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBK8PNyncusy8-gnFXI2o8f0rsWf47du3srbniLyWArZyj8DcgAAyFpoqd8P7Td_HlzcxE-rYqHh9k0ul-fWkYmoUHd2enYtgzw5WDnfRS6IbqVhKVNdWKQ0JtQBn6V9N9GIGuOKv3AotzgDXpqoU9mNCoK5mG3hAkBWOMfEGsZJC0MxPIsKshfBuv42gHPfXfJ3mNLj76uoOPqdAisxpKtCkkR5epBP4YiraWkirCJopFEQ0kCs7w80X2wNdlJ94tmXLof8JEt2-Hv');"></div>
+<div class="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<div class="flex gap-2 mb-1">
+<span class="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded font-medium">Limpeza</span>
+<span class="text-[10px] text-gray-400">Há 4 horas</span>
+</div>
+<h4 class="font-bold text-text-main">Detergente Industrial Alcalino 50L - Concentrado</h4>
+<p class="text-sm text-gray-500">CleanMaster Pro</p>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-right hidden md:block">
+<p class="text-xs text-gray-400">Galão 50L</p>
+<p class="text-lg font-bold text-text-main">R$ 145,00</p>
+</div>
+<button class="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-semibold text-sm rounded-lg hover:bg-gray-50 whitespace-nowrap">
+                                        Detalhes
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Recomendados -->
+<section class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">thumb_up</span>
+<h3 class="text-xl font-bold text-text-main">Recomendados para Acme Corp</h3>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+<div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:border-secondary/30 transition-all cursor-pointer">
+<div class="flex justify-between items-start mb-4">
+<div class="size-12 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-gray-400">print</span>
+</div>
+<span class="text-[10px] font-bold text-secondary bg-secondary/10 px-2 py-1 rounded">REPOSIÇÃO</span>
+</div>
+<h4 class="font-bold text-text-main text-lg mb-1">Manutenção de Impressoras</h4>
+<p class="text-sm text-gray-500 mb-4">Baseado no seu histórico de chamados, encontramos parceiros com melhor custo-benefício.</p>
+<div class="flex items-center gap-2 text-sm font-medium text-secondary">
+                                Ver 3 fornecedores
+                                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+<div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:border-secondary/30 transition-all cursor-pointer">
+<div class="flex justify-between items-start mb-4">
+<div class="size-12 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-gray-400">security</span>
+</div>
+<span class="text-[10px] font-bold text-secondary bg-secondary/10 px-2 py-1 rounded">SERVIÇOS</span>
+</div>
+<h4 class="font-bold text-text-main text-lg mb-1">Segurança Patrimonial</h4>
+<p class="text-sm text-gray-500 mb-4">Empresas de monitoramento avaliadas com 5 estrelas na sua região.</p>
+<div class="flex items-center gap-2 text-sm font-medium text-secondary">
+                                Ver opções
+                                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+<div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:border-secondary/30 transition-all cursor-pointer">
+<div class="flex justify-between items-start mb-4">
+<div class="size-12 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-gray-400">coffee</span>
+</div>
+<span class="text-[10px] font-bold text-secondary bg-secondary/10 px-2 py-1 rounded">COPA &amp; COZINHA</span>
+</div>
+<h4 class="font-bold text-text-main text-lg mb-1">Assinatura de Café Corporativo</h4>
+<p class="text-sm text-gray-500 mb-4">Experimente o serviço de comodato de máquinas de café espresso.</p>
+<div class="flex items-center gap-2 text-sm font-medium text-secondary">
+                                Solicitar degustação
+                                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+</body></html>

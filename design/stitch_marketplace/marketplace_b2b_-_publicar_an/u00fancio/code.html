@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Marketplace B2B - Publicar Anúncio</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10B981", // Requested green
+                        "secondary": "#244E5F", // Requested dark blue
+                        "background-light": "#F3F4F6", // Requested background
+                        "background-dark": "#10221c",
+                        "sidebar-dark": "#1F2937",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem", // 12px
+                        "xl": "1rem", 
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-background-light text-slate-900 h-screen flex overflow-hidden selection:bg-primary/20 selection:text-primary">
+<!-- 1. Primary Sidebar (Dark) -->
+<aside class="w-20 bg-sidebar-dark flex flex-col items-center py-6 gap-6 z-20 shrink-0">
+<!-- Logo Icon -->
+<div class="size-10 bg-primary rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-primary/20 cursor-pointer hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-white text-2xl">hexagon</span>
+</div>
+<!-- Nav Icons -->
+<nav class="flex flex-col gap-4 w-full px-2">
+<a class="flex items-center justify-center p-3 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors group relative" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="absolute left-16 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">Dashboard</span>
+</a>
+<a class="flex items-center justify-center p-3 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors group relative" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="absolute left-16 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">Estoque</span>
+</a>
+<a class="flex items-center justify-center p-3 rounded-lg text-white bg-primary shadow-lg shadow-primary/20 group relative" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="absolute left-16 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">Marketplace</span>
+</a>
+<a class="flex items-center justify-center p-3 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors group relative" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="absolute left-16 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">CRM</span>
+</a>
+<a class="flex items-center justify-center p-3 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors group relative" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="absolute left-16 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">Financeiro</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-4 w-full px-2">
+<a class="flex items-center justify-center p-3 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors group relative" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</a>
+<div class="size-10 rounded-full bg-cover bg-center border-2 border-gray-600 cursor-pointer" data-alt="Avatar do usuário" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDEegsJQKpQQ0J3oOnGHuBj_YfHoI76hRjU3ea156dx-OcGMebxn5MYqlyZfec_zdHWLL8NpZVnjniFTfUcZ4voP6IOHbsDvL9rC-uwphKzb-MkzJytDPMhXGNn_HxxpQPE8WZG_VT4DFyGdp_0woKzBYjAHuri2WxWskkrrBexMEIy-z_pEU0FylpwKLjxi0Lz2N4NgY0c0o8UPpSjhcTQPb2QtM7OSL5TkDbpn6fqHkdOlw5zMaLk4fbY4gDpzJy0hN-akmH5Ooc8');"></div>
+</div>
+</aside>
+<!-- 2. Context Sidebar (Light) -->
+<aside class="w-64 bg-white border-r border-slate-200 flex flex-col z-10 hidden md:flex shrink-0">
+<div class="p-6 pb-2 border-b border-slate-100">
+<h1 class="text-slate-900 text-base font-bold leading-tight">Inteligência &amp; Estratégia</h1>
+<p class="text-slate-500 text-xs mt-1">Gestão de Canais</p>
+</div>
+<nav class="flex-1 overflow-y-auto p-4 flex flex-col gap-1">
+<div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 mt-2 px-3">Módulos</div>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-slate-600">bar_chart</span>
+<span class="text-sm font-medium">Análise de Mercado</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-slate-600">groups</span>
+<span class="text-sm font-medium">Concorrência</span>
+</a>
+<!-- Active Item -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] fill-current">shopping_bag</span>
+<span class="text-sm font-semibold">Marketplace B2B</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-slate-600">handshake</span>
+<span class="text-sm font-medium">Parcerias</span>
+</a>
+<div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 mt-6 px-3">Meus Anúncios</div>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-slate-600">list_alt</span>
+<span class="text-sm font-medium">Listar Todos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-slate-600">reviews</span>
+<span class="text-sm font-medium">Avaliações</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-100">
+<div class="bg-indigo-50 rounded-lg p-3 border border-indigo-100">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-indigo-500 mt-0.5 text-xl">rocket_launch</span>
+<div>
+<p class="text-indigo-900 font-semibold text-xs">Impulsione Vendas</p>
+<p class="text-indigo-700 text-[10px] mt-1 leading-snug">Adquira destaque premium para seus anúncios.</p>
+<button class="text-indigo-600 text-[10px] font-bold mt-2 hover:underline">Saiba Mais</button>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- 3. Main Content Area -->
+<main class="flex-1 overflow-y-auto bg-background-light relative w-full">
+<!-- Header / Breadcrumbs -->
+<header class="sticky top-0 z-10 bg-background-light/95 backdrop-blur-sm border-b border-slate-200/50 px-8 py-4">
+<div class="max-w-5xl mx-auto w-full">
+<!-- Breadcrumbs -->
+<nav class="flex items-center text-sm text-slate-500 mb-2">
+<a class="hover:text-primary transition-colors" href="#">Home</a>
+<span class="mx-2 text-slate-300">/</span>
+<a class="hover:text-primary transition-colors" href="#">Marketplace B2B</a>
+<span class="mx-2 text-slate-300">/</span>
+<span class="text-slate-900 font-medium">Publicar Anúncio</span>
+</nav>
+<div class="flex items-center justify-between">
+<div>
+<h1 class="text-2xl font-bold text-slate-900 tracking-tight">Publicar Novo Anúncio</h1>
+<p class="text-slate-500 text-sm mt-1">Preencha os detalhes abaixo para disponibilizar seu produto ou serviço.</p>
+</div>
+<div class="hidden sm:block">
+<button class="text-slate-500 hover:text-slate-800 font-medium text-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-lg">help</span> Ajuda
+                        </button>
+</div>
+</div>
+</div>
+</header>
+<!-- Form Content -->
+<div class="p-8 pb-20">
+<div class="max-w-5xl mx-auto w-full">
+<form class="flex flex-col gap-6">
+<!-- Section 1: Informações Básicas -->
+<div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+<div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+<h3 class="text-slate-800 font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">info</span>
+                                Informações Básicas
+                            </h3>
+</div>
+<div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="md:col-span-2">
+<label class="block text-sm font-medium text-slate-700 mb-1" for="title">Título do Anúncio <span class="text-red-500">*</span></label>
+<input class="w-full rounded-lg border-slate-300 focus:border-primary focus:ring-primary shadow-sm text-slate-800 placeholder:text-slate-400" id="title" placeholder="Ex: Lote de Cadeiras Ergonômicas - 50 Unidades" type="text"/>
+<p class="text-xs text-slate-400 mt-1">Um título claro e descritivo aumenta as chances de venda.</p>
+</div>
+<div>
+<label class="block text-sm font-medium text-slate-700 mb-1" for="category">Categoria <span class="text-red-500">*</span></label>
+<div class="relative">
+<select class="w-full rounded-lg border-slate-300 focus:border-primary focus:ring-primary shadow-sm text-slate-800 appearance-none bg-white" id="category">
+<option disabled="" selected="" value="">Selecione uma categoria</option>
+<option value="mat-prima">Matéria-prima</option>
+<option value="equipamentos">Equipamentos &amp; Máquinas</option>
+<option value="servicos">Serviços Empresariais</option>
+<option value="escritorio">Mobiliário de Escritório</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-slate-500 pointer-events-none">expand_more</span>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-slate-700 mb-1" for="sku">SKU / Código do Produto</label>
+<input class="w-full rounded-lg border-slate-300 focus:border-primary focus:ring-primary shadow-sm text-slate-800" id="sku" placeholder="Ex: CD-ERG-2023" type="text"/>
+</div>
+<div class="md:col-span-2">
+<label class="block text-sm font-medium text-slate-700 mb-1" for="tags">Tags (Palavras-chave)</label>
+<input class="w-full rounded-lg border-slate-300 focus:border-primary focus:ring-primary shadow-sm text-slate-800" id="tags" placeholder="Digite e pressione Enter..." type="text"/>
+</div>
+</div>
+</div>
+<!-- Section 2: Detalhes & Preço -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Left Column: Description -->
+<div class="lg:col-span-2 bg-white rounded-lg shadow-sm border border-slate-200">
+<div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+<h3 class="text-slate-800 font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">description</span>
+                                    Descrição Detalhada
+                                </h3>
+</div>
+<div class="p-6">
+<label class="sr-only" for="description">Descrição</label>
+<div class="border border-slate-300 rounded-lg shadow-sm overflow-hidden focus-within:ring-1 focus-within:ring-primary focus-within:border-primary">
+<!-- Toolbar Mockup -->
+<div class="bg-slate-50 border-b border-slate-200 px-3 py-2 flex items-center gap-2">
+<button class="p-1 hover:bg-slate-200 rounded text-slate-600" type="button"><span class="material-symbols-outlined text-lg">format_bold</span></button>
+<button class="p-1 hover:bg-slate-200 rounded text-slate-600" type="button"><span class="material-symbols-outlined text-lg">format_italic</span></button>
+<div class="w-px h-4 bg-slate-300 mx-1"></div>
+<button class="p-1 hover:bg-slate-200 rounded text-slate-600" type="button"><span class="material-symbols-outlined text-lg">format_list_bulleted</span></button>
+<button class="p-1 hover:bg-slate-200 rounded text-slate-600" type="button"><span class="material-symbols-outlined text-lg">link</span></button>
+</div>
+<textarea class="w-full border-none focus:ring-0 p-3 text-slate-800 resize-none" id="description" placeholder="Descreva seu produto ou serviço com detalhes técnicos, condições de uso, etc." rows="8"></textarea>
+</div>
+</div>
+</div>
+<!-- Right Column: Pricing & Stock -->
+<div class="bg-white rounded-lg shadow-sm border border-slate-200 h-fit">
+<div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+<h3 class="text-slate-800 font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">attach_money</span>
+                                    Preço &amp; Estoque
+                                </h3>
+</div>
+<div class="p-6 flex flex-col gap-4">
+<div>
+<label class="block text-sm font-medium text-slate-700 mb-1" for="price">Preço Unitário <span class="text-red-500">*</span></label>
+<div class="relative">
+<span class="absolute left-3 top-2.5 text-slate-500 font-medium">R$</span>
+<input class="w-full pl-10 rounded-lg border-slate-300 focus:border-primary focus:ring-primary shadow-sm text-slate-800 font-semibold" id="price" placeholder="0,00" type="text"/>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-slate-700 mb-1" for="stock">Quantidade Disponível</label>
+<input class="w-full rounded-lg border-slate-300 focus:border-primary focus:ring-primary shadow-sm text-slate-800" id="stock" placeholder="0" type="number"/>
+</div>
+<div class="flex items-center gap-3 pt-2">
+<div aria-checked="false" class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 bg-slate-200" role="switch">
+<span class="translate-x-0 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+</div>
+<span class="text-sm text-slate-600">Aceitar ofertas</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 3: Mídia -->
+<div class="bg-white rounded-lg shadow-sm border border-slate-200">
+<div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+<h3 class="text-slate-800 font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">imagesmode</span>
+                                Galeria de Imagens
+                            </h3>
+</div>
+<div class="p-6">
+<div class="border-2 border-dashed border-slate-300 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-slate-50 transition-colors cursor-pointer group">
+<div class="bg-primary/10 p-4 rounded-full mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl">cloud_upload</span>
+</div>
+<p class="text-slate-900 font-medium text-sm">Clique para fazer upload ou arraste e solte</p>
+<p class="text-slate-500 text-xs mt-1">SVG, PNG, JPG ou GIF (max. 800x400px)</p>
+</div>
+<!-- Thumbnail Preview (Hidden by default or shown with js) -->
+<div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4 mt-6">
+<div class="relative aspect-square rounded-lg border border-slate-200 overflow-hidden bg-slate-100 group">
+<div class="w-full h-full bg-cover bg-center" data-alt="Preview de imagem 1" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBhTSmlRR4U1bziHgdCfzLYtA2cIUzShsDS8g9yXY_ML6tg9o-VukvDuyVJ822HLckAjdcHmHpBWQJfya8VSNQGMWjxOYzM8Z9S30Mfdb2sJXFsqQQUVgHKQWRn7jHyI7YwKWwcPfd4dBx5zI6jXpdkJf28fOmmMIABRx9SOE4dhJzqDkCfknq_Yyk-zL6rLWsiJKbvpPVvHd9rghofil7Il8HmoQJ12rwm884gI-k6Nl9p7AwatyJ4yV1RVuIEW9YUJBV965mZvPQQ');"></div>
+<button class="absolute top-1 right-1 bg-white/80 hover:bg-white rounded-full p-1 text-slate-700 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity" type="button">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div>
+<div class="relative aspect-square rounded-lg border border-slate-200 overflow-hidden bg-slate-100 flex items-center justify-center text-slate-400">
+<span class="material-symbols-outlined">add_photo_alternate</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 4: Contato -->
+<div class="bg-white rounded-lg shadow-sm border border-slate-200">
+<div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+<h3 class="text-slate-800 font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">contact_mail</span>
+                                Informações de Contato
+                            </h3>
+</div>
+<div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+<div>
+<label class="block text-sm font-medium text-slate-700 mb-1" for="contact_name">Nome do Vendedor</label>
+<input class="w-full rounded-lg border-slate-300 focus:border-primary focus:ring-primary shadow-sm text-slate-800 bg-slate-50" id="contact_name" readonly="" type="text" value="João Silva (UNIQ ERP)"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-slate-700 mb-1" for="contact_email">E-mail para Contato</label>
+<input class="w-full rounded-lg border-slate-300 focus:border-primary focus:ring-primary shadow-sm text-slate-800" id="contact_email" type="email" value="joao.silva@empresa.com.br"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-slate-700 mb-1" for="contact_phone">Telefone / WhatsApp</label>
+<input class="w-full rounded-lg border-slate-300 focus:border-primary focus:ring-primary shadow-sm text-slate-800" id="contact_phone" placeholder="(00) 00000-0000" type="tel"/>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-4 pt-4 border-t border-slate-200">
+<button class="w-full sm:w-auto px-6 py-2.5 rounded-lg border border-secondary text-secondary font-medium hover:bg-secondary/5 transition-colors focus:ring-2 focus:ring-secondary/20" type="button">
+                            Cancelar
+                        </button>
+<button class="w-full sm:w-auto px-8 py-2.5 rounded-lg bg-primary text-white font-bold shadow-lg shadow-primary/30 hover:bg-[#0ea874] hover:shadow-xl hover:shadow-primary/40 transition-all transform hover:-translate-y-0.5 focus:ring-2 focus:ring-primary/50 flex items-center justify-center gap-2" type="submit">
+<span class="material-symbols-outlined text-lg">publish</span>
+                            Publicar Anúncio
+                        </button>
+</div>
+</form>
+</div>
+</div>
+</main>
+</body></html>

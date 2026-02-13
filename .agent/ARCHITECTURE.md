@@ -54,6 +54,9 @@ Specialist AI personas for different domains.
 | `qa-automation-engineer` | E2E testing, CI pipelines | webapp-testing, testing-patterns |
 | `code-archaeologist` | Legacy code, refactoring | clean-code, code-review-checklist |
 | `explorer-agent` | Codebase analysis | - |
+| `vibe-researcher` | Vibe Coding Research Phase | documentation-writer, code-archaeologist |
+| `vibe-planner` | Vibe Coding Spec Phase | plan-writing, brainstorming |
+| `vibe-implementer` | Vibe Coding Implementation Phase | clean-code, app-builder |
 
 ---
 

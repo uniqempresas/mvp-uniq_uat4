@@ -15,6 +15,7 @@ import CategoriesPage from './pages/Finance/CategoriesPage'
 import CRMLayout from './pages/CRM/CRMLayout'
 import { ModuleProvider } from './contexts/ModuleContext'
 import ModulesPage from './pages/Modules'
+import StoreConfig from './pages/Dashboard/StoreConfig'
 import ForgotPassword from './pages/Auth/ForgotPassword'
 import UpdatePassword from './pages/Auth/UpdatePassword'
 
@@ -44,6 +45,9 @@ function App() {
 
             {/* Modules Management */}
             <Route path="/modules" element={<ModulesPage />} />
+
+            {/* Storefront Configuration */}
+            <Route path="/dashboard/store-config" element={<StoreConfig />} />
           </Route>
 
           {/* Public Storefront */}

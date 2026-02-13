@@ -38,7 +38,8 @@ export const MAIN_NAV_ITEMS: MenuItem[] = [
     {
         id: 'storefront',
         icon: 'storefront',
-        label: 'Loja',
+        label: 'Loja Virtual',
+        route: '/dashboard/store-config',
         moduleCode: 'storefront'
     },
     {

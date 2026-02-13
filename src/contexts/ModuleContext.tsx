@@ -43,10 +43,11 @@ export const ModuleProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         init();
 
         // Listen for auth changes
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
             if (event === 'SIGNED_IN' && session) {
                 setIsLoading(true);
-                await loadModules();
+                // Don't await this, let it run in background so it doesn't block login
+                loadModules().catch(err => console.error("Error loading modules in background", err));
             } else if (event === 'SIGNED_OUT') {
                 setActiveModules([]);
                 setIsLoading(false);

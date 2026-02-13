@@ -1,73 +1,56 @@
-# React + TypeScript + Vite
+# UNIQ Template - Metodologia de Desenvolvimento
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este template consolida a metodologia de desenvolvimento da UNIQ Empresas, integrando agentes especializados, Vibe Coding e um sistema de tracking padronizado.
 
-Currently, two official plugins are available:
+## 📁 Estrutura
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+.
+├── .agent/                          # Infraestrutura de Agentes (Cérebro do Projeto)
+│   ├── agents/                      # Agentes especializados e Vibe Agents
+│   ├── skills/                      # Habilidades compartilhadas
+│   ├── scripts/                     # Scripts de automação e verificação
+│   └── workflows/                   # Fluxos de trabalho (/research, /spec, /implement)
+├── tracking/                        # Metodologia de Gestão Ágil Simplificada
+│   ├── TRACKING.md                  # Dashboard da Sprint Atual
+│   ├── TRACKING_Backlog.md          # Backlog Geral do Produto
+│   └── TRACKING_GUIDE.md            # Guia de como usar o tracking
+├── METODOLOGIA_VIBE_CODING.md       # Referência da metodologia SDD (Spec Driven Development)
+└── README.md                        # Este arquivo
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🚀 Como Usar em Novos Projetos
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1.  **Copie o conteúdo** desta pasta para a raiz do seu novo projeto.
+2.  **Inicialize o Tracking**:
+    - Edite `tracking/TRACKING.md` com o nome do projeto.
+    - Comece a popular `tracking/TRACKING_Backlog.md`.
+3.  **Active os Agentes**:
+    - Certifique-se de que sua ferramenta de AI (ex: Cline, Aider, etc.) está configurada para ler a pasta `.agent`.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🤖 Vibe Coding Workflow
+
+A metodologia Vibe Coding divide o desenvolvimento em 3 fases para maximizar o contexto e qualidade:
+
+### 1. Pesquisa (`/research`)
+Use o chatbot para invocar o agente de pesquisa:
+> "Quero fazer a feature X. /research"
+
+Isso gerará relatórios de contexto sem alucinar código.
+
+### 2. Especificação (`/spec`)
+Com base na pesquisa, crie um plano técnico:
+> "Com base no research, /spec a feature X"
+
+O agente criará um Implementation Plan detalhado em `thoughts/shared/plans/`.
+
+### 3. Implementação (`/implement`)
+Execute o plano de forma focada:
+> "/implement o plano X"
+
+O agente escreverá o código e testará conforme os critérios definidos.
+
+## 🛠 Manutenção
+
+- **Adicionar Novos Agentes**: Crie novos arquivos `.md` em `.agent/agents/`.
+- **Scripts Globais**: Adicione scripts úteis em `.agent/scripts/`.

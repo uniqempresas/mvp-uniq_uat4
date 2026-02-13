@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Meus Pedidos - Marketplace B2B</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b77f", // Matching prompt #10B981 vibe but using theme req
+                        "primary-dark": "#059669",
+                        "secondary-accent": "#244E5F",
+                        "dark-sidebar": "#1F2937",
+                        "background-light": "#F3F4F6", // Prompt requested #F3F4F6
+                        "background-dark": "#10221c",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem", // 12px
+                        "xl": "1rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        "sm": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                        "soft": "0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02)",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for sidebars */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: rgba(0,0,0,0.1);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="flex h-screen w-full overflow-hidden bg-background-light text-slate-900 antialiased selection:bg-primary/20 selection:text-primary">
+<!-- Primary Sidebar (Dark) -->
+<aside class="flex w-20 flex-col items-center gap-6 border-r border-gray-800 bg-dark-sidebar py-6 shrink-0 z-20">
+<!-- Brand / Logo -->
+<div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-emerald-600 text-white shadow-lg">
+<span class="material-symbols-outlined text-2xl font-bold">diamond</span>
+</div>
+<!-- Global Nav Icons -->
+<nav class="flex flex-1 flex-col gap-4 w-full px-2 mt-4">
+<a class="group relative flex size-12 items-center justify-center rounded-xl text-gray-400 transition-all hover:bg-gray-700 hover:text-white mx-auto" href="#">
+<span class="material-symbols-outlined text-[24px]">dashboard</span>
+<span class="absolute left-14 z-50 hidden whitespace-nowrap rounded bg-gray-900 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:block group-hover:opacity-100">Dashboard</span>
+</a>
+<a class="group relative flex size-12 items-center justify-center rounded-xl text-gray-400 transition-all hover:bg-gray-700 hover:text-white mx-auto" href="#">
+<span class="material-symbols-outlined text-[24px]">attach_money</span>
+<span class="absolute left-14 z-50 hidden whitespace-nowrap rounded bg-gray-900 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:block group-hover:opacity-100">Financeiro</span>
+</a>
+<a class="group relative flex size-12 items-center justify-center rounded-xl text-gray-400 transition-all hover:bg-gray-700 hover:text-white mx-auto" href="#">
+<span class="material-symbols-outlined text-[24px]">inventory_2</span>
+<span class="absolute left-14 z-50 hidden whitespace-nowrap rounded bg-gray-900 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:block group-hover:opacity-100">Estoque</span>
+</a>
+<!-- Active Context Indicator -->
+<a class="group relative flex size-12 items-center justify-center rounded-xl bg-gray-700 text-white shadow-inner shadow-white/10 mx-auto" href="#">
+<span class="material-symbols-outlined text-[24px]">storefront</span>
+<span class="absolute left-14 z-50 hidden whitespace-nowrap rounded bg-gray-900 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:block group-hover:opacity-100">Marketplace</span>
+</a>
+<a class="group relative flex size-12 items-center justify-center rounded-xl text-gray-400 transition-all hover:bg-gray-700 hover:text-white mx-auto" href="#">
+<span class="material-symbols-outlined text-[24px]">group</span>
+<span class="absolute left-14 z-50 hidden whitespace-nowrap rounded bg-gray-900 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:block group-hover:opacity-100">CRM</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-4 px-2 w-full">
+<a class="group relative flex size-12 items-center justify-center rounded-xl text-gray-400 transition-all hover:bg-gray-700 hover:text-white mx-auto" href="#">
+<span class="material-symbols-outlined text-[24px]">settings</span>
+</a>
+<div class="h-px w-full bg-gray-700"></div>
+<div class="bg-cover bg-center size-10 rounded-full cursor-pointer border-2 border-gray-600 mx-auto" data-alt="User profile avatar of a man with glasses" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuACZU9iAXjBFxYLNo3wdv8Udr2XDLryERcsUOUP1wgshNFuay7sKbPO-1d0FdKeNjH5rRcs5FzPFP20tEXJlJdSyQCzFwgGlDogoyuUlcJl7_lVPOw6lHImSQ5TPlH6v5LNdMLOG_6Y1O5Zl4CZ8eTwg4nGp9dkrNjo1s4sbK6LOlqWFHJ7Hu_HD6lWbSKBKqeb2c09OUMjE2PVsAkqUz5mOEl1TMHMafZlmxuJXsS_42vVPpqCoqdqaIsVyB4tDdczZQJ4ba5rDbjS');"></div>
+</div>
+</aside>
+<!-- Context Sidebar (Light) -->
+<aside class="hidden w-64 flex-col border-r border-slate-200 bg-white lg:flex z-10">
+<div class="p-6">
+<h2 class="text-xs font-bold uppercase tracking-wider text-primary">Módulo</h2>
+<h1 class="mt-1 text-lg font-bold text-slate-900">Inteligência &amp;<br/>Estratégia</h1>
+</div>
+<nav class="flex-1 overflow-y-auto px-4 pb-4 custom-scrollbar">
+<div class="space-y-1">
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900" href="#">
+<span class="material-symbols-outlined text-[20px]">pie_chart</span>
+                    Visão Geral
+                </a>
+<!-- Expanded Section -->
+<div class="space-y-1 py-2">
+<button class="flex w-full items-center justify-between rounded-lg bg-slate-50 px-3 py-2 text-left text-sm font-semibold text-slate-900">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px] text-primary">store</span>
+                            Marketplace B2B
+                        </div>
+<span class="material-symbols-outlined text-[16px]">expand_less</span>
+</button>
+<div class="relative ml-4 space-y-1 border-l-2 border-slate-100 pl-4 pt-1">
+<a class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-500 transition-colors hover:text-primary" href="#">
+                            Explorar Produtos
+                        </a>
+<a class="flex items-center justify-between rounded-lg bg-primary/10 px-3 py-2 text-sm font-medium text-primary transition-colors" href="#">
+                            Meus Pedidos
+                            <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</a>
+<a class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-500 transition-colors hover:text-primary" href="#">
+                            Favoritos
+                        </a>
+<a class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-500 transition-colors hover:text-primary" href="#">
+                            Carrinho <span class="ml-1 inline-flex items-center justify-center rounded-full bg-slate-200 px-1.5 py-0.5 text-[10px] text-slate-600">3</span>
+</a>
+</div>
+</div>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900" href="#">
+<span class="material-symbols-outlined text-[20px]">local_shipping</span>
+                    Fornecedores
+                </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900" href="#">
+<span class="material-symbols-outlined text-[20px]">description</span>
+                    Relatórios
+                </a>
+</div>
+</nav>
+<div class="border-t border-slate-100 p-4">
+<div class="rounded-xl bg-gradient-to-br from-secondary-accent to-slate-800 p-4 text-white shadow-lg">
+<div class="mb-2 flex size-8 items-center justify-center rounded-lg bg-white/20">
+<span class="material-symbols-outlined text-sm">support_agent</span>
+</div>
+<h3 class="text-sm font-semibold">Precisa de ajuda?</h3>
+<p class="mt-1 text-xs text-slate-300">Fale com nosso suporte B2B dedicado.</p>
+<button class="mt-3 w-full rounded-lg bg-white py-1.5 text-xs font-semibold text-slate-900 transition-colors hover:bg-slate-100">
+                    Abrir Chamado
+                </button>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex h-full flex-1 flex-col overflow-hidden bg-[#F3F4F6]">
+<!-- Top Header Area -->
+<header class="flex h-16 shrink-0 items-center justify-between gap-4 border-b border-slate-200 bg-white px-6 shadow-sm sm:px-8">
+<div class="flex items-center gap-2 text-sm text-slate-500">
+<a class="hover:text-primary transition-colors" href="#">Home</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Marketplace B2B</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="font-medium text-slate-900">Meus Pedidos</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative flex size-10 items-center justify-center rounded-full bg-slate-50 text-slate-600 hover:bg-slate-100 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 rounded-full bg-red-500 border border-white"></span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-6 sm:p-8 custom-scrollbar">
+<div class="mx-auto max-w-6xl space-y-8">
+<!-- Page Title -->
+<div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+<div>
+<h1 class="text-3xl font-black tracking-tight text-slate-900">Meus Pedidos</h1>
+<p class="mt-2 text-base text-slate-500">Acompanhe o status e histórico de todas as suas compras corporativas.</p>
+</div>
+<div class="flex gap-2">
+<button class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+                            Exportar CSV
+                        </button>
+</div>
+</div>
+<!-- Filters & Search -->
+<div class="grid grid-cols-1 gap-4 rounded-2xl bg-white p-4 shadow-sm sm:grid-cols-12 lg:items-center">
+<div class="sm:col-span-12 lg:col-span-5">
+<label class="relative block w-full">
+<span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+<span class="material-symbols-outlined">search</span>
+</span>
+<input class="block w-full rounded-xl border-none bg-slate-50 py-3 pl-10 pr-3 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-primary focus:bg-white transition-all shadow-inner" name="search" placeholder="Buscar por ID, produto ou fornecedor..." type="text"/>
+</label>
+</div>
+<div class="sm:col-span-6 lg:col-span-3">
+<div class="relative">
+<select class="block w-full appearance-none rounded-xl border-none bg-slate-50 py-3 pl-4 pr-10 text-sm font-medium text-slate-700 focus:ring-2 focus:ring-primary cursor-pointer shadow-inner">
+<option>Todos os Status</option>
+<option>Em Processamento</option>
+<option>Em Trânsito</option>
+<option>Entregue</option>
+<option>Cancelado</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+<div class="sm:col-span-6 lg:col-span-4">
+<div class="relative">
+<button class="flex w-full items-center justify-between rounded-xl bg-slate-50 py-3 px-4 text-left text-sm font-medium text-slate-700 shadow-inner hover:bg-slate-100 focus:ring-2 focus:ring-primary transition-colors">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-slate-400">calendar_month</span>
+                                    Últimos 30 dias
+                                </span>
+<span class="material-symbols-outlined text-slate-400">expand_more</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Orders List -->
+<div class="flex flex-col gap-5">
+<!-- Order Card 1: Processing -->
+<div class="group relative overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition-all hover:shadow-md hover:border-slate-200">
+<!-- Top Accent Bar -->
+<div class="h-1.5 w-full bg-blue-500"></div>
+<div class="p-5 sm:p-6">
+<div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+<!-- Order Info -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-3">
+<h3 class="text-lg font-bold text-slate-900">Pedido #4829-B</h3>
+<span class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-700 border border-blue-100">
+<span class="h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                                            Processando
+                                        </span>
+</div>
+<div class="flex items-center gap-3 text-sm text-slate-500">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">event</span> 24 Out, 2023</span>
+<span class="h-1 w-1 rounded-full bg-slate-300"></span>
+<span class="font-medium text-slate-700">R$ 4.350,00</span>
+<span class="h-1 w-1 rounded-full bg-slate-300"></span>
+<span>12 Itens</span>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-3">
+<button class="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-secondary-accent text-secondary-accent bg-white px-4 text-sm font-semibold transition-all hover:bg-secondary-accent/5 focus:ring-2 focus:ring-secondary-accent/20">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+                                        Contatar Vendedor
+                                    </button>
+<button class="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-slate-200 text-slate-400 px-4 text-sm font-semibold cursor-not-allowed">
+                                        Rastrear
+                                    </button>
+</div>
+</div>
+<div class="mt-6 border-t border-slate-100 pt-5">
+<div class="flex flex-col gap-4 sm:flex-row sm:items-center">
+<!-- Vendor -->
+<div class="flex w-full sm:w-1/3 items-center gap-3">
+<div class="relative size-10 overflow-hidden rounded-full border border-slate-100">
+<img alt="Logo da TechSul" class="h-full w-full object-cover" data-alt="Vendor logo for TechSul" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAixV56mswkLRbTxk3S8aNRUTY2NJq_rcTjzMkv_SEWIoENuWMSAmCFsZnEWnvxEctJb56oI8W2ppouhBeysRL5D-jbtpU1FjOn7LQkUEQPrOhGuMZit-DWiv5HhUD7eAmCf7cGHV2VaEqrIVBz0Bb2sxh8vDl62AC8XUxaoEjE2XBXGscE0_bQ4w6JlHQE2POiolRKdmE2F8Iu2qmrCFbCsLUIe_K-EReLWgwKF6x6K42-3V9db46fST7wybv5IyxazWK_roPTtcQr"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-medium text-slate-400 uppercase">Fornecedor</span>
+<span class="text-sm font-semibold text-slate-900">TechSul Distribuidora</span>
+</div>
+</div>
+<!-- Items Preview -->
+<div class="flex flex-1 items-center gap-3 overflow-x-auto pb-2 sm:pb-0">
+<div class="flex -space-x-3">
+<div class="relative h-10 w-10 overflow-hidden rounded-lg border-2 border-white bg-slate-100 shadow-sm" data-alt="Thumbnail of Dell Monitor">
+<div class="flex h-full w-full items-center justify-center bg-gray-200 text-xs text-gray-500">Img</div>
+</div>
+<div class="relative h-10 w-10 overflow-hidden rounded-lg border-2 border-white bg-slate-100 shadow-sm" data-alt="Thumbnail of Logitech Mouse">
+<div class="flex h-full w-full items-center justify-center bg-gray-300 text-xs text-gray-500">Img</div>
+</div>
+<div class="relative h-10 w-10 overflow-hidden rounded-lg border-2 border-white bg-slate-100 shadow-sm" data-alt="Thumbnail of HDMI Cable">
+<div class="flex h-full w-full items-center justify-center bg-gray-200 text-xs text-gray-500">Img</div>
+</div>
+</div>
+<span class="text-xs font-medium text-slate-500">+ 9 outros produtos</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Order Card 2: In Transit -->
+<div class="group relative overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition-all hover:shadow-md hover:border-slate-200">
+<div class="h-1.5 w-full bg-orange-500"></div>
+<div class="p-5 sm:p-6">
+<div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-3">
+<h3 class="text-lg font-bold text-slate-900">Pedido #4810-A</h3>
+<span class="inline-flex items-center gap-1 rounded-full bg-orange-50 px-2.5 py-0.5 text-xs font-semibold text-orange-700 border border-orange-100">
+<span class="material-symbols-outlined text-[14px]">local_shipping</span>
+                                            Em Trânsito
+                                        </span>
+</div>
+<div class="flex items-center gap-3 text-sm text-slate-500">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">event</span> 20 Out, 2023</span>
+<span class="h-1 w-1 rounded-full bg-slate-300"></span>
+<span class="font-medium text-slate-700">R$ 12.890,50</span>
+<span class="h-1 w-1 rounded-full bg-slate-300"></span>
+<span>35 Itens</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-secondary-accent text-secondary-accent bg-white px-4 text-sm font-semibold transition-all hover:bg-secondary-accent/5">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+                                        Contatar
+                                    </button>
+<button class="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-primary text-white px-6 text-sm font-bold shadow-md shadow-primary/20 transition-all hover:bg-primary-dark hover:shadow-lg focus:ring-2 focus:ring-primary focus:ring-offset-2">
+<span class="material-symbols-outlined text-[18px]">map</span>
+                                        Acompanhar Entrega
+                                    </button>
+</div>
+</div>
+<div class="mt-6 border-t border-slate-100 pt-5">
+<div class="flex flex-col gap-4 sm:flex-row sm:items-center">
+<div class="flex w-full sm:w-1/3 items-center gap-3">
+<div class="relative size-10 overflow-hidden rounded-full border border-slate-100">
+<img alt="Logo da Office Plus" class="h-full w-full object-cover" data-alt="Vendor logo for Office Plus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiBxybPdukauxvPQnsBn5l6aCJjQGNrj759mgkMiDnvVe6_ebbFwZXliabPC6_-jrOuWw2jzaMyxbI-5NysHm0cHMKFEFVJHxoaXBDRAnFMer6a5aA0XrC1--E-5z1uLsd8Ze1K25s7YAp-d0_J2d35EAl-TSEYWjRvRmW_e14cormjg_Be06TmQFVMidrWOyx2cYQfUqq1nMlTenZJ-u-yjN5j_rgNkY3Viv6299N85zb1EM3G3jGUuvoBX-ZIjWr3vzhEjcgjtO5"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-medium text-slate-400 uppercase">Fornecedor</span>
+<span class="text-sm font-semibold text-slate-900">Office Plus Mobiliário</span>
+</div>
+</div>
+<div class="flex flex-1 items-center gap-3 overflow-x-auto pb-2 sm:pb-0">
+<div class="flex -space-x-3">
+<div class="relative h-10 w-10 overflow-hidden rounded-lg border-2 border-white bg-slate-100 shadow-sm" data-alt="Thumbnail of Office Chair">
+<div class="flex h-full w-full items-center justify-center bg-gray-200 text-xs text-gray-500">Img</div>
+</div>
+<div class="relative h-10 w-10 overflow-hidden rounded-lg border-2 border-white bg-slate-100 shadow-sm" data-alt="Thumbnail of Standing Desk">
+<div class="flex h-full w-full items-center justify-center bg-gray-300 text-xs text-gray-500">Img</div>
+</div>
+</div>
+<span class="text-xs font-medium text-slate-500">+ 33 outros produtos</span>
+</div>
+<div class="text-right text-xs text-slate-400">
+                                        Chega em: <span class="font-bold text-slate-900">27 Out</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Order Card 3: Delivered -->
+<div class="group relative overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition-all hover:shadow-md hover:border-slate-200">
+<div class="h-1.5 w-full bg-primary"></div>
+<div class="p-5 sm:p-6">
+<div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-3">
+<h3 class="text-lg font-bold text-slate-900">Pedido #4790-X</h3>
+<span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-primary border border-emerald-100">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                            Entregue
+                                        </span>
+</div>
+<div class="flex items-center gap-3 text-sm text-slate-500">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">event</span> 15 Out, 2023</span>
+<span class="h-1 w-1 rounded-full bg-slate-300"></span>
+<span class="font-medium text-slate-700">R$ 890,00</span>
+<span class="h-1 w-1 rounded-full bg-slate-300"></span>
+<span>4 Itens</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-secondary-accent text-secondary-accent bg-white px-4 text-sm font-semibold transition-all hover:bg-secondary-accent/5">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+                                        Contatar
+                                    </button>
+<button class="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white text-slate-700 px-4 text-sm font-semibold hover:bg-slate-50 transition-all">
+<span class="material-symbols-outlined text-[18px]">receipt</span>
+                                        Nota Fiscal
+                                    </button>
+<button class="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-secondary-accent text-white px-6 text-sm font-bold shadow-md shadow-secondary-accent/20 transition-all hover:bg-[#1a3a48]">
+<span class="material-symbols-outlined text-[18px]">autorenew</span>
+                                        Comprar Novamente
+                                    </button>
+</div>
+</div>
+<div class="mt-6 border-t border-slate-100 pt-5">
+<div class="flex flex-col gap-4 sm:flex-row sm:items-center">
+<div class="flex w-full sm:w-1/3 items-center gap-3">
+<div class="relative size-10 overflow-hidden rounded-full border border-slate-100">
+<img alt="Logo da Clean Corp" class="h-full w-full object-cover" data-alt="Vendor logo for Clean Corp" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCn4Nuf2hhXdgWUicz93M8_lZEaterhEDv9Y9Dd3aAP5aafXD-J2aLZDW6vZCW50SbxFFCSzT7G-e0FDAy1N4KTEruwCdAu85tOD_IphT7cfrTXpZSB7ohQzUERHj6NvpvJCzwRlyK04UPQohEIs0b_ce2HQQpd_FbTVoHdDS5lQ5j06Q2zhHT0dW-VKdztBGBr0Brw8CBGz30TyOjHc10N7-K1EqRFag8B3lYFiP9bGmss-pfi-ZkYJtHvA1TW3eB5TxfV1gUaID08"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-medium text-slate-400 uppercase">Fornecedor</span>
+<span class="text-sm font-semibold text-slate-900">Clean Corp Industrial</span>
+</div>
+</div>
+<div class="flex flex-1 items-center gap-3 overflow-x-auto pb-2 sm:pb-0">
+<div class="flex -space-x-3">
+<div class="relative h-10 w-10 overflow-hidden rounded-lg border-2 border-white bg-slate-100 shadow-sm" data-alt="Thumbnail of Paper Towels">
+<div class="flex h-full w-full items-center justify-center bg-gray-200 text-xs text-gray-500">Img</div>
+</div>
+<div class="relative h-10 w-10 overflow-hidden rounded-lg border-2 border-white bg-slate-100 shadow-sm" data-alt="Thumbnail of Cleaning Spray">
+<div class="flex h-full w-full items-center justify-center bg-gray-300 text-xs text-gray-500">Img</div>
+</div>
+</div>
+<span class="text-xs font-medium text-slate-500">+ 2 outros produtos</span>
+</div>
+<div class="text-right text-xs text-emerald-600 font-medium bg-emerald-50 px-3 py-1 rounded-full">
+                                        Entregue em 18 Out
+                                    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-between border-t border-slate-200 py-4">
+<div class="text-sm text-slate-500">
+                        Mostrando <span class="font-medium text-slate-900">1</span> a <span class="font-medium text-slate-900">3</span> de <span class="font-medium text-slate-900">24</span> pedidos
+                    </div>
+<div class="flex gap-2">
+<button class="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-900 disabled:opacity-50">
+                            Anterior
+                        </button>
+<button class="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium text-slate-900 hover:bg-slate-50">
+                            Próxima
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
