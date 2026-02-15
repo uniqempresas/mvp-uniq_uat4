@@ -47,6 +47,9 @@
 - [ ] Criar `BannerManager.tsx` para CRUD de banners
 - [ ] Modificar `MainSidebar.tsx` para ativação do módulo
 
+#### 🛡️ Qualidade e Testes
+- [x] Implementar testes E2E do fluxo de Onboarding (Nova Empresa)
+
 ---
 
 ## 🧪 Checklist de Validação (QA)

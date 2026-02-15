@@ -58,52 +58,31 @@ export default function StoreConfig() {
                         </div>
                     </div>
 
-                    {/* Tabs */}
-                    <div className="border-b border-gray-200 dark:border-gray-800 mb-6">
+                    {/* Tabs - Modern Soft Navigation */}
+                    <div className="border-b border-gray-100 dark:border-gray-800 mb-8">
                         <nav className="-mb-px flex gap-8 overflow-x-auto no-scrollbar">
+                            {[
+                                { id: 'general', label: 'Informações Gerais' },
+                                { id: 'products', label: 'Vitrine & Produtos' },
+                                { id: 'appearance', label: 'Aparência' },
+                                { id: 'banners', label: 'Banners' },
+                            ].map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`border-b-2 py-4 px-1 text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === tab.id
+                                        ? 'border-primary text-primary'
+                                        : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300'
+                                        }`}
+                                >
+                                    {tab.label}
+                                </button>
+                            ))}
                             <button
-                                onClick={() => setActiveTab('general')}
-                                className={`border-b-2 py-4 px-1 text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'general'
-                                    ? 'border-primary text-primary'
-                                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300'
-                                    }`}
-                            >
-                                Informações Básicas
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('products')}
-                                className={`border-b-2 py-4 px-1 text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'products'
-                                    ? 'border-primary text-primary'
-                                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300'
-                                    }`}
-                            >
-                                Produtos & Vitrine
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('branding')}
                                 disabled
-                                className="border-b-2 border-transparent py-4 px-1 text-sm font-medium text-gray-400 cursor-not-allowed opacity-60"
-                                title="Em breve"
+                                className="border-b-2 border-transparent py-4 px-1 text-sm font-medium text-gray-400 cursor-not-allowed flex items-center gap-2 opacity-60"
                             >
-                                Branding <span className="text-[10px] bg-gray-100 dark:bg-gray-800 px-1 rounded ml-1">Em breve</span>
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('appearance')}
-                                className={`border-b-2 py-4 px-1 text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'appearance'
-                                    ? 'border-primary text-primary'
-                                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300'
-                                    }`}
-                            >
-                                Aparência
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('banners')}
-                                className={`border-b-2 py-4 px-1 text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'banners'
-                                    ? 'border-primary text-primary'
-                                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300'
-                                    }`}
-                            >
-                                Banners & Hero
+                                Branding <span className="text-[10px] bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full">Em breve</span>
                             </button>
                         </nav>
                     </div>
