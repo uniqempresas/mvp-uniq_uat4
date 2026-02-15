@@ -8,11 +8,11 @@ export default {
     theme: {
         extend: {
             colors: {
-                "primary": "#10b77f", // Updated from #10B981
-                "primary-hover": "#0a8a5f",
-                "secondary": "#244E5F",
-                "background-light": "#f6f8f7", // Updated from #F3F4F6
-                "background-dark": "#10221c", // Updated from #0f2313
+                "primary": "var(--primary-color, #10b77f)",
+                "primary-hover": "var(--primary-hover-color, #0a8a5f)",
+                "secondary": "var(--secondary-color, #244E5F)",
+                "background-light": "#f6f8f7",
+                "background-dark": "#10221c",
                 "surface-light": "#FFFFFF",
                 "surface-dark": "#1F2937",
                 "sidebar-dark": "#1F2937",

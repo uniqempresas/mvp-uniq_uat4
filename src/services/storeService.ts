@@ -28,9 +28,10 @@ export interface StoreConfig {
 
 export interface StoreData {
     slug: string
-    avatar_url?: string // Logo
+    logo_url?: string // Logo da empresa
     nome_fantasia: string // Nome da Loja
     store_config: StoreConfig
+    appearance?: any // Configurações visuais (banners, cores, etc)
 }
 
 export const storeService = {
@@ -40,7 +41,7 @@ export const storeService = {
 
         const { data, error } = await supabase
             .from('me_empresa')
-            .select('slug, avatar_url, nome_fantasia, store_config')
+            .select('slug, logo_url, nome_fantasia, store_config, appearance')
             .eq('id', empresaId)
             .single()
 
@@ -51,9 +52,10 @@ export const storeService = {
 
         return {
             slug: data.slug,
-            avatar_url: data.avatar_url,
+            logo_url: data.logo_url,
             nome_fantasia: data.nome_fantasia,
-            store_config: data.store_config || {}
+            store_config: data.store_config || {},
+            appearance: data.appearance || {}
         }
     },
 
@@ -61,36 +63,58 @@ export const storeService = {
         const empresaId = await authService.getEmpresaId()
         if (!empresaId) throw new Error('Empresa não encontrada')
 
-        // Separate flattened fields from store_config
-        const { store_config, ...mainFields } = data
-
-        // If store_config is partial, we need to merge it? 
-        // Or we assume the frontend sends the whole object?
-        // Better to merge if possible, or frontend sends complete info.
-        // Let's assume frontend sends strictly what needs to be updated.
-        // But store_config is a JSONB column. Updating it partially in SQL is tricky without fetching first or using jsonb_set.
-        // For simplicity, if store_config is provided, we might want to fetch existing config and merge, OR frontend sends full config.
-        // Given the UI is a form, standard practice is to send the full updated config object or we merge here.
-
+        const { store_config, appearance, ...mainFields } = data
         let updates: any = { ...mainFields }
 
+        // Fetch current data to merge JSONB fields
+        const { data: currentData } = await supabase
+            .from('me_empresa')
+            .select('store_config, appearance')
+            .eq('id', empresaId)
+            .single()
+
         if (store_config) {
-            // If we want to support partial updates to store_config deeply, we need to fetch first.
-            // But let's assume the component invokes getStoreConfig, modifies the object, and sends it back.
-            // So we can just save it.
-            // However, to be safe against overwriting other future fields in store_config, merging is better.
-            // But for now, let's just save what is passed, assuming it's the full config for that section.
-            // Wait, if we have checks, we should probably merge.
-
-            // Let's do a merge strategy if store_config is present
-            const { data: currentData } = await supabase
-                .from('me_empresa')
-                .select('store_config')
-                .eq('id', empresaId)
-                .single()
-
             const currentConfig = currentData?.store_config || {}
-            updates.store_config = { ...currentConfig, ...store_config }
+            const mergedConfig = { ...currentConfig } as Record<string, any>
+
+            for (const [key, value] of Object.entries(store_config)) {
+                if (
+                    value !== null &&
+                    typeof value === 'object' &&
+                    !Array.isArray(value) &&
+                    typeof mergedConfig[key] === 'object' &&
+                    mergedConfig[key] !== null &&
+                    !Array.isArray(mergedConfig[key])
+                ) {
+                    mergedConfig[key] = { ...mergedConfig[key], ...value }
+                } else {
+                    mergedConfig[key] = value
+                }
+            }
+
+            updates.store_config = mergedConfig
+        }
+
+        if (appearance) {
+            const currentAppearance = currentData?.appearance || {}
+            const mergedAppearance = { ...currentAppearance } as Record<string, any>
+
+            for (const [key, value] of Object.entries(appearance)) {
+                if (
+                    value !== null &&
+                    typeof value === 'object' &&
+                    !Array.isArray(value) &&
+                    typeof mergedAppearance[key] === 'object' &&
+                    mergedAppearance[key] !== null &&
+                    !Array.isArray(mergedAppearance[key])
+                ) {
+                    mergedAppearance[key] = { ...mergedAppearance[key], ...value }
+                } else {
+                    mergedAppearance[key] = value
+                }
+            }
+
+            updates.appearance = mergedAppearance
         }
 
         const { error } = await supabase

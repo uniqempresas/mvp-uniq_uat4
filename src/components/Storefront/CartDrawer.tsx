@@ -16,22 +16,22 @@ export default function CartDrawer({ isOpen, onClose, companyPhone, companyName 
     const handleCheckout = () => {
         if (!companyPhone || items.length === 0) return
 
-        // Gerar mensagem WhatsApp
-        let message = `🛒 *Novo Pedido - ${companyName || 'Loja'}*\n\n`
+        const hour = new Date().getHours()
+        const greeting = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite'
+
+        let message = `${greeting}! 🛒 *Novo Pedido - ${companyName || 'Loja'}*\n\n`
         message += `*Itens:*\n`
 
         items.forEach((item, index) => {
             const variacaoTexto = item.variacao ? ` - ${item.variacao.nome_variacao}` : ''
             const preco = item.variacao?.preco_varejo || item.variacao?.preco || item.produto.preco_varejo || item.produto.preco
-            message += `${index + 1}. ${item.quantidade}x ${item.produto.nome_produto}${variacaoTexto} (R$ ${preco.toFixed(2)})\n`
+            message += `${index + 1}. ${item.quantidade}x ${item.produto.nome_produto}${variacaoTexto} (R$ ${preco.toFixed(2).replace('.', ',')})\n`
         })
 
         message += `\n*Total:* R$ ${total.toFixed(2).replace('.', ',')}`
 
-        // Abrir WhatsApp
         window.open(publicService.getWhatsAppLink(companyPhone, message), '_blank')
 
-        // Limpar carrinho após enviar
         setIsCheckingOut(true)
         setTimeout(() => {
             clearCart()

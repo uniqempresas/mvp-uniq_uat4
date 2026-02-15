@@ -10,7 +10,7 @@ interface Props {
 export default function StoreIdentitySection({ form }: Props) {
     const { register, watch, setValue } = form
     const [uploading, setUploading] = useState(false)
-    const avatarUrl = watch('avatar_url')
+    const logoUrl = watch('logo_url')
 
     const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files?.length) return
@@ -18,11 +18,8 @@ export default function StoreIdentitySection({ form }: Props) {
         try {
             setUploading(true)
             const file = e.target.files[0]
-            // We reuse the product asset uploader or create a specific one if needed.
-            // Using a generic asset uploader from storeService would be ideal.
-            // For now assuming we can use uploadStoreAsset which puts in store-assets/ folder.
             const url = await storeService.uploadStoreAsset(file)
-            setValue('avatar_url', url, { shouldDirty: true })
+            setValue('logo_url', url, { shouldDirty: true })
         } catch (error) {
             console.error('Error uploading logo:', error)
             alert('Erro ao fazer upload da logo')
@@ -56,8 +53,8 @@ export default function StoreIdentitySection({ form }: Props) {
                                 disabled={uploading}
                             />
                             <div className={`size-32 rounded-full bg-gray-50 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-700 flex items-center justify-center overflow-hidden hover:border-primary transition-colors ${uploading ? 'opacity-50' : ''}`}>
-                                {avatarUrl ? (
-                                    <img src={avatarUrl} alt="Logo" className="w-full h-full object-cover" />
+                                {logoUrl ? (
+                                    <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
                                 ) : (
                                     <span className="material-symbols-outlined text-gray-400 text-4xl group-hover:text-primary transition-colors">
                                         add_a_photo
@@ -95,12 +92,20 @@ export default function StoreIdentitySection({ form }: Props) {
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Slug (URL)</label>
                             <div className="relative">
                                 <input
-                                    {...register('slug')}
+                                    {...register('slug', {
+                                        pattern: {
+                                            value: /^[a-z0-9-]+$/,
+                                            message: 'Use apenas letras minúsculas, números e hífens'
+                                        }
+                                    })}
                                     className="w-full rounded-lg border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:bg-white dark:focus:bg-gray-900 focus:border-primary focus:ring-primary text-sm shadow-sm transition-all pl-2"
                                     type="text"
                                 />
                             </div>
                             <p className="text-xs text-gray-400 mt-1">Identificador único na URL da loja.</p>
+                            {form.formState.errors.slug && (
+                                <p className="text-xs text-red-500 mt-1">{form.formState.errors.slug.message}</p>
+                            )}
                         </div>
                     </div>
 

@@ -27,11 +27,11 @@ export default function CategoryChips({
             </button>
 
             {categories.map(category => {
-                const isActive = activeCategory === category.id
+                const isActive = activeCategory === category.id_categoria
                 return (
                     <button
-                        key={category.id}
-                        onClick={() => onSelectCategory(category.id)}
+                        key={category.id_categoria}
+                        onClick={() => onSelectCategory(category.id_categoria)}
                         className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-colors shrink-0
                             ${isActive
                                 ? 'bg-primary text-white shadow-sm'

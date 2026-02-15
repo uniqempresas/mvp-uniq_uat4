@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { MENU_CONFIG, type MenuItem } from '../../config/submenus'
+import { storeService } from '../../services/storeService'
 
 interface SubSidebarProps {
     activeContext: string
@@ -10,6 +11,18 @@ interface SubSidebarProps {
 export default function SubSidebar({ activeContext, onNavigate }: SubSidebarProps) {
     const config = MENU_CONFIG[activeContext] || MENU_CONFIG['dashboard']
     const [expandedItems, setExpandedItems] = useState<string[]>([])
+    const [companySlug, setCompanySlug] = useState<string>('')
+
+    useEffect(() => {
+        storeService.getStoreConfig().then(config => {
+            if (config?.slug) setCompanySlug(config.slug)
+        })
+    }, [])
+
+    const resolveHref = (href: string | undefined) => {
+        if (!href) return '#'
+        return href.replace(':slug', companySlug || '')
+    }
 
     const toggleExpand = (id: string, e: React.MouseEvent) => {
         e.preventDefault()
@@ -19,12 +32,23 @@ export default function SubSidebar({ activeContext, onNavigate }: SubSidebarProp
     }
 
     const handleClick = (e: React.MouseEvent, item: MenuItem) => {
+        if (item.disabled) {
+            e.preventDefault()
+            e.stopPropagation()
+            return
+        }
+        // G5: Se tem href com template e target _blank, abrir em nova aba
+        if (item.target === '_blank' && item.href) {
+            e.preventDefault()
+            const resolved = resolveHref(item.href)
+            if (resolved !== '#') window.open(resolved, '_blank')
+            return
+        }
         if (item.children && item.id) {
             toggleExpand(item.id, e)
         } else if (item.view && onNavigate) {
             e.preventDefault()
-            e.stopPropagation() // Ensure no bubbling issues
-            console.log('Navigating to:', item.view)
+            e.stopPropagation()
             onNavigate(item.view)
         }
     }
@@ -41,9 +65,12 @@ export default function SubSidebar({ activeContext, onNavigate }: SubSidebarProp
             <div key={`item-${index}`}>
                 <button
                     onClick={(e) => handleClick(e, item)}
-                    className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-lg transition-all font-medium group select-none cursor-pointer text-left ${item.active
-                        ? 'bg-mint-soft text-primary shadow-sm border border-primary/10'
-                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                    disabled={item.disabled}
+                    className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-lg transition-all font-medium group select-none ${item.disabled
+                        ? 'text-slate-400 cursor-not-allowed opacity-60'
+                        : item.active
+                            ? 'bg-mint-soft text-primary shadow-sm border border-primary/10'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 cursor-pointer'
                         }`}
                 >
                     <span className={`material-symbols-outlined text-[20px] ${!item.active ? 'text-slate-400 group-hover:text-slate-600' : ''}`}>
@@ -87,7 +114,11 @@ export default function SubSidebar({ activeContext, onNavigate }: SubSidebarProp
                                 <button
                                     key={`sub-${index}-${subIndex}`}
                                     onClick={(e) => handleClick(e, subItem)}
-                                    className="flex w-full items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
+                                    disabled={subItem.disabled}
+                                    className={`flex w-full items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors text-left ${subItem.disabled
+                                        ? 'text-slate-300 cursor-not-allowed'
+                                        : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50 cursor-pointer'
+                                        }`}
                                 >
                                     {subItem.icon && (
                                         <span className="material-symbols-outlined text-[18px] text-slate-400">

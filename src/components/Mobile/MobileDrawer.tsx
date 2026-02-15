@@ -108,11 +108,15 @@ export default function MobileDrawer({ isOpen, onClose, activeContext = 'dashboa
                                 {/* Submenu (Accordion) */}
                                 {item.submenu && expandedItem === item.id && (
                                     <div className="ml-6 mt-1 flex flex-col gap-1">
-                                        {item.submenu.map((subitem) => (
+                                        {item.submenu.map((subitem: any) => (
                                             <button
                                                 key={subitem.id}
-                                                onClick={() => handleSubmenuClick(item.route, subitem.view)}
-                                                className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-all text-sm"
+                                                disabled={subitem.disabled}
+                                                onClick={() => !subitem.disabled && handleSubmenuClick(item.route, subitem.view)}
+                                                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all text-sm ${subitem.disabled
+                                                    ? 'text-white/20 cursor-not-allowed'
+                                                    : 'text-white/60 hover:bg-white/5 hover:text-white'
+                                                    }`}
                                             >
                                                 <span className="material-symbols-outlined text-[18px]">{subitem.icon}</span>
                                                 <span>{subitem.label}</span>

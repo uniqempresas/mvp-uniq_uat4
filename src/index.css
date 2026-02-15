@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Theme Variables - Store Configuration */
+:root {
+  --primary-color: #10b77f;
+  --primary-hover-color: #0a8a5f;
+  --secondary-color: #244E5F;
+  --border-radius: 1rem;
+  --font-family: 'Plus Jakarta Sans', 'Poppins', sans-serif;
+}
+
 @layer utilities {
   .bg-grid-pattern {
     background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
@@ -86,5 +95,20 @@
   
   .animate-fade-in {
     animation: fade-in 0.2s ease-out;
+  }
+  
+  @keyframes slide-down {
+    from {
+      transform: translate(-50%, -100%);
+      opacity: 0;
+    }
+    to {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+  }
+  
+  .animate-slide-down {
+    animation: slide-down 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }

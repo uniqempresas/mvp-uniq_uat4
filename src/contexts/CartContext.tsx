@@ -120,11 +120,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
     // Contar itens
     const itemCount = items.reduce((sum, item) => sum + item.quantidade, 0)
 
-    // Gerar mensagem para WhatsApp
     const getCartMessage = useCallback(() => {
         if (items.length === 0) return ''
 
-        let text = `*🛒 Novo Pedido*\n\n`
+        const hour = new Date().getHours()
+        const greeting = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite'
+
+        let text = `${greeting}! *🛒 Novo Pedido*\n\n`
 
         items.forEach((item) => {
             const variacaoDecl = item.variacao ? ` [${item.variacao.nome_variacao}]` : ''

@@ -1,62 +1,56 @@
 # 🟢 Tracking de Desenvolvimento - UNIQ
 
-**Última atualização:** 14/02/2026
-**Sprint Atual:** [Sprint 05](specs/SPEC_Sprint_05.md) (Loja de Módulos & Configurações)
-**Status:** 🏃 Em Execução
+**Última atualização:** 15/02/2026
+**Sprint Atual:** [Sprint 06] (Planejamento)
+**Status:** 📋 Planejamento
 
 > 📁 **Arquivos de Sprints Anteriores:**
-> - [Sprint 04](plans/Sprint_04.md) (Concluido - Ver Histórico)
-> - [Sprint 03](plans/Sprint_03.md) (Concluido)
+> - [Sprint 05](tracking_arq/TRACKING_Sprint_05.md) (Concluído)
+> - [Sprint 04](tracking_arq/TRACKING_Sprint_04.md) (Concluído)
+> - [Sprint 03](tracking_arq/TRACKING_Sprint_03.md) (Concluído)
 >
 > 📋 **Backlog Geral:**
 > - [Backlog do Projeto](TRACKING_Backlog.md)
 
 ---
 
-## 🎯 Sprint 05 - Loja de Módulos & Configurações
+## 🎯 Sprint 06 - Storefront 2.0 & Personalização
 
-**Status:** 🏃 Em Execução
-**Foco:** Habilitar seleção contextual de módulos e configuração completa da Loja Virtual.
-**Objetivo:** Refatorar a visualização da Loja de Módulos para abas (Meus Módulos / Disponíveis / Em Breve) e consolidar o fluxo de configuração da vitrine (Slug, Bio, Produtos).
+**Status:** � EM PROGRESSO
+**Foco:** Sistema de temas, banners, navegação hierárquica e personalização da loja virtual
+**Responsável:** AI Agent (Vibe Implementer)
+**SPEC:** [SPEC_Sprint_06.md](specs/SPEC_Sprint_06.md)
 
-### ✅ Concluído
-- [x] Elaboração da Especificação Técnica da Sprint 05.
+### 🚧 Em Andamento
 
-### 🚧 Em Andamento / A Fazer
+#### 🏍️ Estilização e Theming
+- [x] Modificar `tailwind.config.js` para suportar variáveis CSS
+- [x] Atualizar `src/index.css` com valores default no `:root`
 
-#### 📦 1. Refatoração da Module Store (`ModuleStore.tsx`)
-- [ ] Substituir filtros de categoria por abas contextuais.
-- [ ] Implementar aba **"Meus Módulos"** (Módulos ativos).
-- [ ] Implementar aba **"Disponíveis"** (Módulos não ativos).
-- [ ] Implementar aba **"Em Breve"** (Módulos em desenvolvimento).
-- [ ] Garantir que o card mostre "Ativar" ou "Configurar" dinamicamente.
+#### 🏪 Core da Loja (Storefront)
+- [x] Implementar `ThemedContainer` em `Storefront.tsx`
+- [ ] Adicionar lógica de renderização condicional por ordem
+- [x] Atualizar `publicService.ts` para retornar `store_config` completo
+- [x] Criar método `getHierarchicalCategories`
 
-#### ⚙️ 2. Configurações da Loja (`StoreConfig`)
-- [ ] **Aba Geral (`GeneralTab`):**
-    - [ ] Adicionar validação de Slug (zod + regex para hífens/minúsculas).
-    - [ ] Implementar check de disponibilidade de slug no backend.
-    - [ ] Garantir persistência de `whatsapp`, `bio` e `name` na tabela `unq_lojas`.
-- [ ] **Aba Produtos (`ProductsTab`):**
-    - [ ] Permitir selecionar produtos visíveis na vitrine.
-    - [ ] Salvar flag `is_public` ou relação na tabela associativa.
+#### 🧭 Navegação e Menus
+- [ ] Atualizar `src/config/submenus.ts` com novo menu Storefront
+- [ ] Modificar `src/config/menu.ts` para vincular módulo
 
-#### 🌐 3. Vitrine Pública (`Storefront.tsx`)
-- [ ] Carregar dados da loja dinamicamente via `slug`.
-- [ ] Aplicar filtros de visibilidade nos produtos.
-- [ ] Layout premium refletindo Bio e contatos salvos.
+#### 🧩 Componentes de Interface
+- [ ] Modificar `HeroSection.tsx` para integrar Swiper
+- [ ] Modificar `StoreHeader.tsx` para navegação hierárquica
+- [ ] Criar novo componente `FlashDeals.tsx`
+
+#### ⚙️ Dashboard de Gestão
+- [ ] Criar `AppearanceTab.tsx` para gestão visual
+- [ ] Criar `BannerManager.tsx` para CRUD de banners
+- [ ] Modificar `MainSidebar.tsx` para ativação do módulo
 
 ---
 
 ## 🧪 Checklist de Validação (QA)
-
-### Fluxo de Onboarding
-- [ ] Cadastro completo -> Redirecionamento Dashboard.
-- [ ] Verificação de `empresa_id` associado ao usuário.
-
-### Loja de Módulos
-- [ ] Troca de abas funcional.
-- [ ] Ativação de módulo move o item para "Meus Módulos".
-
-### Gestão da Vitrine
-- [ ] Troca de slug reflete na URL da vitrine.
-- [ ] Produto desmarcado não aparece para o cliente final.
+- [ ] Testar fallback de cores quando JSONB vazio
+- [ ] Monitorar bundle size após adicionar Swiper
+- [ ] Validar LCP (Largest Contentful Paint) com banners
+- [ ] Garantir que merge do JSONB não apague configurações operacionais

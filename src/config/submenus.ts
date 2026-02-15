@@ -15,6 +15,8 @@ export interface MenuItem {
     children?: MenuItem[];
     id?: string;
     view?: string; // Target view
+    disabled?: boolean;
+    target?: string; // '_blank' para abrir em nova aba
 }
 
 export const MENU_CONFIG: Record<string, SubMenuConfig> = {
@@ -42,12 +44,14 @@ export const MENU_CONFIG: Record<string, SubMenuConfig> = {
     },
     storefront: {
         title: 'Loja Virtual',
-        subtitle: 'E-commerce',
+        subtitle: 'Gestão de E-commerce',
         items: [
-            { icon: 'store', label: 'Vitrine', active: true, href: '#' },
-            { icon: 'palette', label: 'Aparência', href: '#' },
-            { icon: 'local_shipping', label: 'Entregas', href: '#' },
-            { icon: 'percent', label: 'Cupons', href: '#' },
+            { icon: 'visibility', label: 'Ver Loja', view: 'preview', href: '/c/:slug', target: '_blank' },
+            { icon: 'palette', label: 'Aparência', view: 'appearance', href: '#' },
+            { icon: 'view_carousel', label: 'Banners & Hero', view: 'banners', href: '#' },
+            { type: 'divider' },
+            { icon: 'category', label: 'Categorias (Menu)', view: 'categories', href: '#', disabled: true },
+            { icon: 'local_shipping', label: 'Entregas/Frete', view: 'shipping', href: '#' },
         ],
     },
     inventory: {
