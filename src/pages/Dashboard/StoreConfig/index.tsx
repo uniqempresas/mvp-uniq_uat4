@@ -1,109 +1,71 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { GeneralTab } from './GeneralTab'
-import { ProductsTab } from './ProductsTab'
-import { storeService } from '../../../services/storeService'
-import MainSidebar from '../../../components/Sidebar/MainSidebar'
-import MobileHeader from '../../../components/Mobile/MobileHeader'
-import MobileDrawer from '../../../components/Mobile/MobileDrawer'
-import { useBreakpoint } from '../../../hooks/useBreakpoint'
+import { useState } from 'react'
+import GeneralTab from './GeneralTab'
+import { Link } from 'react-router-dom'
 
 export default function StoreConfig() {
-    const [activeTab, setActiveTab] = useState<'general' | 'products'>('general')
-    const [storeSlug, setStoreSlug] = useState<string>('')
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-    const { isMobile } = useBreakpoint()
-    const navigate = useNavigate()
-
-    useEffect(() => {
-        storeService.getStoreConfig().then(data => {
-            if (data?.slug) setStoreSlug(data.slug)
-        })
-    }, [])
-
-    const handleContextChange = (context: string) => {
-        if (context === 'dashboard') navigate('/dashboard')
-        if (context === 'crm') navigate('/crm')
-        if (context === 'finance') navigate('/finance')
-        // storefront is active
-    }
+    const [activeTab, setActiveTab] = useState('general')
 
     return (
-        <div className="flex h-screen bg-gray-50 overflow-hidden">
-            {/* Mobile Header */}
-            {isMobile && <MobileHeader onMenuClick={() => setIsDrawerOpen(true)} />}
-
-            {/* Mobile Drawer */}
-            {isMobile && (
-                <MobileDrawer
-                    isOpen={isDrawerOpen}
-                    onClose={() => setIsDrawerOpen(false)}
-                    activeContext="storefront"
-                    onContextChange={handleContextChange}
-                    onNavigate={() => { }}
-                />
-            )}
-
-            {/* Desktop Sidebar */}
-            <MainSidebar activeContext="storefront" onContextChange={handleContextChange} />
-
-            <div className="flex-1 flex flex-col h-full overflow-hidden relative pt-16 md:pt-0">
-                <main className="flex-1 overflow-auto bg-gray-50">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                        <div className="md:flex md:items-center md:justify-between mb-8">
-                            <div className="flex-1 min-w-0">
-                                <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
-                                    Loja Virtual (Vitrine)
-                                </h2>
-                                <p className="mt-1 text-sm text-gray-500">
-                                    Configure a aparência e os produtos da sua loja online.
-                                </p>
-                            </div>
-                            <div className="mt-4 flex md:mt-0 md:ml-4 space-x-3">
-                                {storeSlug && (
-                                    <a
-                                        href={`/c/${storeSlug}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                    >
-                                        <svg className="-ml-1 mr-2 h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                        </svg>
-                                        Visualizar Loja
-                                    </a>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="border-b border-gray-200">
-                            <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-                                <button
-                                    onClick={() => setActiveTab('general')}
-                                    className={`${activeTab === 'general'
-                                        ? 'border-indigo-500 text-indigo-600'
-                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                                        } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-150`}
-                                >
-                                    Configurações Gerais
-                                </button>
-                                <button
-                                    onClick={() => setActiveTab('products')}
-                                    className={`${activeTab === 'products'
-                                        ? 'border-indigo-500 text-indigo-600'
-                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                                        } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-150`}
-                                >
-                                    Produtos na Vitrine
-                                </button>
-                            </nav>
-                        </div>
-
-                        <div className="mt-6">
-                            {activeTab === 'general' ? <GeneralTab /> : <ProductsTab />}
-                        </div>
+        <div className="flex-1 overflow-y-auto p-6 md:p-8 pb-32 bg-gray-50 dark:bg-background-dark min-h-screen">
+            <div className="max-w-5xl mx-auto space-y-6">
+                {/* Page Header */}
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div>
+                        <h1 className="text-3xl font-bold text-secondary dark:text-white tracking-tight">Configurações de Perfil</h1>
+                        <p className="text-gray-500 dark:text-gray-400 mt-1">Gerencie as informações públicas e operacionais da sua empresa no marketplace.</p>
                     </div>
-                </main>
+                    <div className="flex gap-3">
+                        {/* Assuming we can construct the Public URL easily. For now just a placeholder link or dynamic if we fetched slug. 
+                            Ideally GeneralTab fetches slug, but we are parent. 
+                            We could fetch here too or let context handle it. 
+                            For MVP, link to homepage or dynamic slug if we had context. 
+                        */}
+                        <Link to="/" target="_blank" className="text-primary hover:text-primary-hover font-medium text-sm flex items-center gap-1">
+                            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>visibility</span>
+                            Ver perfil público
+                        </Link>
+                    </div>
+                </div>
+
+                {/* Tabs */}
+                <div className="border-b border-gray-200 dark:border-gray-800 mb-6">
+                    <nav className="-mb-px flex gap-8 overflow-x-auto no-scrollbar">
+                        <button
+                            onClick={() => setActiveTab('general')}
+                            className={`border-b-2 py-4 px-1 text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'general'
+                                ? 'border-primary text-primary'
+                                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300'
+                                }`}
+                        >
+                            Informações Básicas
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('products')}
+                            className={`border-b-2 py-4 px-1 text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'products'
+                                ? 'border-primary text-primary'
+                                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300'
+                                }`}
+                        >
+                            Produtos & Vitrine
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('branding')}
+                            disabled
+                            className="border-b-2 border-transparent py-4 px-1 text-sm font-medium text-gray-400 cursor-not-allowed opacity-60"
+                            title="Em breve"
+                        >
+                            Branding <span className="text-[10px] bg-gray-100 dark:bg-gray-800 px-1 rounded ml-1">Em breve</span>
+                        </button>
+                    </nav>
+                </div>
+
+                {/* Content */}
+                {activeTab === 'general' && <GeneralTab />}
+                {activeTab === 'products' && (
+                    <div className="text-center p-12 bg-white dark:bg-surface-dark rounded-lg">
+                        <p className="text-gray-500">Aba de Produtos será implementada em breve.</p>
+                    </div>
+                )}
             </div>
         </div>
     )

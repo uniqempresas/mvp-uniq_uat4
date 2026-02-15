@@ -1,9 +1,4 @@
 import { useState } from 'react'
-import MainSidebar from '../../components/Sidebar/MainSidebar'
-import SubSidebar from '../../components/Sidebar/SubSidebar'
-import MobileHeader from '../../components/Mobile/MobileHeader'
-import MobileDrawer from '../../components/Mobile/MobileDrawer'
-import { useBreakpoint } from '../../hooks/useBreakpoint'
 import DashboardHome from './components/DashboardHome'
 import ModuleStore from './components/ModuleStore'
 import ProductList from '../../components/Catalog/ProductList'
@@ -12,25 +7,22 @@ import ServiceList from '../Services/ServiceList'
 import CollaboratorList from '../../components/Registers/CollaboratorList'
 import ClientList from '../../components/Registers/ClientList'
 import SupplierList from '../../components/Registers/SupplierList'
+import DashboardLayout from '../../components/Layout/DashboardLayout'
 
 export default function Dashboard() {
     const [activeContext, setActiveContext] = useState('dashboard')
     const [activeView, setActiveView] = useState('home')
     const [editingProductId, setEditingProductId] = useState<number | undefined>(undefined)
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-    const { isMobile } = useBreakpoint()
 
     console.log('Dashboard activeView:', activeView)
 
     const renderContent = () => {
         if (activeContext === 'store') return <ModuleStore />
         if (activeContext === 'finance') {
-            // Financeiro deve navegar para sua própria rota, não renderizar aqui
-            window.location.href = '/finance' // Force navigation or use useNavigate if available outside loop
+            window.location.href = '/finance'
             return null
         }
 
-        // Dashboard Context Views
         switch (activeView) {
             case 'products':
                 return <ProductList onNavigate={setActiveView} onEdit={(id) => { setEditingProductId(id); setActiveView('product-form') }} />
@@ -51,40 +43,12 @@ export default function Dashboard() {
     }
 
     return (
-        <div className="flex h-screen w-full overflow-hidden bg-background-light text-slate-800 antialiased selection:bg-primary/20 selection:text-primary">
-
-            {/* Mobile Header (apenas mobile) */}
-            {isMobile && <MobileHeader onMenuClick={() => setIsDrawerOpen(true)} />}
-
-            {/* Mobile Drawer (apenas mobile) */}
-            {isMobile && (
-                <MobileDrawer
-                    isOpen={isDrawerOpen}
-                    onClose={() => setIsDrawerOpen(false)}
-                    activeContext={activeContext}
-                    onContextChange={setActiveContext}
-                    onNavigate={setActiveView}
-                />
-            )}
-
-            {/* Desktop Sidebars (apenas desktop) */}
-            <MainSidebar
-                activeContext={activeContext}
-                onContextChange={(ctx) => {
-                    setActiveContext(ctx)
-                    setActiveView('home')
-                }}
-            />
-
-            <SubSidebar
-                activeContext={activeContext}
-                onNavigate={(view) => setActiveView(view)}
-            />
-
-            {/* Main Content Area */}
-            <main className="flex-1 overflow-auto pt-16 md:pt-0">
-                {renderContent()}
-            </main>
-        </div>
+        <DashboardLayout
+            activeContext={activeContext}
+            setActiveContext={setActiveContext}
+            onNavigate={setActiveView}
+        >
+            {renderContent()}
+        </DashboardLayout>
     )
 }

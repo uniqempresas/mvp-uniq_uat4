@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { useModules } from '../../contexts/ModuleContext'
 import { MAIN_NAV_ITEMS } from '../../config/menu'
+import { MENU_CONFIG } from '../../config/submenus'
 
 interface MobileDrawerProps {
     isOpen: boolean
@@ -129,16 +130,40 @@ export default function MobileDrawer({ isOpen, onClose, activeContext = 'dashboa
                             onClick={() => {
                                 navigate('/modules')
                                 if (onContextChange) onContextChange('modules')
-                                onClose()
+                                // Do not close immediately to allow submenu expansion if needed, but for modules we might want to navigate
+                                // Or better, treat it like other items that have submenus in MENU_CONFIG
+                                setExpandedItem(expandedItem === 'modules' ? null : 'modules')
                             }}
-                            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeContext === 'modules'
+                            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all w-full ${activeContext === 'modules'
                                 ? 'bg-primary/10 text-primary shadow-[inset_0_0_0_1px_rgba(16,185,129,0.2)]'
                                 : 'text-white/70 hover:bg-white/10 hover:text-white'
                                 }`}
                         >
                             <span className="material-symbols-outlined">extension</span>
-                            <span className="text-sm font-medium">Meus Módulos</span>
+                            <span className="text-sm font-medium flex-1 text-left">Meus Módulos</span>
+                            <span className={`material-symbols-outlined text-sm transition-transform ${expandedItem === 'modules' ? 'rotate-180' : ''}`}>
+                                expand_more
+                            </span>
                         </button>
+
+                        {/* Modules Submenu Mobile */}
+                        {expandedItem === 'modules' && (
+                            <div className="ml-6 mt-1 flex flex-col gap-1">
+                                {MENU_CONFIG['modules']?.items.filter(i => i.href && !i.href.includes('dashboard')).map((item, idx) => (
+                                    <button
+                                        key={`mod-sub-${idx}`}
+                                        onClick={() => {
+                                            if (item.href) navigate(item.href)
+                                            onClose()
+                                        }}
+                                        className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-all text-sm"
+                                    >
+                                        <span className="material-symbols-outlined text-[18px]">{item.icon}</span>
+                                        <span>{item.label}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        )}
 
                         <button
                             onClick={() => {

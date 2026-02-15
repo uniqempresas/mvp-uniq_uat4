@@ -70,6 +70,8 @@ export const ModuleProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
         try {
             await moduleService.toggleModule(code, active);
+            // Refresh to get any derived server-side changes
+            await loadModules();
         } catch (error) {
             console.error('Failed to toggle module, reverting...', error);
             // Revert on error

@@ -1,4 +1,4 @@
-import type { Module } from '../../../services/modulesService';
+import type { Module } from '../../../services/moduleService';
 
 interface ModuleDetailsProps {
     onBack: () => void;

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import ModuleDetails from './ModuleDetails'
 import ModuleCheckout from './ModuleCheckout'
-import { modulesService } from '../../../services/modulesService'
-import type { Module, CompanyModule } from '../../../services/modulesService'
+import { moduleService } from '../../../services/moduleService'
+import type { Module, CompanyModule } from '../../../services/moduleService'
 
 export default function ModuleStore() {
     // Current View State: 'list' | 'details' | 'checkout'
@@ -14,7 +14,7 @@ export default function ModuleStore() {
     const [myModules, setMyModules] = useState<CompanyModule[]>([])
     const [loading, setLoading] = useState(true)
     const [empresaId, setEmpresaId] = useState<string | null>(null)
-    const [activeTab, setActiveTab] = useState('Todos')
+    const [activeTab, setActiveTab] = useState('Disponíveis')
 
     useEffect(() => {
         loadData()
@@ -24,14 +24,14 @@ export default function ModuleStore() {
         try {
             setLoading(true)
             const [allModules, empId] = await Promise.all([
-                modulesService.getAllModules(),
-                modulesService.getCurrentCompanyId()
+                moduleService.getAllModules(),
+                moduleService.getCurrentCompanyId()
             ])
             setModules(allModules)
             setEmpresaId(empId)
 
             if (empId) {
-                const owned = await modulesService.getCompanyModules(empId)
+                const owned = await moduleService.getCompanyModules(empId)
                 setMyModules(owned)
             }
         } catch (error) {
@@ -53,7 +53,7 @@ export default function ModuleStore() {
     const handlePurchaseSuccess = async () => {
         // Reload data to reflect new purchase
         if (empresaId) {
-            const owned = await modulesService.getCompanyModules(empresaId)
+            const owned = await moduleService.getCompanyModules(empresaId)
             setMyModules(owned)
         }
         setView('details')
@@ -62,15 +62,12 @@ export default function ModuleStore() {
 
     // Filter modules based on tab
     const filteredModules = modules.filter(m => {
-        if (activeTab === 'Todos') return true;
-        // Simple mapping or strict check depending on data consistency
-        // Our categories in DB: Vendas, Logistica, Financeiro, Fiscal, Gestão, Serviços
-        // Tabs: Financeiro, Vendas & CRM, Estoque & Logística, Recursos Humanos
+        const isActive = isModuleActive(m.id)
 
-        if (activeTab === 'Financeiro') return m.categoria === 'Financeiro' || m.categoria === 'Fiscal'
-        if (activeTab === 'Vendas & CRM') return m.categoria === 'Vendas'
-        if (activeTab === 'Estoque & Logística') return m.categoria === 'Logistica'
-        // Add more logic as needed
+        if (activeTab === 'Meus Módulos') return isActive
+        if (activeTab === 'Disponíveis') return !isActive && m.status !== 'dev'
+        if (activeTab === 'Em Breve') return m.status === 'dev'
+
         return true
     })
 
@@ -80,7 +77,7 @@ export default function ModuleStore() {
             onConfirm={async () => {
                 if (empresaId && selectedModule) {
                     try {
-                        await modulesService.subscribeToModule(empresaId, selectedModule.id)
+                        await moduleService.subscribeToModule(empresaId, selectedModule.id)
                         await handlePurchaseSuccess()
                     } catch (e) {
                         console.error("Erro ao comprar", e)
@@ -103,7 +100,7 @@ export default function ModuleStore() {
             onDeactivate={async () => {
                 if (empresaId && selectedModule) {
                     try {
-                        await modulesService.unsubscribeFromModule(empresaId, selectedModule.id)
+                        await moduleService.unsubscribeFromModule(empresaId, selectedModule.id)
                         await handlePurchaseSuccess() // Reloads data
                     } catch (e) {
                         console.error("Erro ao cancelar", e)
@@ -161,7 +158,7 @@ export default function ModuleStore() {
 
                     {/* Tabs */}
                     <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                        {['Todos', 'Financeiro', 'Vendas & CRM', 'Estoque & Logística', 'Recursos Humanos'].map(tab => (
+                        {['Meus Módulos', 'Disponíveis', 'Em Breve'].map(tab => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}

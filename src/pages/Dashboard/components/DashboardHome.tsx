@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { dashboardService, type DashboardKPIs, type RecentSale } from '../../../services/dashboardService'
-import { modulesService } from '../../../services/modulesService'
+import { moduleService } from '../../../services/moduleService'
 import { useBreakpoint } from '../../../hooks/useBreakpoint'
 import MobileCard from '../../../components/Mobile/MobileCard'
 
@@ -50,7 +50,7 @@ export default function DashboardHome() {
         async function fetchData() {
             setLoading(true)
             try {
-                const empresaId = await modulesService.getCurrentCompanyId()
+                const empresaId = await moduleService.getCurrentCompanyId()
                 if (empresaId) {
                     // Date Range: Start of month to now
                     const now = new Date()

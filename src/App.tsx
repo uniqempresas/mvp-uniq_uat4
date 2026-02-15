@@ -13,6 +13,7 @@ import ReceivablePage from './pages/Finance/ReceivablePage'
 import AccountsPage from './pages/Finance/AccountsPage'
 import CategoriesPage from './pages/Finance/CategoriesPage'
 import CRMLayout from './pages/CRM/CRMLayout'
+import ModulesLayout from './pages/Modules/ModulesLayout'
 import { ModuleProvider } from './contexts/ModuleContext'
 import ModulesPage from './pages/Modules'
 import StoreConfig from './pages/Dashboard/StoreConfig'
@@ -44,7 +45,11 @@ function App() {
             </Route>
 
             {/* Modules Management */}
-            <Route path="/modules" element={<ModulesPage />} />
+            <Route path="/modules" element={<ModulesLayout />}>
+              <Route index element={<ModulesPage tab="chosen" />} />
+              <Route path="new" element={<ModulesPage tab="new" />} />
+              <Route path="dev" element={<ModulesPage tab="dev" />} />
+            </Route>
 
             {/* Storefront Configuration */}
             <Route path="/dashboard/store-config" element={<StoreConfig />} />

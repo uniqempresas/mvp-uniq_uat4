@@ -4,8 +4,26 @@ import { authService } from './authService'
 export interface StoreConfig {
     banner_url?: string
     primary_color?: string
+
+    // Identidade
+    slogan?: string
     description?: string // Bio
+
+    // Contato
+    support_email?: string
     whatsapp_contact?: string
+    website?: string
+
+    // Operacional
+    shipping_methods?: string[] // ["Correios", "Retirada", "Transportadora"]
+    pix_key?: string
+
+    // Preferências
+    notifications?: {
+        new_orders: boolean
+        questions: boolean
+        reports: boolean
+    }
 }
 
 export interface StoreData {

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useModules } from '../../contexts/ModuleContext';
 import { moduleService, type ModuleCode } from '../../services/moduleService';
@@ -52,7 +51,13 @@ interface Role {
     nome_cargo: string;
 }
 
-export default function ModulesPage() {
+type TabType = 'chosen' | 'new' | 'dev';
+
+interface ModulesPageProps {
+    tab?: TabType;
+}
+
+export default function ModulesPage({ tab = 'chosen' }: ModulesPageProps) {
     const { isModuleActive, toggleModule, isLoading: isModulesLoading } = useModules();
     const [userRole, setUserRole] = useState<string | null>(null);
     const [roles, setRoles] = useState<Role[]>([]);
@@ -71,27 +76,45 @@ export default function ModulesPage() {
                     .eq('id', user.id)
                     .single();
 
+
                 const cargoObj = Array.isArray(data?.cargo) ? data.cargo[0] : data?.cargo;
+
                 if (cargoObj?.nome_cargo) {
-                    setUserRole(cargoObj.nome_cargo.toLowerCase());
+                    setUserRole(cargoObj.nome_cargo.trim().toLowerCase());
                 }
             }
         };
         fetchUserRole();
     }, []);
 
-    const isOwner = userRole === 'dono' || userRole === 'admin';
+    const isOwner = userRole === 'dono' || userRole === 'admin' || userRole === 'proprietario' || userRole === 'proprietário';
 
     // Fetch Roles (only if owner)
     useEffect(() => {
         if (isOwner) {
             const fetchRoles = async () => {
-                const { data } = await supabase
-                    .from('me_cargo')
-                    .select('id, nome_cargo')
-                    .order('nome_cargo');
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) return;
 
-                if (data) setRoles(data);
+                const { data: userData } = await supabase
+                    .from('me_usuario')
+                    .select('empresa_id')
+                    .eq('id', user.id)
+                    .single();
+
+                if (userData?.empresa_id) {
+                    const { data } = await supabase
+                        .from('me_cargo')
+                        .select('id, nome_cargo')
+                        .eq('empresa_id', userData.empresa_id)
+                        .order('nome_cargo');
+
+                    if (data) {
+                        // Remove potential duplicates just in case
+                        const uniqueRoles = Array.from(new Map(data.map(item => [item.nome_cargo, item])).values());
+                        setRoles(uniqueRoles);
+                    }
+                }
             };
             fetchRoles();
         }
@@ -132,31 +155,58 @@ export default function ModulesPage() {
         );
     }
 
+    const filteredModules = AVAILABLE_MODULES.filter(module => {
+        const isActive = selectedRole === 'company' || !isOwner
+            ? isModuleActive(module.code)
+            : rolePermissions.includes(module.code);
+
+        if (tab === 'chosen') {
+            return isActive && !module.comingSoon;
+        } else if (tab === 'new') {
+            return !isActive && !module.comingSoon;
+        } else if (tab === 'dev') {
+            return module.comingSoon;
+        }
+        return true;
+    });
+
     return (
         <div className="flex h-full flex-col bg-slate-50 overflow-auto">
-            <header className="flex items-center justify-between border-b bg-white px-8 py-4 shadow-sm">
-                <div>
-                    <h1 className="text-2xl font-bold text-slate-800">Meus Módulos</h1>
-                    <p className="text-sm text-slate-500">Ative ou desative funcionalidades conforme sua necessidade</p>
-                </div>
-
-                {isOwner && (
-                    <div className="flex items-center gap-2">
-                        <span className="text-xs font-medium text-slate-500">Configurar para:</span>
-                        <select
-                            value={selectedRole}
-                            onChange={(e) => setSelectedRole(e.target.value)}
-                            className="rounded-lg border-slate-200 text-sm focus:border-primary focus:ring-primary"
-                        >
-                            <option value="company">Toda a Empresa (Master)</option>
-                            <optgroup label="Cargos">
-                                {roles.map(role => (
-                                    <option key={role.id} value={role.id}>{role.nome_cargo}</option>
-                                ))}
-                            </optgroup>
-                        </select>
+            <header className="flex flex-col border-b bg-white shadow-sm">
+                <div className="flex items-center justify-between px-8 py-4">
+                    <div>
+                        <h1 className="text-2xl font-bold text-slate-800">
+                            {tab === 'chosen' && 'Módulos Escolhidos'}
+                            {tab === 'new' && 'Novos Módulos'}
+                            {tab === 'dev' && 'Em Desenvolvimento'}
+                        </h1>
+                        <p className="text-sm text-slate-500">Ative ou desative funcionalidades conforme sua necessidade</p>
+                        <span className="text-xs text-slate-400 mt-1 block">
+                            Perfil: <strong className="uppercase mr-2">{userRole || '...'}</strong>
+                            Status: <strong className={isOwner ? 'text-green-600' : 'text-red-500'}>
+                                {isOwner ? 'EDITÁVEL' : 'BLOQUEADO'}
+                            </strong>
+                        </span>
                     </div>
-                )}
+
+                    {isOwner && (
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs font-medium text-slate-500">Configurar para:</span>
+                            <select
+                                value={selectedRole}
+                                onChange={(e) => setSelectedRole(e.target.value)}
+                                className="rounded-lg border-slate-200 text-sm focus:border-primary focus:ring-primary"
+                            >
+                                <option value="company">Toda a Empresa (Master)</option>
+                                <optgroup label="Cargos">
+                                    {roles.map(role => (
+                                        <option key={role.id} value={role.id}>{role.nome_cargo}</option>
+                                    ))}
+                                </optgroup>
+                            </select>
+                        </div>
+                    )}
+                </div>
             </header>
 
             <main className="p-8">
@@ -167,76 +217,90 @@ export default function ModulesPage() {
                     </div>
                 )}
 
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {AVAILABLE_MODULES.map((module) => {
-                        // Logic display:
-                        // If configuring Company: Show activeModules
-                        // If configuring Role: Show rolePermissions
-                        // If NOT Owner (Collaborator view): Show activeModules (which are already filtered by service)
+                {filteredModules.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-12 text-center">
+                        <div className="bg-slate-100 p-4 rounded-full mb-4">
+                            <span className="material-symbols-outlined text-3xl text-slate-400">
+                                {tab === 'chosen' ? 'apps_outage' : tab === 'new' ? 'check_circle' : 'engineering'}
+                            </span>
+                        </div>
+                        <h3 className="text-lg font-medium text-slate-900">
+                            {tab === 'chosen' ? 'Nenhum módulo ativo' : tab === 'new' ? 'Você já possui todos os módulos!' : 'Nenhum módulo em desenvolvimento'}
+                        </h3>
+                        <p className="text-slate-500 mt-1 max-w-sm">
+                            {tab === 'chosen'
+                                ? 'Acesse a aba "Novos Módulos" para adicionar funcionalidades.'
+                                : tab === 'new'
+                                    ? 'Explore as funcionalidades ativas na aba "Módulos Escolhidos".'
+                                    : 'Fique atento para novidades em breve!'}
+                        </p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        {filteredModules.map((module) => {
+                            const isActive = selectedRole === 'company' || !isOwner
+                                ? isModuleActive(module.code)
+                                : rolePermissions.includes(module.code);
 
-                        const isActive = selectedRole === 'company' || !isOwner
-                            ? isModuleActive(module.code)
-                            : rolePermissions.includes(module.code);
+                            const isLoading = selectedRole !== 'company' && loadingPermissions;
 
-                        const isLoading = selectedRole !== 'company' && loadingPermissions;
+                            return (
+                                <div
+                                    key={module.code}
+                                    className={`relative flex flex-col rounded-xl border p-6 transition-all shadow-sm
+                                        ${module.comingSoon ? 'opacity-70 bg-slate-50' : 'bg-white hover:shadow-md'}
+                                        ${isActive ? 'border-primary/20 ring-1 ring-primary/20' : 'border-slate-200'}
+                                        ${isLoading ? 'opacity-50 pointer-events-none' : ''}
+                                    `}
+                                >
+                                    <div className="mb-4 flex items-center justify-between">
+                                        <div className={`flex h-12 w-12 items-center justify-center rounded-lg 
+                                            ${isActive ? 'bg-primary/10 text-primary' : 'bg-slate-100 text-slate-500'}
+                                        `}>
+                                            <span className="material-symbols-outlined text-2xl">{module.icon}</span>
+                                        </div>
 
-                        return (
-                            <div
-                                key={module.code}
-                                className={`relative flex flex-col rounded-xl border p-6 transition-all shadow-sm
-                                    ${module.comingSoon ? 'opacity-70 bg-slate-50' : 'bg-white hover:shadow-md'}
-                                    ${isActive ? 'border-primary/20 ring-1 ring-primary/20' : 'border-slate-200'}
-                                    ${isLoading ? 'opacity-50 pointer-events-none' : ''}
-                                `}
-                            >
-                                <div className="mb-4 flex items-center justify-between">
-                                    <div className={`flex h-12 w-12 items-center justify-center rounded-lg 
-                                        ${isActive ? 'bg-primary/10 text-primary' : 'bg-slate-100 text-slate-500'}
-                                    `}>
-                                        <span className="material-symbols-outlined text-2xl">{module.icon}</span>
+                                        {!module.comingSoon && (
+                                            <label className="relative inline-flex cursor-pointer items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    className="peer sr-only"
+                                                    checked={isActive}
+                                                    disabled={!isOwner}
+                                                    onChange={(e) => handleToggle(module.code, e.target.checked)}
+                                                />
+                                                <div className={`peer h-6 w-11 rounded-full bg-slate-200 
+                                                    after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] 
+                                                    ${!isOwner ? 'opacity-60 cursor-not-allowed' : ''}
+                                                    peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30`}></div>
+                                            </label>
+                                        )}
                                     </div>
 
-                                    {!module.comingSoon && (
-                                        <label className="relative inline-flex cursor-pointer items-center">
-                                            {/* Disable input if user is NOT owner (Collaborator view is Read-Only) */}
-                                            <input
-                                                type="checkbox"
-                                                className="peer sr-only"
-                                                checked={isActive}
-                                                disabled={!isOwner}
-                                                onChange={(e) => handleToggle(module.code, e.target.checked)}
-                                            />
-                                            <div className={`peer h-6 w-11 rounded-full bg-slate-200 
-                                                after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] 
-                                                ${!isOwner ? 'opacity-60 cursor-not-allowed' : ''}
-                                                peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30`}></div>
-                                        </label>
+                                    <h3 className="mb-2 text-lg font-semibold text-slate-900">{module.name}</h3>
+                                    <p className="text-sm text-slate-500 mb-4 flex-grow">{module.description}</p>
+
+                                    {module.comingSoon && (
+                                        <div className="mt-auto pt-4 border-t border-slate-100">
+                                            <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-800">
+                                                Em breve
+                                            </span>
+                                        </div>
+                                    )}
+
+                                    {isActive && !module.comingSoon && (
+                                        <div className="mt-auto pt-4 border-t border-slate-100">
+                                            <span className="inline-flex items-center gap-1 text-xs font-medium text-primary">
+                                                <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
+                                                {selectedRole === 'company' || !isOwner ? 'Ativo' : 'Permitido'}
+                                            </span>
+                                        </div>
                                     )}
                                 </div>
-
-                                <h3 className="mb-2 text-lg font-semibold text-slate-900">{module.name}</h3>
-                                <p className="text-sm text-slate-500 mb-4 flex-grow">{module.description}</p>
-
-                                {module.comingSoon && (
-                                    <div className="mt-auto pt-4 border-t border-slate-100">
-                                        <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-800">
-                                            Em breve
-                                        </span>
-                                    </div>
-                                )}
-
-                                {isActive && !module.comingSoon && (
-                                    <div className="mt-auto pt-4 border-t border-slate-100">
-                                        <span className="inline-flex items-center gap-1 text-xs font-medium text-primary">
-                                            <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
-                                            {selectedRole === 'company' || !isOwner ? 'Ativo' : 'Permitido'}
-                                        </span>
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    })}
-                </div>
+                            );
+                        })}
+                    </div>
+                )}
             </main>
         </div>
     );
