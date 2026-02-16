@@ -134,7 +134,8 @@ export default function Onboarding() {
                     p_bairro: formData.address.bairro,
                     p_cidade: formData.address.cidade,
                     p_uf: formData.address.uf,
-                    p_ibge: formData.address.ibge
+                    p_ibge: formData.address.ibge,
+                    p_nome_usuario: formData.fullName
                 }
             )
 

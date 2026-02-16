@@ -11,7 +11,7 @@ interface CollaboratorFormProps {
 
 export default function CollaboratorForm({ initialData, empresaId, onSuccess, onCancel }: CollaboratorFormProps) {
     const [loading, setLoading] = useState(false)
-    const [cargos, setCargos] = useState<{ id: number, nome: string }[]>([])
+    const [cargos, setCargos] = useState<{ id: number, nome_cargo: string }[]>([])
 
     const [formData, setFormData] = useState<Partial<Collaborator>>({
         nome_usuario: '',
@@ -33,10 +33,15 @@ export default function CollaboratorForm({ initialData, empresaId, onSuccess, on
     const fetchCargos = async () => {
         const { data } = await supabase
             .from('me_cargo')
-            .select('id, nome')
+            .select('id, nome_cargo')
+            .eq('empresa_id', empresaId)
             .eq('ativo', true)
 
-        if (data) setCargos(data)
+        // Ordenar por nome_cargo
+        if (data) {
+            const sorted = data.sort((a: any, b: any) => a.nome_cargo.localeCompare(b.nome_cargo))
+            setCargos(sorted)
+        }
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -121,7 +126,7 @@ export default function CollaboratorForm({ initialData, empresaId, onSuccess, on
                     >
                         <option value="">Selecione um cargo...</option>
                         {cargos.map(c => (
-                            <option key={c.id} value={c.id}>{c.nome}</option>
+                            <option key={c.id} value={c.id}>{c.nome_cargo}</option>
                         ))}
                     </select>
                 </div>
@@ -143,7 +148,18 @@ export default function CollaboratorForm({ initialData, empresaId, onSuccess, on
                 </div>
 
                 {/* Configurações */}
-                <div className="md:col-span-2 pt-2">
+                <div className="md:col-span-2 pt-2 flex gap-6">
+                    <label className="flex items-center space-x-3 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            name="ativo"
+                            checked={formData.ativo ?? true}
+                            onChange={handleChange}
+                            className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                        />
+                        <span className="text-sm text-slate-700">Cadastro Ativo</span>
+                    </label>
+
                     <label className="flex items-center space-x-3 cursor-pointer">
                         <input
                             type="checkbox"

@@ -27,9 +27,8 @@ export const meCollaboratorService = {
 
         if (userError) throw userError
 
-        // Busca cargos (manual join para evitar erro de alias/coluna inexistente no Supabase)
-        // Isso é mais seguro dado os erros recentes de schema
-        const cargoIds = users.map((u: any) => u.cargo_id).filter((id: any) => id)
+        // Busca cargos
+        const cargoIds = users.filter((u: any) => u.cargo).map((u: any) => u.cargo)
         let cargosMap: Record<number, string> = {}
 
         if (cargoIds.length > 0) {
@@ -47,13 +46,21 @@ export const meCollaboratorService = {
 
         return users.map((user: any) => ({
             ...user,
-            cargo_nome: user.cargo_id ? cargosMap[user.cargo_id] : undefined
+            cargo_id: user.cargo, // Map back to frontend expectation
+            cargo_nome: user.cargo ? cargosMap[user.cargo] : undefined,
+            // ativo agora vem do banco
         })) as Collaborator[]
     },
 
     async create(colaborador: Partial<Collaborator>) {
-        // No MVP, removemos o ID para o DB gerar (UUID)
-        const { id, created_at, cargo_nome, ...payload } = colaborador as any
+        // Mapear cargo_id -> cargo
+        const { id, created_at, cargo_nome, cargo_id, ativo, ...rest } = colaborador as any
+
+        const payload = {
+            ...rest,
+            cargo: cargo_id,
+            ativo: ativo !== undefined ? ativo : true // Usa valor do form ou default true
+        }
 
         const { data, error } = await supabase
             .from('me_usuario')
@@ -66,7 +73,11 @@ export const meCollaboratorService = {
     },
 
     async update(id: string, updates: Partial<Collaborator>) {
-        const { cargo_nome, ...payload } = updates as any
+        // Mapear cargo_id -> cargo
+        const { cargo_nome, cargo_id, ...rest } = updates as any
+
+        const payload: any = { ...rest }
+        if (cargo_id !== undefined) payload.cargo = cargo_id
 
         const { data, error } = await supabase
             .from('me_usuario')
@@ -80,10 +91,20 @@ export const meCollaboratorService = {
     },
 
     async delete(id: string) {
-        // Soft delete preferencialmente
+        // Soft delete agora que temos a coluna ativo
         const { error } = await supabase
             .from('me_usuario')
             .update({ ativo: false })
+            .eq('id', id)
+
+        if (error) throw error
+        return true
+    },
+
+    async toggleStatus(id: string, ativo: boolean) {
+        const { error } = await supabase
+            .from('me_usuario')
+            .update({ ativo })
             .eq('id', id)
 
         if (error) throw error
