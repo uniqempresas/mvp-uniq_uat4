@@ -19,6 +19,8 @@ import ModulesPage from './pages/Modules'
 import StoreConfig from './pages/Dashboard/StoreConfig'
 import ForgotPassword from './pages/Auth/ForgotPassword'
 import UpdatePassword from './pages/Auth/UpdatePassword'
+import SalesLayout from './pages/Sales/SalesLayout'
+import SalesPage from './pages/Sales/SalesPage'
 
 function App() {
   return (
@@ -53,6 +55,11 @@ function App() {
 
             {/* Storefront Configuration */}
             <Route path="/dashboard/store-config" element={<StoreConfig />} />
+
+            {/* Sales/PDV */}
+            <Route path="/sales" element={<SalesLayout />}>
+              <Route index element={<SalesPage />} />
+            </Route>
           </Route>
 
           {/* Public Storefront */}

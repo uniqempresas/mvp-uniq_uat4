@@ -26,7 +26,7 @@ export const MENU_CONFIG: Record<string, SubMenuConfig> = {
         items: [
             { icon: 'grid_view', label: 'Dashboard Hub', active: true, view: 'home', href: '#' },
             { type: 'divider' },
-            { icon: 'point_of_sale', label: 'Vendas & PDV', href: '#' },
+            { icon: 'point_of_sale', label: 'Vendas & PDV', href: '/sales' },
             {
                 id: 'cadastros',
                 icon: 'app_registration',

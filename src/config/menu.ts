@@ -29,6 +29,12 @@ export const MAIN_NAV_ITEMS: MenuItem[] = [
         ]
     },
     {
+        id: 'sales',
+        icon: 'point_of_sale',
+        label: 'Vendas & PDV',
+        route: '/sales'
+    },
+    {
         id: 'crm',
         icon: 'groups',
         label: 'CRM',

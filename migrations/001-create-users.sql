@@ -1,0 +1,7 @@
+-- Migration 001: Create users table
+CREATE TABLE IF NOT EXISTS public.users (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now()
+);

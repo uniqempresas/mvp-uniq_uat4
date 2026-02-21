@@ -7,7 +7,7 @@ interface MonthData {
     despesa: number
 }
 
-interface CategoryBreakdown {
+export interface CategoryBreakdown {
     nome: string
     valor: number
     percentual: number
@@ -102,45 +102,45 @@ export default function FinanceDashboard() {
             <div className="flex-1 overflow-y-auto p-6 scroll-smooth">
                 <div className="max-w-7xl mx-auto flex flex-col gap-6">
 
-                    {/* KPI Cards */}
-                    <div className="grid grid-cols-3 gap-4">
-                        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            {/* KPI Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div className="bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm">
                             <div className="flex items-center justify-between mb-2">
                                 <p className="text-sm text-gray-500 font-medium">Receita Bruta</p>
                                 <span className="text-green-600 text-xs font-bold bg-green-50 px-2 py-0.5 rounded">+12%</span>
                             </div>
-                            <p className="text-3xl font-bold text-gray-900">
+                            <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
                                 R$ {receitaBruta.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                             </p>
                         </div>
 
-                        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                        <div className="bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm">
                             <div className="flex items-center justify-between mb-2">
                                 <p className="text-sm text-gray-500 font-medium">Despesas Totais</p>
                                 <span className="text-red-600 text-xs font-bold bg-red-50 px-2 py-0.5 rounded">+5%</span>
                             </div>
-                            <p className="text-3xl font-bold text-gray-900">
+                            <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
                                 R$ {despesasTotais.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                             </p>
                         </div>
 
-                        <div className="bg-gradient-to-br from-blue-900 to-blue-700 p-6 rounded-xl shadow-lg text-white">
+                        <div className="bg-gradient-to-br from-blue-900 to-blue-700 p-4 md:p-6 rounded-xl shadow-lg text-white md:col-span-2 lg:col-span-1">
                             <div className="flex items-center justify-between mb-2">
                                 <p className="text-sm text-white/80 font-medium">Lucro Líquido</p>
                                 <span className="text-white text-xs font-bold bg-white/20 px-2 py-0.5 rounded">
                                     {margemLucro >= 0 ? '+' : ''}{margemLucro.toFixed(0)}%
                                 </span>
                             </div>
-                            <p className="text-3xl font-bold">
+                            <p className="text-2xl md:text-3xl lg:text-4xl font-bold">
                                 R$ {lucroLiquido.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                             </p>
                             <p className="text-xs text-white/70 mt-1">Margem de lucro</p>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         {/* Evolução Financeira Chart */}
-                        <div className="col-span-2 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                        <div className="lg:col-span-2 bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm">
                             <div className="flex items-center justify-between mb-6">
                                 <h3 className="text-lg font-bold text-gray-900">Evolução Financeira</h3>
                                 <div className="flex items-center gap-4 text-xs">
