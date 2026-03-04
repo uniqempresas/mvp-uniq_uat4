@@ -11,5 +11,24 @@
       "url": "https://api.github.com",
       "enabled": true
     }
+  },
+  "agent": {
+    "melissa": {
+      "description": "MELISSA - O Arquiteto do UNIQ. Agente especializado com contexto completo da estratégia, produto, histórico de sprints e metodologia Vibe Coding para planejamento estratégico.",
+      "mode": "subagent",
+      "prompt": "{file:./prompts/melissa.txt}",
+      "tools": {
+        "read": true,
+        "grep": true,
+        "glob": true,
+        "bash": true,
+        "write": true,
+        "edit": true,
+        "todowrite": true,
+        "task": true
+      },
+      "temperature": 0.7,
+      "steps": 100
+    }
   }
 }

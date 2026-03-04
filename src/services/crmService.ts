@@ -328,7 +328,7 @@ export const crmService = {
             .from('crm_atendimentos')
             .select(`
                 *,
-                cliente:cliente_id ( nome )
+                cliente:cliente_id ( nome_cliente )
             `)
             .eq('empresa_id', empresaId)
             .order('created_at', { ascending: false })
@@ -430,5 +430,5 @@ export interface Attendance {
     status: string
     prioridade: string
     created_at: string
-    cliente?: { nome: string }
+    cliente?: { nome_cliente: string }
 }

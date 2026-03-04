@@ -86,6 +86,7 @@ export const financeService = {
         const empresaId = await authService.getEmpresaId()
         if (!empresaId) return []
 
+        // Buscar transações manuais do módulo financeiro
         let query = supabase
             .from('fn_movimento')
             .select(`
@@ -110,9 +111,52 @@ export const financeService = {
             query = query.ilike('descricao', `%${filters.search}%`)
         }
 
-        const { data, error } = await query
-        if (error) throw error
-        return data as Transaction[]
+        const { data: manualTransactions, error: manualError } = await query
+        if (manualError) throw manualError
+
+        // Se estiver buscando receitas, também buscar contas a receber do PDV
+        let salesReceivables: Transaction[] = []
+        if (filters.tipo === 'receita' || !filters.tipo) {
+            let salesQuery = supabase
+                .from('me_contas_receber')
+                .select('*')
+                .eq('empresa_id', empresaId)
+                .order('data_vencimento', { ascending: true })
+
+            if (filters.status && filters.status !== 'todos') {
+                salesQuery = salesQuery.eq('status', filters.status)
+            }
+            // Buscar todas as contas a receber, independente do mês
+            // (para mostrar contas futuras geradas pelo PDV)
+            if (filters.search) {
+                salesQuery = salesQuery.ilike('descricao', `%${filters.search}%`)
+            }
+
+            const { data: salesData, error: salesError } = await salesQuery
+            if (!salesError && salesData) {
+                salesReceivables = salesData.map(item => ({
+                    id: item.id,
+                    empresa_id: item.empresa_id,
+                    descricao: item.descricao || 'Conta a receber',
+                    valor: Number(item.valor),
+                    tipo: 'receita' as const,
+                    status: item.status || 'pendente',
+                    data_vencimento: item.data_vencimento,
+                    data_pagamento: item.data_pagamento,
+                    cliente_id: item.cliente_id,
+                    categoria: undefined,
+                    created_at: item.created_at
+                }))
+            }
+        }
+
+        // Combinar transações manuais e do PDV
+        const allTransactions = [...(manualTransactions || []), ...salesReceivables]
+        
+        // Ordenar por data de vencimento
+        return allTransactions.sort((a, b) => 
+            new Date(a.data_vencimento).getTime() - new Date(b.data_vencimento).getTime()
+        ) as Transaction[]
     },
 
     async getDashboardStats(tipo: 'receita' | 'despesa'): Promise<FinanceStats> {
@@ -123,7 +167,7 @@ export const financeService = {
         const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString()
         const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).toISOString()
 
-        // 1. Vencendo Hoje (Pendente)
+        // 1. Vencendo Hoje (Pendente) - fn_movimento
         const { data: todayData } = await supabase
             .from('fn_movimento')
             .select('valor')
@@ -132,9 +176,10 @@ export const financeService = {
             .eq('data_vencimento', today)
             .eq('status', 'pendente')
 
-        const todayTotal = todayData?.reduce((acc, curr) => acc + Number(curr.valor), 0) || 0
+        let todayTotal = todayData?.reduce((acc, curr) => acc + Number(curr.valor), 0) || 0
+        let todayCount = todayData?.length || 0
 
-        // 2. Total Mês (Vencimento no mês)
+        // 2. Total Mês (Vencimento no mês) - fn_movimento
         const { data: monthData } = await supabase
             .from('fn_movimento')
             .select('valor')
@@ -143,11 +188,9 @@ export const financeService = {
             .gte('data_vencimento', startOfMonth)
             .lte('data_vencimento', endOfMonth)
 
-        const monthTotal = monthData?.reduce((acc, curr) => acc + Number(curr.valor), 0) || 0
+        let monthTotal = monthData?.reduce((acc, curr) => acc + Number(curr.valor), 0) || 0
 
-        // 3. Pago Mês (Pago e Data Pagamento no mês, OU Vencimento no mês e status pago? Usually Cash Flow vs Competence. 
-        // Request said "Simples" (Simple). Usually users want "How much I paid this month" (Cash flow).
-        // Let's go with "Status = Pago" AND "Data Pagamento" in month.
+        // 3. Pago Mês - fn_movimento
         const { data: paidData } = await supabase
             .from('fn_movimento')
             .select('valor')
@@ -157,11 +200,45 @@ export const financeService = {
             .gte('data_pagamento', startOfMonth)
             .lte('data_pagamento', endOfMonth)
 
-        const paidTotal = paidData?.reduce((acc, curr) => acc + Number(curr.valor), 0) || 0
+        let paidTotal = paidData?.reduce((acc, curr) => acc + Number(curr.valor), 0) || 0
+
+        // 4. Se for receita, também buscar em me_contas_receber (vendas do PDV)
+        if (tipo === 'receita') {
+            const todayStr = today
+
+            // Vencendo hoje - me_contas_receber
+            const { data: salesTodayData } = await supabase
+                .from('me_contas_receber')
+                .select('valor')
+                .eq('empresa_id', empresaId)
+                .eq('data_vencimento', todayStr)
+                .eq('status', 'pendente')
+
+            todayTotal += salesTodayData?.reduce((acc, curr) => acc + Number(curr.valor), 0) || 0
+            todayCount += salesTodayData?.length || 0
+
+            // Total a Receber (todas as contas pendentes, independente do mês)
+            const { data: salesPendingData } = await supabase
+                .from('me_contas_receber')
+                .select('valor')
+                .eq('empresa_id', empresaId)
+                .eq('status', 'pendente')
+
+            monthTotal += salesPendingData?.reduce((acc, curr) => acc + Number(curr.valor), 0) || 0
+
+            // Pago - me_contas_receber (todos os pagos, não só do mês)
+            const { data: salesPaidData } = await supabase
+                .from('me_contas_receber')
+                .select('valor')
+                .eq('empresa_id', empresaId)
+                .eq('status', 'pago')
+
+            paidTotal += salesPaidData?.reduce((acc, curr) => acc + Number(curr.valor), 0) || 0
+        }
 
         return {
-            vencendo_hoje: { total: todayTotal, count: todayData?.length || 0 },
-            total_mes: { total: monthTotal, percentual: 0 }, // TODO: Calc breakdown later
+            vencendo_hoje: { total: todayTotal, count: todayCount },
+            total_mes: { total: monthTotal, percentual: 0 },
             pago_mes: { total: paidTotal }
         }
     },
@@ -181,24 +258,61 @@ export const financeService = {
     },
 
     async updateTransaction(id: string, updates: Partial<Transaction>) {
-        const { data, error } = await supabase
+        // Tentar atualizar em fn_movimento primeiro (transações manuais)
+        const { data: manualData, error: manualError } = await supabase
             .from('fn_movimento')
             .update(updates)
             .eq('id', id)
             .select()
-            .single()
 
-        if (error) throw error
-        return data as Transaction
+        if (!manualError && manualData && manualData.length > 0) {
+            return manualData[0] as Transaction
+        }
+
+        // Se não encontrou em fn_movimento, tentar em me_contas_receber (vendas PDV)
+        const { data: salesData, error: salesError } = await supabase
+            .from('me_contas_receber')
+            .update(updates)
+            .eq('id', id)
+            .select()
+
+        if (salesError) throw salesError
+        if (!salesData || salesData.length === 0) {
+            throw new Error('Transação não encontrada')
+        }
+
+        // Mapear dados da tabela me_contas_receber para o formato Transaction
+        return {
+            id: salesData[0].id,
+            empresa_id: salesData[0].empresa_id,
+            descricao: salesData[0].descricao || 'Conta a receber',
+            valor: Number(salesData[0].valor),
+            tipo: 'receita' as const,
+            status: salesData[0].status || 'pendente',
+            data_vencimento: salesData[0].data_vencimento,
+            data_pagamento: salesData[0].data_pagamento,
+            cliente_id: salesData[0].cliente_id,
+            categoria: undefined,
+            created_at: salesData[0].created_at
+        } as Transaction
     },
 
     async deleteTransaction(id: string) {
-        const { error } = await supabase
+        // Tentar deletar de fn_movimento primeiro
+        const { error: manualError } = await supabase
             .from('fn_movimento')
             .delete()
             .eq('id', id)
 
-        if (error) throw error
+        if (!manualError) return
+
+        // Se falhou, tentar deletar de me_contas_receber
+        const { error: salesError } = await supabase
+            .from('me_contas_receber')
+            .delete()
+            .eq('id', id)
+
+        if (salesError) throw salesError
     },
 
     async getMonthlyEvolution(months: number = 6) {
@@ -212,8 +326,10 @@ export const financeService = {
             const targetDate = new Date(now.getFullYear(), now.getMonth() - i, 1)
             const startOfMonth = new Date(targetDate.getFullYear(), targetDate.getMonth(), 1).toISOString()
             const endOfMonth = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0).toISOString()
+            const startOfMonthStr = startOfMonth.split('T')[0]
+            const endOfMonthStr = endOfMonth.split('T')[0]
 
-            // Receita
+            // Receita - fn_movimento
             const { data: receitaData } = await supabase
                 .from('fn_movimento')
                 .select('valor')
@@ -221,6 +337,14 @@ export const financeService = {
                 .eq('tipo', 'receita')
                 .gte('data_vencimento', startOfMonth)
                 .lte('data_vencimento', endOfMonth)
+
+            // Receita - me_contas_receber (vendas PDV)
+            const { data: salesReceitaData } = await supabase
+                .from('me_contas_receber')
+                .select('valor')
+                .eq('empresa_id', empresaId)
+                .gte('data_vencimento', startOfMonthStr)
+                .lte('data_vencimento', endOfMonthStr)
 
             // Despesa
             const { data: despesaData } = await supabase
@@ -231,13 +355,59 @@ export const financeService = {
                 .gte('data_vencimento', startOfMonth)
                 .lte('data_vencimento', endOfMonth)
 
-            const receita = receitaData?.reduce((acc, curr) => acc + Number(curr.valor), 0) || 0
+            const receitaManual = receitaData?.reduce((acc, curr) => acc + Number(curr.valor), 0) || 0
+            const receitaSales = salesReceitaData?.reduce((acc, curr) => acc + Number(curr.valor), 0) || 0
+            const receita = receitaManual + receitaSales
             const despesa = despesaData?.reduce((acc, curr) => acc + Number(curr.valor), 0) || 0
 
             result.push({
                 month: targetDate.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', ''),
                 receita,
                 despesa
+            })
+        }
+
+        return result
+    },
+
+    // Novo método: Vendas realizadas por mês (por data de criação da venda)
+    async getMonthlySales(months: number = 6) {
+        const empresaId = await authService.getEmpresaId()
+        if (!empresaId) return []
+
+        const result = []
+        const now = new Date()
+
+        for (let i = months - 1; i >= 0; i--) {
+            const targetDate = new Date(now.getFullYear(), now.getMonth() - i, 1)
+            const startOfMonth = new Date(targetDate.getFullYear(), targetDate.getMonth(), 1).toISOString()
+            const endOfMonth = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0).toISOString()
+
+            // Vendas de produtos - me_venda (por data de criação)
+            const { data: productSalesData } = await supabase
+                .from('me_venda')
+                .select('valor_total')
+                .eq('empresa_id', empresaId)
+                .gte('criado_em', startOfMonth)
+                .lte('criado_em', endOfMonth)
+
+            // Vendas de serviços - me_venda_servicos (por data de criação)
+            const { data: serviceSalesData } = await supabase
+                .from('me_venda_servicos')
+                .select('valor_total')
+                .eq('empresa_id', empresaId)
+                .gte('created_at', startOfMonth)
+                .lte('created_at', endOfMonth)
+
+            const productSales = productSalesData?.reduce((acc, curr) => acc + Number(curr.valor_total), 0) || 0
+            const serviceSales = serviceSalesData?.reduce((acc, curr) => acc + Number(curr.valor_total), 0) || 0
+            const total = productSales + serviceSales
+
+            result.push({
+                month: targetDate.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', ''),
+                produtos: productSales,
+                servicos: serviceSales,
+                total
             })
         }
 
@@ -289,7 +459,10 @@ export const financeService = {
 
         const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString()
         const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).toISOString()
+        const startOfMonthStr = startOfMonth.split('T')[0]
+        const endOfMonthStr = endOfMonth.split('T')[0]
 
+        // Buscar receitas manuais - fn_movimento
         let query = supabase
             .from('fn_movimento')
             .select(`
@@ -307,20 +480,44 @@ export const financeService = {
             query = query.eq('status', 'pendente')
         }
 
-        const { data, error } = await query
+        const { data: manualData, error: manualError } = await query
+        if (manualError) throw manualError
 
-        if (error) throw error
+        // Buscar vendas do PDV - me_contas_receber
+        let salesQuery = supabase
+            .from('me_contas_receber')
+            .select('valor, status')
+            .eq('empresa_id', empresaId)
+            .gte('data_vencimento', startOfMonthStr)
+            .lte('data_vencimento', endOfMonthStr)
+
+        if (statusFilter === 'pago') {
+            salesQuery = salesQuery.eq('status', 'pago')
+        } else if (statusFilter === 'pendente') {
+            salesQuery = salesQuery.eq('status', 'pendente')
+        }
+
+        const { data: salesData, error: salesError } = await salesQuery
+        if (salesError) throw salesError
 
         // Group by category
         const breakdown: Record<string, number> = {}
         let total = 0
 
-        data?.forEach((item: any) => {
+        // Adicionar receitas manuais
+        manualData?.forEach((item: any) => {
             const categoryName = item.categoria?.nome || 'Outros'
             const value = Number(item.valor)
             breakdown[categoryName] = (breakdown[categoryName] || 0) + value
             total += value
         })
+
+        // Adicionar vendas do PDV (categoria específica)
+        const salesTotal = salesData?.reduce((acc, curr) => acc + Number(curr.valor), 0) || 0
+        if (salesTotal > 0) {
+            breakdown['Vendas PDV'] = (breakdown['Vendas PDV'] || 0) + salesTotal
+            total += salesTotal
+        }
 
         // Convert to percentage
         return Object.entries(breakdown).map(([nome, valor]) => ({

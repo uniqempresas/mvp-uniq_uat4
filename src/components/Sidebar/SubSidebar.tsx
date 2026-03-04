@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { MENU_CONFIG, type MenuItem } from '../../config/submenus'
 import { storeService } from '../../services/storeService'
 
@@ -12,6 +12,7 @@ export default function SubSidebar({ activeContext, onNavigate }: SubSidebarProp
     const config = MENU_CONFIG[activeContext] || MENU_CONFIG['dashboard']
     const [expandedItems, setExpandedItems] = useState<string[]>([])
     const [companySlug, setCompanySlug] = useState<string>('')
+    const location = useLocation()
 
     useEffect(() => {
         storeService.getStoreConfig().then(config => {
@@ -53,6 +54,22 @@ export default function SubSidebar({ activeContext, onNavigate }: SubSidebarProp
         }
     }
 
+    const isItemActive = (item: MenuItem): boolean => {
+        if (!item.href) return false
+        
+        const currentPath = location.pathname
+        const itemPath = item.href
+        
+        // Para o caso especial de /attendant que deve corresponder apenas ao exato ou ter filhos
+        if (itemPath === '/attendant') {
+            return currentPath === '/attendant' || currentPath === '/attendant/'
+        }
+        
+        // Para outros casos, verifica se o caminho atual começa com o href do item
+        // ou é exatamente igual
+        return currentPath === itemPath || currentPath.startsWith(itemPath + '/')
+    }
+
     const renderMenuItem = (item: MenuItem, index: number) => {
         if (item.type === 'divider') {
             return <div key={`divider-${index}`} className="my-2 h-px bg-slate-100 w-full"></div>
@@ -60,6 +77,35 @@ export default function SubSidebar({ activeContext, onNavigate }: SubSidebarProp
 
         const isExpanded = item.id && expandedItems.includes(item.id)
         const hasChildren = item.children && item.children.length > 0
+        const hasHref = item.href && item.href !== '#'
+        const isActive = isItemActive(item)
+
+        // Se tem href e não tem children, usar Link
+        if (hasHref && !hasChildren && item.href) {
+            return (
+                <div key={`item-${index}`}>
+                    <Link
+                        to={item.href}
+                        className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-lg transition-all font-medium group select-none ${item.disabled
+                            ? 'text-slate-400 cursor-not-allowed opacity-60'
+                            : isActive
+                                ? 'bg-mint-soft text-primary shadow-sm border border-primary/10'
+                                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 cursor-pointer'
+                            }`}
+                    >
+                        <span className={`material-symbols-outlined text-[20px] ${!isActive ? 'text-slate-400 group-hover:text-slate-600' : ''}`}>
+                            {item.icon}
+                        </span>
+                        <span className="text-sm flex-1">{item.label}</span>
+                        {item.badge && (
+                            <span className="ml-auto bg-primary/10 text-primary text-[10px] font-bold px-1.5 py-0.5 rounded">
+                                {item.badge}
+                            </span>
+                        )}
+                    </Link>
+                </div>
+            )
+        }
 
         return (
             <div key={`item-${index}`}>
@@ -68,12 +114,12 @@ export default function SubSidebar({ activeContext, onNavigate }: SubSidebarProp
                     disabled={item.disabled}
                     className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-lg transition-all font-medium group select-none ${item.disabled
                         ? 'text-slate-400 cursor-not-allowed opacity-60'
-                        : item.active
+                        : isActive
                             ? 'bg-mint-soft text-primary shadow-sm border border-primary/10'
                             : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 cursor-pointer'
                         }`}
                 >
-                    <span className={`material-symbols-outlined text-[20px] ${!item.active ? 'text-slate-400 group-hover:text-slate-600' : ''}`}>
+                    <span className={`material-symbols-outlined text-[20px] ${!isActive ? 'text-slate-400 group-hover:text-slate-600' : ''}`}>
                         {item.icon}
                     </span>
                     <span className="text-sm flex-1">{item.label}</span>

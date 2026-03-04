@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { salesService } from '../../../services/salesService';
-import type { Product, Service } from '../../../types/sales';
+import { VariationSelector } from './VariationSelector';
+import type { Product, ProductVariation, Service } from '../../../types/sales';
 
 interface ProductSearchProps {
-  onSelect: (item: Product | Service) => void;
+  onSelect: (item: Product | Service | ProductVariation) => void;
 }
 
 export function ProductSearch({ onSelect }: ProductSearchProps) {
@@ -11,6 +12,8 @@ export function ProductSearch({ onSelect }: ProductSearchProps) {
   const [suggestions, setSuggestions] = useState<(Product | Service)[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isVariationModalOpen, setIsVariationModalOpen] = useState(false);
 
   const debouncedSearch = useCallback(
     async (term: string) => {
@@ -40,11 +43,38 @@ export function ProductSearch({ onSelect }: ProductSearchProps) {
     return () => clearTimeout(timeoutId);
   }, [searchTerm, debouncedSearch]);
 
+  const isProductWithVariations = (item: Product | Service): item is Product => {
+    return item.tipo === 'produto' && item.tipo_produto === 'variavel' && !!item.variacoes && item.variacoes.length > 0;
+  };
+
   const handleSelect = (item: Product | Service) => {
-    onSelect(item);
+    if (isProductWithVariations(item)) {
+      setSelectedProduct(item);
+      setIsVariationModalOpen(true);
+    } else {
+      onSelect(item);
+      setSearchTerm('');
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleVariationSelect = (variation: ProductVariation) => {
+    onSelect(variation);
+    setIsVariationModalOpen(false);
+    setSelectedProduct(null);
     setSearchTerm('');
     setSuggestions([]);
     setShowSuggestions(false);
+  };
+
+  const getProductPrice = (item: Product | Service): string => {
+    if (isProductWithVariations(item)) {
+      const prices = item.variacoes!.map(v => v.preco);
+      const minPrice = Math.min(...prices);
+      return `A partir de R$ ${minPrice.toFixed(2)}`;
+    }
+    return `R$ ${item.preco.toFixed(2)}`;
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -93,26 +123,43 @@ export function ProductSearch({ onSelect }: ProductSearchProps) {
                 </span>
                 <div>
                   <p className="font-medium text-sm">{item.nome}</p>
-                  {'quantidade' in item && (
-                    <p className="text-xs text-gray-500">
-                      Estoque: {item.quantidade} un
+                  {isProductWithVariations(item) ? (
+                    <p className="text-xs text-amber-600">
+                      {item.variacoes!.length} opções disponíveis
                     </p>
-                  )}
+                  ) : !isProductWithVariations(item) && ((item as unknown) as Product).quantidade !== undefined ? (
+                    <p className="text-xs text-gray-500">
+                      Estoque: {((item as unknown) as Product).quantidade} un
+                    </p>
+                  ) : null}
                 </div>
               </div>
-              <span className="font-semibold text-sm">
-                R$ {item.preco.toFixed(2)}
+              <span className={`font-semibold text-sm ${isProductWithVariations(item) ? 'text-amber-600' : ''}`}>
+                {getProductPrice(item)}
               </span>
             </button>
           ))}
         </div>
       )}
-      
+
       {/* Click outside to close */}
       {showSuggestions && suggestions.length > 0 && (
-        <div 
-          className="fixed inset-0 z-10" 
+        <div
+          className="fixed inset-0 z-10"
           onClick={() => setShowSuggestions(false)}
+        />
+      )}
+
+      {/* Variation Selector Modal */}
+      {selectedProduct && (
+        <VariationSelector
+          product={selectedProduct}
+          isOpen={isVariationModalOpen}
+          onClose={() => {
+            setIsVariationModalOpen(false);
+            setSelectedProduct(null);
+          }}
+          onSelect={handleVariationSelect}
         />
       )}
     </div>

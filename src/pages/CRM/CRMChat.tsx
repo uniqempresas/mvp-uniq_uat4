@@ -6,6 +6,9 @@ import { crmService, type FunnelStage } from '../../services/crmService'
 import { productService, type Product } from '../../services/productService'
 import OpportunityModal from '../../components/CRM/OpportunityModal'
 import ClientForm from './ClientForm'
+import { CanalFilter, CanalFilterBadge } from '../../components/CRM/chat/CanalFilter'
+import { QuickReplySelector } from '../../components/CRM/chat/QuickReplySelector'
+import type { CanalType } from '../../types/crm-chat'
 
 export default function CRMChat({ onNavigate }: { onNavigate?: (view: string, params?: any) => void }) {
     const [conversations, setConversations] = useState<ChatConversation[]>([])
@@ -41,6 +44,7 @@ export default function CRMChat({ onNavigate }: { onNavigate?: (view: string, pa
     // Filters
     const [searchTerm, setSearchTerm] = useState('')
     const [filterType, setFilterType] = useState<'all' | 'cliente' | 'lead' | 'outros'>('all')
+    const [selectedCanais, setSelectedCanais] = useState<CanalType[]>([])
 
     // Filter Logic
     const filteredConversations = conversations.filter(conv => {
@@ -49,10 +53,19 @@ export default function CRMChat({ onNavigate }: { onNavigate?: (view: string, pa
 
         if (!matchesSearch) return false
 
-        if (filterType === 'all') return true
-        if (filterType === 'cliente') return !!conv.cliente
-        if (filterType === 'lead') return !!conv.lead && !conv.cliente
-        if (filterType === 'outros') return !conv.cliente && !conv.lead
+        // Filtro por tipo (cliente/lead/outros)
+        let matchesType = true
+        if (filterType === 'cliente') matchesType = !!conv.cliente
+        else if (filterType === 'lead') matchesType = !!conv.lead && !conv.cliente
+        else if (filterType === 'outros') matchesType = !conv.cliente && !conv.lead
+
+        if (!matchesType) return false
+
+        // Filtro por canal
+        if (selectedCanais.length > 0) {
+            const convCanal = (conv.canal || 'whatsapp') as CanalType
+            if (!selectedCanais.includes(convCanal)) return false
+        }
 
         return true
     })
@@ -545,7 +558,19 @@ export default function CRMChat({ onNavigate }: { onNavigate?: (view: string, pa
             `}>
                 {/* Header */}
                 <div className="p-4 border-b border-gray-50 flex justify-between items-center shrink-0">
-                    <h2 className="font-bold text-gray-800 text-lg tracking-tight">Conversas</h2>
+                    <div className="flex items-center gap-3">
+                        <h2 className="font-bold text-gray-800 text-lg tracking-tight">Conversas</h2>
+                        <CanalFilter 
+                            selectedCanais={selectedCanais}
+                            onChange={setSelectedCanais}
+                        />
+                        {selectedCanais.length > 0 && (
+                            <CanalFilterBadge 
+                                canais={selectedCanais}
+                                onClear={() => setSelectedCanais([])}
+                            />
+                        )}
+                    </div>
                     <button
                         onClick={() => setIsNewChatModalOpen(true)}
                         className="h-9 w-9 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-colors shadow-sm"
@@ -567,7 +592,7 @@ export default function CRMChat({ onNavigate }: { onNavigate?: (view: string, pa
                         />
                     </div>
                     {/* Filter Tabs */}
-                    <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+                    <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar items-center">
                         <button
                             onClick={() => setFilterType('all')}
                             className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${filterType === 'all' ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
@@ -592,6 +617,7 @@ export default function CRMChat({ onNavigate }: { onNavigate?: (view: string, pa
                         >
                             Outros
                         </button>
+                        
                     </div>
                 </div>
                 {/* List */}
@@ -614,12 +640,19 @@ export default function CRMChat({ onNavigate }: { onNavigate?: (view: string, pa
                                 ></div>
                                 <div className={`absolute bottom-0 right-0 w-3 h-3 border-2 border-white rounded-full ${conv.status === 'aberto' ? 'bg-green-500' : 'bg-gray-300'
                                     }`}></div>
-                                {/* Channel Icon Badge */}
+                                {/* Channel Icon Badge with Color */}
                                 {conv.canal && (
-                                    <div className="absolute -top-1 -right-1 bg-white rounded-full p-0.5 shadow-sm border border-gray-100">
-                                        <span className="material-symbols-outlined text-[10px] text-gray-500 block">
-                                            {getChannelIcon(conv.canal)}
-                                        </span>
+                                    <div 
+                                        className="absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center material-symbols-outlined text-white text-[10px] shadow-sm border-2 border-white"
+                                        style={{
+                                            background: conv.canal === 'whatsapp' ? '#25D366' : 
+                                                      conv.canal === 'instagram' ? 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)' :
+                                                      conv.canal === 'email' ? '#4285F4' :
+                                                      conv.canal === 'chat' ? '#7C3AED' : '#6B7280'
+                                        }}
+                                        title={conv.canal}
+                                    >
+                                        {getChannelIcon(conv.canal)}
                                     </div>
                                 )}
                             </div>
@@ -671,10 +704,26 @@ export default function CRMChat({ onNavigate }: { onNavigate?: (view: string, pa
                                 </div>
                                 <div className="flex flex-col overflow-hidden">
                                     <h2 className="text-sm font-bold text-gray-900 leading-tight truncate">{selectedChat.cliente?.nome_cliente || selectedChat.lead?.nome || selectedChat.nome || selectedChat.titulo || 'Cliente'}</h2>
-                                    <span className="text-xs text-green-600 font-medium flex items-center gap-1 truncate">
+                                    <span className="text-xs font-medium flex items-center gap-1 truncate">
                                         <span className="w-1.5 h-1.5 rounded-full bg-green-600 shrink-0"></span>
-                                        <span className="truncate">{selectedChat.modo === 'bot' ? 'Bot' : 'Humano'}</span>
-                                        {selectedChat.canal && <span className="text-gray-400 mx-1 shrink-0">• {selectedChat.canal}</span>}
+                                        <span className="truncate text-green-600">{selectedChat.modo === 'bot' ? 'Bot' : 'Humano'}</span>
+                                        {selectedChat.canal && (
+                                            <span 
+                                                className="ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-semibold"
+                                                style={{
+                                                    backgroundColor: selectedChat.canal === 'whatsapp' ? '#25D36620' :
+                                                                   selectedChat.canal === 'instagram' ? '#E4405F20' :
+                                                                   selectedChat.canal === 'email' ? '#4285F420' :
+                                                                   selectedChat.canal === 'chat' ? '#7C3AED20' : '#6B728020',
+                                                    color: selectedChat.canal === 'whatsapp' ? '#25D366' :
+                                                          selectedChat.canal === 'instagram' ? '#E4405F' :
+                                                          selectedChat.canal === 'email' ? '#4285F4' :
+                                                          selectedChat.canal === 'chat' ? '#7C3AED' : '#6B7280'
+                                                }}
+                                            >
+                                                {selectedChat.canal.charAt(0).toUpperCase() + selectedChat.canal.slice(1)}
+                                            </span>
+                                        )}
                                     </span>
                                 </div>
                             </div>
@@ -807,6 +856,13 @@ export default function CRMChat({ onNavigate }: { onNavigate?: (view: string, pa
                                     >
                                         <span className="material-symbols-outlined text-[22px]">storefront</span>
                                     </button>
+                                    
+                                    {/* Quick Reply Selector */}
+                                    <QuickReplySelector 
+                                        inputText={messageInput}
+                                        onSelect={(text) => setMessageInput(text)}
+                                    />
+                                    
                                     <textarea
                                         id="message-input"
                                         name="message"

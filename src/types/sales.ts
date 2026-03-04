@@ -2,6 +2,7 @@ export interface CartItem {
   id: string;
   tipo: 'produto' | 'servico';
   id_referencia: string;
+  produto_pai_id?: string; // Usado apenas para variações (ID do produto pai)
   nome: string;
   quantidade: number;
   preco_unitario: number;
@@ -21,7 +22,8 @@ export interface VendaPayload {
 
 export interface VendaResult {
   success: boolean;
-  id_venda: string;
+  id_venda?: string;
+  id_venda_servico?: string;
   id_conta_receber: string;
   valor_total: number;
   error?: string;
@@ -34,6 +36,18 @@ export interface Product {
   preco: number;
   quantidade: number;
   tipo: 'produto';
+  tipo_produto?: 'simples' | 'variavel';
+  variacoes?: ProductVariation[];
+}
+
+export interface ProductVariation {
+  id: string;
+  produto_pai_id: string;
+  nome: string;
+  sku: string;
+  preco: number;
+  quantidade: number;
+  atributos: Record<string, string>;
 }
 
 export interface Service {

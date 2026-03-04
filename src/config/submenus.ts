@@ -40,6 +40,7 @@ export const MENU_CONFIG: Record<string, SubMenuConfig> = {
                     { label: 'Colaboradores', icon: 'badge', view: 'collaborators' }
                 ]
             },
+
         ],
     },
     storefront: {
@@ -111,4 +112,5 @@ export const MENU_CONFIG: Record<string, SubMenuConfig> = {
             { icon: 'arrow_back', label: 'Voltar ao Dashboard', href: '/dashboard' },
         ],
     },
+
 }

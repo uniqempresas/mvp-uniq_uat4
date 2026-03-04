@@ -213,7 +213,7 @@ export default function OpportunityModal({
 
     return (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 flex items-center justify-center p-4 backdrop-blur-sm transition-all duration-300">
-            <div className="bg-white w-full max-w-3xl rounded-xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-[fade-in-up_0.3s_ease-out]">
+            <div className="bg-white w-full max-w-3xl rounded shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-[fade-in-up_0.3s_ease-out]">
                 <div className="px-6 py-5 border-b border-gray-200 flex justify-between items-center bg-white sticky top-0 z-10">
                     <h2 className="text-xl font-bold text-gray-900">
                         {selectedOpp?.id ? 'Detalhes da Oportunidade' : 'Nova Oportunidade'}
@@ -252,7 +252,7 @@ export default function OpportunityModal({
                                 <label className="block">
                                     <span className="text-sm font-semibold text-gray-700 mb-1.5 block">Lead (crm_leads)</span>
                                     <select
-                                        className="w-full h-10 rounded-lg border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary/20 transition-all text-sm px-3 border"
+                                        className="w-full h-10 rounded border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary/20 transition-all text-sm px-3 border"
                                         value={selectedOpp.lead_id || ''}
                                         name="lead_id"
                                         onChange={handleChange}
@@ -264,7 +264,7 @@ export default function OpportunityModal({
                                 <label className="block">
                                     <span className="text-sm font-semibold text-gray-700 mb-1.5 block">Cliente (me_cliente)</span>
                                     <select
-                                        className="w-full h-10 rounded-lg border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary/20 transition-all text-sm px-3 border"
+                                        className="w-full h-10 rounded border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary/20 transition-all text-sm px-3 border"
                                         value={selectedOpp.cliente_id || ''}
                                         name="cliente_id"
                                         onChange={handleChange}
@@ -281,7 +281,7 @@ export default function OpportunityModal({
                                     <div className="relative">
                                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 material-symbols-outlined text-lg">shopping_bag</span>
                                         <input
-                                            className="w-full pl-10 h-10 rounded-lg border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary/20 transition-all text-sm px-3 border"
+                                            className="w-full pl-10 h-10 rounded border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary/20 transition-all text-sm px-3 border"
                                             type="text"
                                             value={selectedOpp.titulo || ''}
                                             onChange={handleChange}
@@ -293,7 +293,7 @@ export default function OpportunityModal({
                                     <label className="block">
                                         <span className="text-sm font-semibold text-gray-700 mb-1.5 block">Valor (R$)</span>
                                         <input
-                                            className="w-full h-10 rounded-lg border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary/20 transition-all text-sm px-3 border"
+                                            className="w-full h-10 rounded border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary/20 transition-all text-sm px-3 border"
                                             type="text"
                                             value={displayValue}
                                             onChange={handleValueChange}
@@ -304,7 +304,7 @@ export default function OpportunityModal({
                                     <label className="block">
                                         <span className="text-sm font-semibold text-gray-700 mb-1.5 block">Data Fechamento</span>
                                         <input
-                                            className="w-full h-10 rounded-lg border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary/20 transition-all text-sm px-3 border"
+                                            className="w-full h-10 rounded border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary/20 transition-all text-sm px-3 border"
                                             type="date"
                                             value={selectedOpp.data_fechamento || ''}
                                             onChange={handleChange}
@@ -319,7 +319,7 @@ export default function OpportunityModal({
                                 <div className="relative">
                                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 material-symbols-outlined text-lg">label</span>
                                     <select
-                                        className="w-full pl-10 h-10 rounded-lg border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary/20 transition-all text-sm px-3 border"
+                                        className="w-full pl-10 h-10 rounded border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary/20 transition-all text-sm px-3 border"
                                         value={selectedOpp.estagio || ''}
                                         onChange={handleChange}
                                         name="estagio"
@@ -335,12 +335,12 @@ export default function OpportunityModal({
                             {/* Products Section (Embedded in Details) */}
                             <div className="pt-6 border-t border-gray-200 mt-6">
                                 <h3 className="text-sm font-bold text-gray-800 mb-4">Produtos</h3>
-                                <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                                <div className="bg-gray-50 p-4 rounded border border-gray-200">
                                     <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end mb-4">
                                         <div className="md:col-span-5">
                                             <label className="block text-xs font-semibold text-gray-500 mb-1.5">Produto</label>
                                             <select
-                                                className="w-full rounded-lg border-gray-300 text-sm py-2"
+                                                className="w-full rounded border-gray-300 text-sm py-2"
                                                 value={productForm.produto_id}
                                                 onChange={e => {
                                                     const selectedId = e.target.value
@@ -360,7 +360,7 @@ export default function OpportunityModal({
                                         <div className="md:col-span-2">
                                             <label className="block text-xs font-semibold text-gray-500 mb-1.5">Qtd</label>
                                             <input
-                                                className="w-full rounded-lg border-gray-300 text-sm py-2"
+                                                className="w-full rounded border-gray-300 text-sm py-2"
                                                 type="number"
                                                 value={productForm.quantidade}
                                                 onChange={e => setProductForm(prev => ({ ...prev, quantidade: Number(e.target.value) }))}
@@ -369,7 +369,7 @@ export default function OpportunityModal({
                                         <div className="md:col-span-3">
                                             <label className="block text-xs font-semibold text-gray-500 mb-1.5">Preço Unit.</label>
                                             <input
-                                                className="w-full rounded-lg border-gray-300 text-sm py-2"
+                                                className="w-full rounded border-gray-300 text-sm py-2"
                                                 type="number"
                                                 value={productForm.preco_unitario}
                                                 onChange={e => setProductForm(prev => ({ ...prev, preco_unitario: Number(e.target.value) }))}
@@ -379,7 +379,7 @@ export default function OpportunityModal({
                                             <button
                                                 type="button"
                                                 onClick={handleAddProduct}
-                                                className="w-full bg-emerald-400 hover:bg-emerald-500 text-white font-medium text-sm py-2 rounded-lg shadow-sm transition-colors"
+                                                className="w-full bg-emerald-400 hover:bg-emerald-500 text-white font-medium text-sm py-2 rounded shadow-sm transition-colors"
                                             >
                                                 Adicionar
                                             </button>
@@ -387,7 +387,7 @@ export default function OpportunityModal({
                                     </div>
 
                                     {/* Products List Table */}
-                                    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                                    <div className="bg-white rounded border border-gray-200 overflow-hidden">
                                         <table className="w-full text-sm text-left">
                                             <thead className="text-xs text-gray-700 bg-gray-50 border-b border-gray-200">
                                                 <tr>
@@ -436,7 +436,7 @@ export default function OpportunityModal({
                                         </table>
                                     </div>
 
-                                    <div className="mt-4 border-2 border-dashed border-gray-200 rounded-xl p-4 flex items-center justify-center text-gray-500 gap-2 cursor-pointer hover:border-primary hover:text-primary transition-colors">
+                                    <div className="mt-4 border-2 border-dashed border-gray-200 rounded p-4 flex items-center justify-center text-gray-500 gap-2 cursor-pointer hover:border-primary hover:text-primary transition-colors">
                                         <span className="material-symbols-outlined">description</span>
                                         <span className="font-medium">Gerar Proposta PDF</span>
                                     </div>
@@ -448,14 +448,14 @@ export default function OpportunityModal({
                                 <button
                                     type="button"
                                     onClick={onClose}
-                                    className="text-gray-600 hover:text-gray-900 font-medium text-sm px-4 py-2 rounded-lg transition-colors"
+                                    className="text-gray-600 hover:text-gray-900 font-medium text-sm px-4 py-2 rounded transition-colors"
                                 >
                                     Cancelar
                                 </button>
                                 <button
                                     type="button"
                                     onClick={handleSave}
-                                    className="bg-primary hover:bg-emerald-600 text-white font-medium text-sm px-5 py-2 rounded-lg shadow-sm flex items-center gap-2 transition-all"
+                                    className="bg-primary hover:bg-emerald-600 text-white font-medium text-sm px-5 py-2 rounded shadow-sm flex items-center gap-2 transition-all"
                                 >
                                     <span className="material-symbols-outlined text-lg">save</span> Salvar
                                 </button>
@@ -472,7 +472,7 @@ export default function OpportunityModal({
                                     Salve a oportunidade primeiro para adicionar atividades.
                                 </div>
                             ) : (
-                                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                                <div className="bg-white p-4 rounded border border-gray-200 shadow-sm">
                                     <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
                                         {[
                                             { id: 'nota', label: 'Nota', icon: 'chat_bubble_outline' },
@@ -484,7 +484,7 @@ export default function OpportunityModal({
                                                 key={item.id}
                                                 type="button"
                                                 onClick={() => setActivityForm(prev => ({ ...prev, tipo: item.id }))}
-                                                className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors border ${activityForm.tipo === item.id
+                                                className={`px-4 py-2 rounded text-sm font-medium flex items-center gap-2 transition-colors border ${activityForm.tipo === item.id
                                                     ? 'bg-gray-100 border-gray-300 text-gray-900 shadow-sm'
                                                     : 'bg-white border-transparent text-gray-500 hover:bg-gray-50'
                                                     }`}
@@ -498,7 +498,7 @@ export default function OpportunityModal({
                                     </div>
 
                                     <textarea
-                                        className="w-full rounded-lg border-gray-300 text-sm p-3 focus:border-primary focus:ring-primary/20 min-h-[100px] mb-3"
+                                        className="w-full rounded border-gray-300 text-sm p-3 focus:border-primary focus:ring-primary/20 min-h-[100px] mb-3"
                                         placeholder="Descreva a atividade..."
                                         value={activityForm.descricao}
                                         onChange={e => setActivityForm(prev => ({ ...prev, descricao: e.target.value }))}
@@ -509,7 +509,7 @@ export default function OpportunityModal({
                                             <div className="relative">
                                                 <input
                                                     type="datetime-local"
-                                                    className="pl-3 pr-3 py-2 rounded-lg border border-gray-300 text-sm focus:border-primary focus:ring-primary/20"
+                                                    className="pl-3 pr-3 py-2 rounded border border-gray-300 text-sm focus:border-primary focus:ring-primary/20"
                                                     value={activityForm.data_vencimento}
                                                     onChange={e => setActivityForm(prev => ({ ...prev, data_vencimento: e.target.value }))}
                                                 />
@@ -519,7 +519,7 @@ export default function OpportunityModal({
                                         <button
                                             type="button"
                                             onClick={handleAddActivity}
-                                            className="bg-emerald-400 hover:bg-emerald-500 text-white px-6 py-2 rounded-lg font-medium text-sm transition-colors shadow-sm"
+                                            className="bg-emerald-400 hover:bg-emerald-500 text-white px-6 py-2 rounded font-medium text-sm transition-colors shadow-sm"
                                         >
                                             Adicionar
                                         </button>
@@ -530,12 +530,12 @@ export default function OpportunityModal({
                     )}
 
                     {activeTab === 'produtos' && (
-                        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm mt-0">
+                        <div className="bg-white p-5 rounded border border-gray-200 shadow-sm mt-0">
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end mb-4">
                                 <div className="md:col-span-5">
                                     <label className="block text-xs font-semibold text-gray-500 mb-1.5">Produto</label>
                                     <select
-                                        className="w-full rounded-lg border-gray-300 text-sm py-2"
+                                        className="w-full rounded border-gray-300 text-sm py-2"
                                         value={productForm.produto_id}
                                         onChange={e => {
                                             const selectedId = e.target.value
@@ -555,7 +555,7 @@ export default function OpportunityModal({
                                 <div className="md:col-span-2">
                                     <label className="block text-xs font-semibold text-gray-500 mb-1.5">Qtd</label>
                                     <input
-                                        className="w-full rounded-lg border-gray-300 text-sm py-2"
+                                        className="w-full rounded border-gray-300 text-sm py-2"
                                         type="number"
                                         value={productForm.quantidade}
                                         onChange={e => setProductForm(prev => ({ ...prev, quantidade: Number(e.target.value) }))}
@@ -564,7 +564,7 @@ export default function OpportunityModal({
                                 <div className="md:col-span-3">
                                     <label className="block text-xs font-semibold text-gray-500 mb-1.5">Preço Unit.</label>
                                     <input
-                                        className="w-full rounded-lg border-gray-300 text-sm py-2"
+                                        className="w-full rounded border-gray-300 text-sm py-2"
                                         type="number"
                                         value={productForm.preco_unitario}
                                         onChange={e => setProductForm(prev => ({ ...prev, preco_unitario: Number(e.target.value) }))}
@@ -574,14 +574,14 @@ export default function OpportunityModal({
                                     <button
                                         type="button"
                                         onClick={handleAddProduct}
-                                        className="w-full bg-emerald-400 hover:bg-emerald-500 text-white font-medium text-sm py-2 rounded-lg shadow-sm transition-colors"
+                                        className="w-full bg-emerald-400 hover:bg-emerald-500 text-white font-medium text-sm py-2 rounded shadow-sm transition-colors"
                                     >
                                         Adicionar
                                     </button>
                                 </div>
                             </div>
 
-                            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                            <div className="bg-white rounded border border-gray-200 overflow-hidden">
                                 <table className="w-full text-sm text-left">
                                     <thead className="text-xs text-gray-700 bg-gray-50 border-b border-gray-200">
                                         <tr>

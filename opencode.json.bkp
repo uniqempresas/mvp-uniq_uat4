@@ -1,0 +1,15 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "supabase": {
+      "type": "remote",
+      "url": "https://mcp.supabase.com/mcp?project_ref=krrkfgvdwhpelxtrdtla",
+      "enabled": true
+    },
+    "github": {
+      "type": "remote",
+      "url": "https://api.github.com",
+      "enabled": true
+    }
+  }
+}

@@ -57,21 +57,22 @@ export default function PayablePage() {
 
     return (
         <div className="flex-1 flex flex-col h-full bg-gray-50 overflow-hidden">
-            {/* Header */}
-            <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 shrink-0 z-10">
+            {/* Header Mobile-First */}
+            <header className="bg-white border-b border-gray-200 flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 sm:px-6 py-3 sm:py-0 sm:h-16 shrink-0 z-10 gap-3">
                 <div className="flex items-center gap-2 text-sm">
-                    <span className="text-gray-400">Financeiro</span>
-                    <span className="material-symbols-outlined text-[14px] text-gray-300">chevron_right</span>
+                    <span className="text-gray-400 hidden sm:inline">Financeiro</span>
+                    <span className="material-symbols-outlined text-[14px] text-gray-300 hidden sm:inline">chevron_right</span>
                     <span className="font-medium text-red-600">Contas a Pagar</span>
                 </div>
                 {/* Actions */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
                     <button
                         onClick={handleNew}
-                        className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition-all shadow-sm shadow-red-200"
+                        className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-red-600 text-white text-sm font-bold rounded-lg hover:bg-red-700 transition-all shadow-sm shadow-red-200 w-full sm:w-auto"
                     >
-                        <span className="material-symbols-outlined text-[20px]">add</span>
-                        <span>Nova Despesa</span>
+                        <span className="material-symbols-outlined text-[18px] sm:text-[20px]">add</span>
+                        <span className="hidden sm:inline">Nova Despesa</span>
+                        <span className="sm:hidden">Nova</span>
                     </button>
                 </div>
             </header>

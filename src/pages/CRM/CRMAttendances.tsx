@@ -122,7 +122,7 @@ export default function CRMAttendances() {
 
     const filteredAttendances = attendances.filter(att => {
         const matchSearch = att.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            att.cliente?.nome?.toLowerCase().includes(searchTerm.toLowerCase())
+            att.cliente?.nome_cliente?.toLowerCase().includes(searchTerm.toLowerCase())
         const matchStatus = statusFilter === 'todos' ? true : att.status === statusFilter
         const matchPriority = priorityFilter === 'todas' ? true : att.prioridade === priorityFilter
         return matchSearch && matchStatus && matchPriority
@@ -199,7 +199,7 @@ export default function CRMAttendances() {
                                     <div className="text-xs text-gray-500 mt-0.5 truncate max-w-[300px]">{att.descricao}</div>
                                 </td>
                                 <td className="px-6 py-4 text-sm text-gray-600">
-                                    {att.cliente?.nome || '-'}
+                                    {att.cliente?.nome_cliente || '-'}
                                 </td>
                                 <td className="px-6 py-4">
                                     <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(att.status)}`}>

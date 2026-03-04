@@ -99,16 +99,16 @@ export const categoryService = {
 
         const { data, error } = await supabase
             .from('me_subcategoria')
-            .insert([{ nome_subcategoria, categoria_id: categoryId, empresa_id: empresaId }])
+            .insert([{ nome_subcategoria, id_categoria: categoryId, empresa_id: empresaId }])
             .select()
             .single()
 
         if (error) throw error
 
         return {
-            id_subcategoria: data.id,
+            id_subcategoria: data.id_subcategoria,
             nome_subcategoria: data.nome_subcategoria,
-            id_categoria: data.categoria_id,
+            id_categoria: data.id_categoria,
             empresa_id: data.empresa_id
         } as Subcategory
     },
@@ -117,7 +117,7 @@ export const categoryService = {
         const { error } = await supabase
             .from('me_subcategoria')
             .update({ nome_subcategoria })
-            .eq('id', id) // Use 'id' column
+            .eq('id_subcategoria', id)
 
         if (error) throw error
     },
@@ -126,7 +126,7 @@ export const categoryService = {
         const { error } = await supabase
             .from('me_subcategoria')
             .delete()
-            .eq('id', id) // Use 'id' column
+            .eq('id_subcategoria', id)
 
         if (error) throw error
     }

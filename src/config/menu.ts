@@ -35,6 +35,13 @@ export const MAIN_NAV_ITEMS: MenuItem[] = [
         route: '/sales'
     },
     {
+        id: 'attendant',
+        icon: 'support_agent',
+        label: 'Atendente',
+        route: '/attendant',
+        moduleCode: 'attendant'
+    },
+    {
         id: 'crm',
         icon: 'groups',
         label: 'CRM',

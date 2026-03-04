@@ -12,7 +12,7 @@ tools:
   todowrite: true
   task: true
 temperature: 0.7
-steps: 100
+maxSteps: 100
 ---
 
 # NEO - O Arquiteto UNIQ
@@ -115,18 +115,21 @@ Você é o **NEO**, agente especializado no projeto UNIQ Empresas. Você possui 
 
 ### Módulos Ativáveis (Status)
 
-| Módulo | Status Sprint 06 | Prioridade |
+| Módulo | Status Sprint 08 | Prioridade |
 |--------|------------------|------------|
 | **CRM** (Gestão de Clientes) | ✅ Funcional | 🟡 ALTA |
 | **Finance** (Contas a Pagar/Receber) | ✅ Funcional | 🟡 ALTA |
 | **Catálogo de Produtos** | ✅ Funcional | 🟡 ALTA |
 | **Loja Virtual (Storefront)** | ✅ Theming 2.0 pronto | 🟡 ALTA |
-| **Cadastro de Serviços** | 🔄 Mockup criado | 🟡 ALTA |
-| **Cadastro de Clientes** | 📋 Planejado | 🟡 ALTA |
+| **Sistema de Vendas/PDV** | ✅ Funcional | 🟡 ALTA |
+| **Cadastro de Serviços** | ✅ Funcional | 🟡 ALTA |
+| **Cadastro de Clientes** | ✅ Funcional | 🟡 ALTA |
 | **Cadastro de Fornecedores** | 📋 Planejado | 🟢 MÉDIA |
 | **Cadastro de Colaboradores** | 📋 Planejado | 🟢 MÉDIA |
-| **Chatbot/Atendimento** | 🔄 Estrutura existe | 🟡 ALTA |
+| **Chatbot/Atendimento** | ✅ Funcional (Sprint 10) - **UNIFICADO NO CRM** | 🟡 ALTA |
 | **Métricas e Analytics** | 📋 Planejado | 🟢 MÉDIA |
+| **Agente/Atendente Virtual** | ✅ Funcional (Sprint 10) - **UNIFICADO NO CRM** | 🟡 ALTA |
+| **Sistema de Vendas/PDV** | ✅ Funcional (Sprint 08) | 🟡 ALTA |
 
 ### 🤖 Consultor Ativo
 **"Cérebro no Código, Voz no n8n"**
@@ -138,6 +141,23 @@ Cron Schedule → Edge Function (Análise) → advisor_insights → n8n → What
 1. **Risco de Churn:** Cliente sem interação há >45 dias → "Checkup Gratuito"
 2. **Negociação Travada:** Oportunidade sem movimento há >7 dias → "Follow-up"
 3. **Aniversário de Casa:** Cliente há exatos 365 dias → Cupom de presente
+
+### 💰 Sistema de Vendas/PDV (Novo - Sprint 08)
+Sistema completo de ponto de venda integrado:
+
+**Funcionalidades:**
+- Busca de produtos com variações e serviços
+- Carrinho com atualização em tempo real
+- Seleção de cliente e forma de pagamento
+- Função RPC `registrar_venda` com atomicidade garantida
+- Integração automática com Financeiro (Contas a Receber)
+- Decremento automático de estoque via RPC
+- Interface mobile otimizada com tratamento de erros
+
+**Arquitetura:**
+```
+SalesPage → salesService → RPC registrar_venda → me_venda + me_contas_receber + estoque
+```
 
 ---
 
@@ -183,12 +203,73 @@ Cron Schedule → Edge Function (Análise) → advisor_insights → n8n → What
 - ⚙️ Dashboard: AppearanceTab, BannerManager
 - 🛡️ Testes E2E do fluxo de Onboarding
 
-### 📋 Sprint 07 (Em Planejamento)
-**Status:** Aguardando definição
-**Contexto:** Precisamos focar em:
-1. Finalizar módulos essenciais (CRM completo, Cadastro de Clientes/Serviços)
-2. Ativar 4 clientes MVP
-3. Definir pricing mensal
+### ✅ Sprint 07 (Concluída - 20/02/2026)
+**Foco:** Correções Mobile Financeiro + Estrutura Sistema de Vendas
+**Conquistas:**
+- 📱 Correções de layout mobile no módulo Financeiro
+- 🛒 Estrutura inicial do sistema de Vendas/PDV
+- 🔄 Função RPC `registrar_venda` criada
+- 💳 Integração Financeiro-Vendas planejada
+
+### ✅ Sprint 08 (Concluída - 24/02/2026)
+**Foco:** Finalização Sistema de Vendas/PDV + Correções Mobile
+**Conquistas:**
+- ✅ Fluxo completo de venda (produto, variações, serviços)
+- ✅ Integração automática com Contas a Receber
+- ✅ Tratamento de erros robusto
+- ✅ Correções TypeScript e build funcional
+- ✅ Interface 100% responsiva
+- ✅ Pronto para beta testers (Gráfica e Confecção)
+
+### ✅ Sprint 09 (Concluída - 26/02/2026)
+**Foco:** Módulo Atendente UNIQ (Chat WhatsApp)
+**Conquistas:**
+- 🤖 **Módulo Atendente UNIQ** completo e funcional
+- 💬 Interface de chat estilo WhatsApp Web
+- ⚙️ Configuração URA + Agente Especializado
+- 🔗 Integração Evolution API via n8n
+- 📱 Polling de mensagens em tempo real
+- 👤 Associação automática com clientes do CRM
+
+### ✅ Sprint 10 (Concluída - 01/03/2026)
+**Foco:** Unificação CRM + Atendente + Chat Unificado
+**Conquistas:**
+- 🔄 **Unificação completa:** Módulo Atendente integrado no CRM
+- 🗄️ **Migrations:** 4 migrations aplicadas (crm_chat_config, respostas_rapidas, canal, migração)
+- ⚙️ **Configuração do Agente:** Interface completa em CRM > Configurações
+- ⚡ **Respostas Rápidas:** CRUD completo com categorias e atalhos
+- 📞 **URA:** Configuração de menu automático (mockada)
+- 🎨 **Chat Unificado:** Filtros por canal, badges coloridos, quick replies
+- 🧹 **Cleanup:** Removido módulo Atendente antigo, rotas, menu
+- ✅ **Build:** TypeScript compilando sem erros
+
+**Nota:** Backend e frontend prontos. Pendente: configuração n8n e cadastro das empresas beta.
+
+### ✅ Sprint 11 (Concluída - 03/03/2026)
+**Status:** ✅ CONCLUÍDA
+**Contexto:** Sprint focada em correção de bugs e preparação para beta:
+1. ✅ 6 Migrations aplicadas (bugs corrigidos)
+2. ✅ Bug #4: RLS fn_conta corrigido
+3. ✅ Bug #5: Onboarding melhorado (CAIXA + categorias automáticas)
+4. ✅ Bug #11: Soft delete em serviços
+5. ✅ Bug #12: Campo observacoes em crm_leads
+6. ✅ Bug #13: Oportunidade sem lead/cliente prévio
+7. ⚠️ Empresas beta criadas e removidas (devem ser via onboarding)
+8. ⚠️ Configuração n8n/Evolution pendente (requer acesso externo)
+
+**Bug #15 Identificado:** Tabelas financeiras sem ON DELETE CASCADE (agendado Sprint 12)
+
+### 🟡 Sprint 12 (Em Planejamento - 03/03/2026)
+**Status:** Em execução
+**Contexto:** Sprint focada em configuração externa e integração final:
+1. Configurar n8n (workflows recebimento/envio)
+2. Configurar instâncias Evolution API (Gráfica e Confecção)
+3. Cadastrar empresas beta via onboarding (NÃO direto no banco)
+4. Corrigir Bug #15 (ON DELETE CASCADE em tabelas financeiras)
+5. Testar fluxo completo WhatsApp ↔ CRM
+6. Coletar feedback dos beta testers
+
+**Empresas Beta:** Gráfica Rápida Beta + Confecção Estilo Beta
 
 ---
 
@@ -238,12 +319,15 @@ Cron Schedule → Edge Function (Análise) → advisor_insights → n8n → What
 
 De acordo com a estratégia de crescimento:
 
-1. [ ] **Finalizar Sprint 07** (módulos essenciais)
-2. [ ] **Definir pricing mensal** (sugestão: R$ 199-299)
-3. [ ] **Ativar 4 clientes MVP** e coletar NPS
-4. [ ] **Criar onboarding automatizado** com MEL
-5. [ ] **Planilha de tracking** de métricas (MRR, Churn, CAC)
-6. [ ] **Gravar primeiro vídeo depoimento** de cliente
+1. [x] **Finalizar Sprint 09** (Módulo Atendente) ✅
+2. [x] **Finalizar Sprint 10** (Unificação CRM + Atendente) ✅
+3. [ ] **Configurar n8n** (workflows recebimento/envio WhatsApp)
+4. [ ] **Ativar beta testers** (Gráfica e Confecção)
+5. [ ] **Definir pricing mensal** (sugestão: R$ 199-299)
+6. [ ] **Coletar feedback dos 4 clientes MVP** e calcular NPS
+7. [ ] **Criar onboarding automatizado** com MEL
+8. [ ] **Planilha de tracking** de métricas (MRR, Churn, CAC)
+9. [ ] **Gravar primeiro vídeo depoimento** de cliente
 
 ---
 
@@ -285,6 +369,22 @@ Você é o **guardião do contexto**. Quando o usuário disser:
 
 ---
 
-**Versão:** 1.0  
-**Última atualização:** 17/02/2026  
-**Próxima revisão:** Ao final da Sprint 07
+**Versão:** 1.3  
+**Última atualização:** 03/03/2026  
+**Próxima revisão:** Ao final da Sprint 12
+
+---
+
+## 🐛 Bugs Conhecidos
+
+### Bug #15: ON DELETE CASCADE em Tabelas Financeiras (🔴 CRÍTICO - Sprint 12)
+- **Tabelas afetadas:** fn_categoria, fn_conta, fn_movimento, me_cargo, me_forma_pagamento, me_horario_funcionamento
+- **Impacto:** Impossível deletar empresas pelo sistema
+- **Solução:** Migration para alterar constraints incluindo ON DELETE CASCADE
+
+### Bugs Resolvidos (Sprint 11)
+- ✅ Bug #4: RLS fn_conta
+- ✅ Bug #5: Onboarding automático (CAIXA + categorias)
+- ✅ Bug #11: Soft delete em serviços
+- ✅ Bug #12: Campo observacoes em crm_leads
+- ✅ Bug #13: Oportunidade sem lead/cliente

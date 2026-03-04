@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './Login'
 import Storefront from './pages/Public/Storefront'
 import ProductDetail from './pages/Public/ProductDetail'
@@ -21,6 +21,7 @@ import ForgotPassword from './pages/Auth/ForgotPassword'
 import UpdatePassword from './pages/Auth/UpdatePassword'
 import SalesLayout from './pages/Sales/SalesLayout'
 import SalesPage from './pages/Sales/SalesPage'
+
 
 function App() {
   return (
@@ -60,6 +61,11 @@ function App() {
             <Route path="/sales" element={<SalesLayout />}>
               <Route index element={<SalesPage />} />
             </Route>
+
+
+            {/* Redirect old Attendant routes to CRM */}
+            <Route path="/attendant" element={<Navigate to="/crm" replace />} />
+            <Route path="/attendant/*" element={<Navigate to="/crm" replace />} />
           </Route>
 
           {/* Public Storefront */}

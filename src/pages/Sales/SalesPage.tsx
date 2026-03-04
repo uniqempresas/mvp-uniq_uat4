@@ -5,7 +5,7 @@ import { SaleCart } from './components/SaleCart';
 import { CustomerSelector } from './components/CustomerSelector';
 import { PaymentSelector } from './components/PaymentSelector';
 import { QuickProductGrid } from './components/QuickProductGrid';
-import type { CartItem, Product, Service, PaymentMethod, Customer } from '../../types/sales';
+import type { CartItem, Product, ProductVariation, Service, PaymentMethod, Customer } from '../../types/sales';
 
 // Helper to add days to a date
 const addDays = (date: Date, days: number): Date => {
@@ -20,6 +20,7 @@ export default function SalesPage() {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('pix');
   const [dueDate, setDueDate] = useState<Date>(addDays(new Date(), 1));
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [activeTab, setActiveTab] = useState<'products' | 'services'>('products');
   const [mobileView, setMobileView] = useState<'catalog' | 'cart'>('catalog');
@@ -32,15 +33,28 @@ export default function SalesPage() {
     }), { subtotal: 0, quantity: 0 });
   }, [cart]);
 
-  const addToCart = useCallback((item: Product | Service) => {
+  const isProductVariation = (item: Product | Service | ProductVariation): item is ProductVariation => {
+    return 'produto_pai_id' in item;
+  };
+
+  const addToCart = useCallback((item: Product | Service | ProductVariation) => {
     setCart(prev => {
+      // Se for uma variação, usa o ID da variação como referência
+      // mas guarda o produto_pai_id para uso no banco (estoque)
+      const isVariation = isProductVariation(item);
+      const itemId = isVariation ? item.id : item.id;
+      const itemTipo = isVariation ? 'produto' : item.tipo;
+      const itemNome = isVariation ? item.nome : item.nome;
+      const itemPreco = item.preco;
+      const itemProdutoPaiId = isVariation ? (item as ProductVariation).produto_pai_id : undefined;
+      
       const existingItem = prev.find(
-        cartItem => cartItem.id_referencia === item.id && cartItem.tipo === item.tipo
+        cartItem => cartItem.id_referencia === itemId && cartItem.tipo === itemTipo
       );
       
       if (existingItem) {
         return prev.map(cartItem =>
-          cartItem.id_referencia === item.id && cartItem.tipo === item.tipo
+          cartItem.id_referencia === itemId && cartItem.tipo === itemTipo
             ? {
                 ...cartItem,
                 quantidade: cartItem.quantidade + 1,
@@ -51,13 +65,14 @@ export default function SalesPage() {
       }
       
       const newItem: CartItem = {
-        id: `${item.id}-${Date.now()}`,
-        tipo: item.tipo,
-        id_referencia: item.id,
-        nome: item.nome,
+        id: `${itemId}-${Date.now()}`,
+        tipo: itemTipo,
+        id_referencia: itemId,
+        produto_pai_id: itemProdutoPaiId,
+        nome: itemNome,
         quantidade: 1,
-        preco_unitario: item.preco,
-        subtotal: item.preco
+        preco_unitario: itemPreco,
+        subtotal: itemPreco
       };
       
       return [...prev, newItem];
@@ -86,20 +101,26 @@ export default function SalesPage() {
   }, []);
 
   const finalizeSale = async () => {
-    if (cart.length === 0) return;
+    if (cart.length === 0) {
+      setError('Adicione pelo menos um item ao carrinho');
+      return;
+    }
     
     setIsSubmitting(true);
+    setError(null);
+    
     try {
       const itens = cart.map(item => ({
         id: item.id,
         tipo: item.tipo,
         id_referencia: item.id_referencia,
+        produto_pai_id: item.produto_pai_id,
         nome: item.nome,
         quantidade: item.quantidade,
         preco_unitario: item.preco_unitario
       }));
       
-      await salesService.createSale({
+      const result = await salesService.createSale({
         id_cliente: selectedCustomer?.id,
         valor_total: totals.subtotal,
         forma_pagamento: paymentMethod,
@@ -116,9 +137,23 @@ export default function SalesPage() {
       setShowSuccess(true);
       
       setTimeout(() => setShowSuccess(false), 3000);
-    } catch (error) {
+      
+      console.log('Venda registrada:', result);
+    } catch (error: any) {
       console.error('Erro ao finalizar venda:', error);
-      alert('Erro ao registrar venda. Tente novamente.');
+      
+      // Mensagens de erro amigáveis
+      if (error.message?.includes('network') || error.message?.includes('fetch') || error.message?.includes('connection')) {
+        setError('Erro de conexão. Verifique sua internet e tente novamente.');
+      } else if (error.message?.includes('estoque') || error.message?.includes('insufficient')) {
+        setError('Produto sem estoque suficiente. Verifique as quantidades.');
+      } else if (error.message?.includes('permission') || error.message?.includes('unauthorized')) {
+        setError('Você não tem permissão para realizar vendas. Contate o administrador.');
+      } else if (error.message?.includes('timeout')) {
+        setError('A operação demorou muito. Tente novamente.');
+      } else {
+        setError(error.message || 'Erro ao registrar venda. Tente novamente.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -166,6 +201,22 @@ export default function SalesPage() {
           </div>
         </header>
         
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-50 dark:bg-red-900/20 border-b border-red-200 dark:border-red-800 px-4 md:px-6 py-3 shrink-0">
+            <div className="flex items-center gap-2 text-red-800 dark:text-red-400">
+              <span className="material-symbols-outlined">error</span>
+              <span className="text-sm font-medium flex-1">{error}</span>
+              <button 
+                onClick={() => setError(null)}
+                className="p-1 hover:bg-red-100 dark:hover:bg-red-900/30 rounded"
+              >
+                <span className="material-symbols-outlined text-sm">close</span>
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Success Message */}
         {showSuccess && (
           <div className="bg-green-100 dark:bg-green-900/30 border-b border-green-200 dark:border-green-800 px-4 md:px-6 py-3 shrink-0">

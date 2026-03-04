@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { crmService, type FunnelStage } from '../../services/crmService'
+import { CRMAgentSettings } from '../../components/CRM/config/CRMAgentSettings'
 
 const COLORS = [
     { label: 'Cinza', value: 'bg-gray-100 text-gray-800' },
@@ -171,6 +172,11 @@ export default function CRMSettings() {
 
                 {/* Origins Section */}
                 <OriginsSettings />
+
+                {/* Chat Configuration Section */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-8">
+                    <CRMAgentSettings />
+                </div>
             </div>
         </div>
     )

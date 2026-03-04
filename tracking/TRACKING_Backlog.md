@@ -15,5 +15,15 @@
 
 ## 🧊 Icebox (Ideias Futuras / Baixa Prioridade)
 
+- [ ] **Refatoração do Layout do Módulo Financeiro** - Sprint XX
+  - **Contexto**: Layout atual do módulo Financeiro (Dashboard, Contas a Pagar/Receber) precisa de redesign para melhor UX/UI
+  - **Escopo**: 
+    - Redesign da tela `/finance` (Dashboard com gráficos e KPIs)
+    - Melhorar responsividade mobile das telas `/finance/payable` e `/finance/receivable`
+    - Padronizar componentes e tipografia
+    - Melhorar visualização dos dados financeiros
+  - **Prioridade**: Média
+  - **Dependências**: Módulo Financeiro já funcional (Sprint 07)
+
 - [ ] Ideia X
 - [ ] Melhoria Y
