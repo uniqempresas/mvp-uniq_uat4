@@ -25,3 +25,9 @@ dist-ssr
 
 # MCP Configuration (contains secrets)
 .opencode/mcp.json
+
+# Environment variables (security: never commit secrets)
+.env
+.env.local
+.env.*.local
+!.env.example
