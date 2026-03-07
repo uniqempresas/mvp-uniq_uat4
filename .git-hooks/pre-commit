@@ -1,0 +1,42 @@
+#!/bin/bash
+#
+# Pre-commit hook to prevent committing sensitive files
+# 
+# Install: cp .git-hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+#
+
+echo "🔒 Running security checks..."
+
+# Check for .env files
+if git diff --cached --name-only | grep -E "^\.env($|\.)" > /dev/null; then
+    echo ""
+    echo "❌ ERROR: Attempting to commit .env file(s)!"
+    echo ""
+    echo "🚫 Blocked files:"
+    git diff --cached --name-only | grep -E "^\.env($|\.)" | sed 's/^/   - /'
+    echo ""
+    echo "⚠️  Environment files contain secrets and should NEVER be committed."
+    echo ""
+    echo "✅ To fix:"
+    echo "   1. Remove from staging: git reset HEAD <file>"
+    echo "   2. Add to .gitignore: echo '<file>' >> .gitignore"
+    echo "   3. Commit only .gitignore"
+    echo ""
+    exit 1
+fi
+
+# Check for potential secrets in code
+if git diff --cached -U0 --no-color | grep -E "^\+.*(password|secret|token|key)\s*[:=]\s*['\"][^'\"]{8,}['\"]" > /dev/null; then
+    echo ""
+    echo "⚠️  WARNING: Potential hardcoded secret detected in staged changes!"
+    echo ""
+    echo "🔍 Matches found:"
+    git diff --cached -U0 --no-color | grep -E "^\+.*(password|secret|token|key)\s*[:=]\s*['\"][^'\"]{8,}['\"]" | sed 's/^/   /'
+    echo ""
+    echo "Review these changes before committing."
+    echo ""
+    # Don't block, just warn
+fi
+
+echo "✅ Security checks passed!"
+exit 0
