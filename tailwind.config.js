@@ -15,7 +15,7 @@ export default {
                 "background-dark": "#10221c",
                 "surface-light": "#FFFFFF",
                 "surface-dark": "#1F2937",
-                "sidebar-dark": "#1F2937",
+                "sidebar-dark": "#1b2d34",
                 "mint-soft": "#D1FAE5",
             },
             fontFamily: {
